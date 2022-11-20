@@ -1,0 +1,10 @@
+[run]
+branch = True
+source = sqlalchemy_bind_manager
+concurrency = multiprocessing
+parallel = true
+
+[report]
+exclude_lines =
+    pragma: no cover
+    pass
