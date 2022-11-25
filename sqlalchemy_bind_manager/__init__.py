@@ -28,15 +28,18 @@ SQLAlchemyConfig = TypeVar('SQLAlchemyConfig', bound=Union[Dict[str, SQLAlchemyB
 
 
 class SQLAlchemyManager:
-    __binds: Dict[str, SQLAlchemyBind] = {}
+    __binds: Dict[str, SQLAlchemyBind]
 
     def __init__(self, config: SQLAlchemyConfig) -> None:
         if isinstance(config, SQLAlchemyBindConfig):
-            self.__init_bind("default", config)
+            self.__binds = dict(
+                default=self.__init_bind("default", config)
+            )
 
         if isinstance(config, dict):
+            self.__binds = {}
             for name, conf in config.items():
-                self.__init_bind(name, conf)
+                self.__binds[name] = self.__init_bind(name, conf)
 
         # Shared session example
         # cls.__session_class = sessionmaker(
@@ -50,7 +53,7 @@ class SQLAlchemyManager:
         #     expire_on_commit=False,
         # )
 
-    def __init_bind(self, name: str, config: SQLAlchemyBindConfig) -> None:
+    def __init_bind(self, name: str, config: SQLAlchemyBindConfig) -> SQLAlchemyBind:
         if not isinstance(config, SQLAlchemyBindConfig):
             print(name, config)
             raise ValueError("Config has to be a SQLAlchemyBindConfig object")
@@ -66,7 +69,7 @@ class SQLAlchemyManager:
 
         engine = create_engine(config.engine_url, **engine_options)
         registry_mapper = registry()
-        self.__binds[name] = SQLAlchemyBind(
+        return SQLAlchemyBind(
             engine=engine,
             registry_mapper=registry_mapper,
             session_class=sessionmaker(bind=engine, **session_options),
