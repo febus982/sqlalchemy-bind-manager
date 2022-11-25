@@ -27,7 +27,7 @@ class SQLAlchemyBind(BaseModel):
 SQLAlchemyConfig = TypeVar('SQLAlchemyConfig', bound=Union[Dict[str, SQLAlchemyBindConfig], SQLAlchemyBindConfig])
 
 
-class SQLAlchemyManager:
+class SQLAlchemyBindManager:
     __binds: Dict[str, SQLAlchemyBind]
 
     def __init__(self, config: SQLAlchemyConfig) -> None:
