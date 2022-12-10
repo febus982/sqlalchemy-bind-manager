@@ -1,5 +1,5 @@
 from contextlib import AbstractContextManager
-from typing import TypeVar, Dict, Union
+from typing import Dict, Union
 
 from pydantic import BaseModel
 from sqlalchemy import create_engine, MetaData
@@ -24,7 +24,7 @@ class SQLAlchemyBind(BaseModel):
         arbitrary_types_allowed = True
 
 
-SQLAlchemyConfig = TypeVar('SQLAlchemyConfig', bound=Union[Dict[str, SQLAlchemyBindConfig], SQLAlchemyBindConfig])
+SQLAlchemyConfig = Union[Dict[str, SQLAlchemyBindConfig], SQLAlchemyBindConfig]
 
 
 class SQLAlchemyBindManager:
