@@ -39,3 +39,10 @@ jobs:
     - name: Test with pytest
       run: |
         pytest --cov
+    - name: Test & publish code coverage
+      uses: paambaati/codeclimate-action@v3.2.0
+      env:
+        CC_TEST_REPORTER_ID: ${{ secrets.CODECLIMATE_REPORTER_ID }}
+      with:
+        coverageCommand: pytest --cov
+        debug: true
