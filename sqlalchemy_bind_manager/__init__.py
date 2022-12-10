@@ -39,19 +39,8 @@ class SQLAlchemyBindManager:
         if isinstance(config, dict):
             self.__binds = {}
             for name, conf in config.items():
-                self.__binds[name] = self.__init_bind(name, conf)
-
-        # Shared session example
-        # cls.__session_class = sessionmaker(
-        #     binds={
-        #         m: b.engine
-        #         for b in cls.__binds.values()
-        #         for m in b.registry_mapper.mappers
-        #     },
-        #     autocommit=False,
-        #     autoflush=False,
-        #     expire_on_commit=False,
-        # )
+                if isinstance(conf, SQLAlchemyBindConfig):
+                    self.__binds[name] = self.__init_bind(name, conf)
 
     def __init_bind(self, name: str, config: SQLAlchemyBindConfig) -> SQLAlchemyBind:
         if not isinstance(config, SQLAlchemyBindConfig):
