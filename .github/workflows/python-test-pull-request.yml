@@ -45,5 +45,7 @@ jobs:
       env:
         CC_TEST_REPORTER_ID: ${{ secrets.CODECLIMATE_REPORTER_ID }}
       with:
-        coverageCommand: pytest --cov
+        coverageCommand: pytest --cov --cov-report lcov
+        coverageLocations: |
+          ${{github.workspace}}/coverage.lcov:lcov
         debug: true
