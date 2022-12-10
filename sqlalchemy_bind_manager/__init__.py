@@ -1,4 +1,4 @@
-from typing import Dict, Union, Mapping, ContextManager, AsyncContextManager
+from typing import Dict, Union, Mapping
 
 from pydantic import BaseModel
 from sqlalchemy import create_engine, MetaData
@@ -95,14 +95,14 @@ class SQLAlchemyBindManager:
         except KeyError as err:
             raise NotInitializedBind(f"Bind not initialized")
 
-    def get_session(self, bind: str = "default") -> Union[ContextManager[Session], Session]:
+    def get_session(self, bind: str = "default") -> Session:
         _bind = self.__get_bind(bind)
         if not _bind.bind_async:
             return _bind.session_class()
         else:
             raise UnsupportedBind("Requested bind is asynchronous. Use `get_async_session`")
 
-    def get_async_session(self, bind: str = "default") -> Union[AsyncContextManager[AsyncSession], AsyncSession]:
+    def get_async_session(self, bind: str = "default") -> AsyncSession:
         _bind = self.__get_bind(bind)
         if _bind.bind_async:
             return _bind.session_class()
