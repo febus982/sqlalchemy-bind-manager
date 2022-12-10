@@ -54,11 +54,11 @@ class SQLAlchemyBindManager:
             echo=False,
             future=True,
         )
-        if engine_options:
+        if config.engine_options:
             engine_options.update(config.engine_options)
 
         session_options = dict()
-        if session_options:
+        if config.session_options:
             session_options.update(config.session_options)
 
         if config.engine_async:
