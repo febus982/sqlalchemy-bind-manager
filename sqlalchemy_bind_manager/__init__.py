@@ -1,5 +1,4 @@
-from contextlib import AbstractContextManager, AbstractAsyncContextManager
-from typing import Dict, Union, Mapping
+from typing import Dict, Union, Mapping, ContextManager, AsyncContextManager
 
 from pydantic import BaseModel
 from sqlalchemy import create_engine, MetaData
@@ -43,7 +42,7 @@ class SQLAlchemyBindManager:
         else:
             self.__init_bind("default", config)
 
-    def __init_bind(self, name: str, config: SQLAlchemyBindConfig) -> SQLAlchemyBind:
+    def __init_bind(self, name: str, config: SQLAlchemyBindConfig):
         if not isinstance(config, SQLAlchemyBindConfig):
             raise InvalidConfig(f"Config for bind `{name}` is not a SQLAlchemyBindConfig object")
 
@@ -96,14 +95,14 @@ class SQLAlchemyBindManager:
         except KeyError as err:
             raise NotInitializedBind(f"Bind not initialized")
 
-    def get_session(self, bind: str = "default") -> Union[AbstractContextManager[Session], Session]:
+    def get_session(self, bind: str = "default") -> Union[ContextManager[Session], Session]:
         _bind = self.__get_bind(bind)
         if not _bind.bind_async:
             return _bind.session_class()
         else:
             raise UnsupportedBind("Requested bind is asynchronous. Use `get_async_session`")
 
-    def get_async_session(self, bind: str = "default") -> Union[AbstractAsyncContextManager[AsyncSession], AsyncSession]:
+    def get_async_session(self, bind: str = "default") -> Union[AsyncContextManager[AsyncSession], AsyncSession]:
         _bind = self.__get_bind(bind)
         if _bind.bind_async:
             return _bind.session_class()
