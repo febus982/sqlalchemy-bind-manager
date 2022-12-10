@@ -4,7 +4,7 @@ from typing import Dict, Union, Mapping
 from pydantic import BaseModel
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.engine import Engine
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, AsyncEngine
 from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.orm.decl_api import registry
 
@@ -20,7 +20,7 @@ class SQLAlchemyBindConfig(BaseModel):
 
 class SQLAlchemyBind(BaseModel):
     bind_async: bool
-    engine: Engine
+    engine: Union[Engine, AsyncEngine]
     model_declarative_base: type
     registry_mapper: registry
     session_class: sessionmaker
@@ -36,38 +36,36 @@ class SQLAlchemyBindManager:
     __binds: Dict[str, SQLAlchemyBind]
 
     def __init__(self, config: SQLAlchemyConfig) -> None:
-        if isinstance(config, SQLAlchemyBindConfig):
-            self.__binds = dict(
-                default=self.__init_bind("default", config)
-            )
-
+        self.__binds = {}
         if isinstance(config, dict):
-            self.__binds = {}
             for name, conf in config.items():
-                self.__binds[name] = self.__init_bind(name, conf)
+                self.__init_bind(name, conf)
+        else:
+            self.__init_bind("default", config)
 
     def __init_bind(self, name: str, config: SQLAlchemyBindConfig) -> SQLAlchemyBind:
         if not isinstance(config, SQLAlchemyBindConfig):
             raise InvalidConfig(f"Config for bind `{name}` is not a SQLAlchemyBindConfig object")
 
-        engine_options = dict(
+        engine_options: dict = dict(
             echo=False,
             future=True,
         )
         if config.engine_options:
             engine_options.update(config.engine_options)
 
-        session_options = dict()
+        session_options: dict = dict()
         if config.session_options:
             session_options.update(config.session_options)
 
+        engine: Union[Engine, AsyncEngine]
         if config.engine_async:
             engine = create_async_engine(config.engine_url, **engine_options)
         else:
             engine = create_engine(config.engine_url, **engine_options)
 
         registry_mapper = registry()
-        return SQLAlchemyBind(
+        self.__binds[name] = SQLAlchemyBind(
             engine=engine,
             registry_mapper=registry_mapper,
             session_class=sessionmaker(
@@ -98,17 +96,17 @@ class SQLAlchemyBindManager:
         except KeyError as err:
             raise NotInitializedBind(f"Bind not initialized")
 
-    def get_session(self, bind: str = "default") -> AbstractContextManager[Session]:
-        bind = self.__get_bind(bind)
-        if not bind.bind_async:
-            return bind.session_class()
+    def get_session(self, bind: str = "default") -> Union[AbstractContextManager[Session], Session]:
+        _bind = self.__get_bind(bind)
+        if not _bind.bind_async:
+            return _bind.session_class()
         else:
             raise UnsupportedBind("Requested bind is asynchronous. Use `get_async_session`")
 
-    def get_async_session(self, bind: str = "default") -> AbstractAsyncContextManager[AsyncSession]:
-        bind = self.__get_bind(bind)
-        if bind.bind_async:
-            return bind.session_class()
+    def get_async_session(self, bind: str = "default") -> Union[AbstractAsyncContextManager[AsyncSession], AsyncSession]:
+        _bind = self.__get_bind(bind)
+        if _bind.bind_async:
+            return _bind.session_class()
         else:
             raise UnsupportedBind("Requested bind is synchronous. Use `get_session`")
 
