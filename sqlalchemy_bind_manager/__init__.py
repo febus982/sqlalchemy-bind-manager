@@ -1,4 +1,4 @@
-from typing import Dict, Union, Mapping
+from typing import Dict, Union
 
 from pydantic import BaseModel
 from sqlalchemy import create_engine, MetaData
@@ -12,9 +12,9 @@ from sqlalchemy_bind_manager.exceptions import NotInitializedBind, UnsupportedBi
 
 class SQLAlchemyBindConfig(BaseModel):
     engine_async: bool = False
-    engine_options: Union[Mapping, None]
+    engine_options: Union[Dict, None]
     engine_url: str
-    session_options: Union[Mapping, None]
+    session_options: Union[Dict, None]
 
 
 class SQLAlchemyBind(BaseModel):
@@ -46,16 +46,11 @@ class SQLAlchemyBindManager:
         if not isinstance(config, SQLAlchemyBindConfig):
             raise InvalidConfig(f"Config for bind `{name}` is not a SQLAlchemyBindConfig object")
 
-        engine_options: dict = dict(
-            echo=False,
-            future=True,
-        )
-        if config.engine_options:
-            engine_options.update(config.engine_options)
+        engine_options: dict = config.engine_options or {}
+        engine_options.setdefault("echo", False)
+        engine_options.setdefault("future", True)
 
-        session_options: dict = dict()
-        if config.session_options:
-            session_options.update(config.session_options)
+        session_options: dict = config.session_options or {}
 
         engine: Union[Engine, AsyncEngine]
         if config.engine_async:
