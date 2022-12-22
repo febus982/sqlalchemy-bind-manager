@@ -8,3 +8,11 @@ class UnsupportedBind(Exception):
 
 class InvalidConfig(Exception):
     pass
+
+
+class ModelNotFound(Exception):
+    pass
+
+
+class UnmappedProperty(Exception):
+    pass
