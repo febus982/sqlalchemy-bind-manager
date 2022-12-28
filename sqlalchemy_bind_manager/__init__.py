@@ -14,7 +14,9 @@ from sqlalchemy_bind_manager.exceptions import (
     NotInitializedBind,
     UnsupportedBind,
     InvalidConfig,
-    ModelNotFound, UnmappedProperty, InvalidModel,
+    ModelNotFound,
+    UnmappedProperty,
+    InvalidModel,
 )
 
 
@@ -234,7 +236,9 @@ class SQLAlchemyRepository(Generic[MODEL], ABC):
             object_mapper(obj)
             if isinstance(obj, self._model):
                 return True
-            raise InvalidModel(f"This repository can handle only `{self._model}` models. `{type(obj)}` has been passed.")
+            raise InvalidModel(
+                f"This repository can handle only `{self._model}` models. `{type(obj)}` has been passed."
+            )
         except UnmappedInstanceError:
             return False
 
@@ -265,7 +269,9 @@ class SQLAlchemyRepository(Generic[MODEL], ABC):
         # TODO: Add support for relationship eager load
         for k, v in search_params.items():
             if not self._is_mapped_property(k):
-                raise UnmappedProperty(f"Property `{k}` is not mapped in the ORM for model `{self._model}`")
+                raise UnmappedProperty(
+                    f"Property `{k}` is not mapped in the ORM for model `{self._model}`"
+                )
 
             stmt = stmt.where(getattr(self._model, k) == v)
         return stmt

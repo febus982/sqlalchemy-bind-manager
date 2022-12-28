@@ -29,13 +29,17 @@ def test_save_many_models(repository_class, model_class, sa_manager):
     assert model2.model_id is not None
 
 
-def test_failed_model_does_rollback_and_reraises_exception(repository_class, model_class, sa_manager):
+def test_failed_model_does_rollback_and_reraises_exception(
+    repository_class, model_class, sa_manager
+):
     class SomeTestException(Exception):
         pass
 
     with patch.object(
         Session, "rollback", return_value=None
-    ) as mocked_rollback, patch.object(Session, "commit", side_effect=SomeTestException):
+    ) as mocked_rollback, patch.object(
+        Session, "commit", side_effect=SomeTestException
+    ):
         model = model_class(
             name="Someone",
         )
