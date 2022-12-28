@@ -103,8 +103,8 @@ class SQLAlchemyBindManager:
         except KeyError as err:
             raise NotInitializedBind(f"Bind not initialized")
 
-    def get_session(self, bind: str = DEFAULT_BIND_NAME) -> Session:
-        _bind = self.get_bind(bind)
+    def get_session(self, bind_name: str = DEFAULT_BIND_NAME) -> Session:
+        _bind = self.get_bind(bind_name)
         if not _bind.bind_async:
             return _bind.session_class()
         else:
@@ -112,15 +112,15 @@ class SQLAlchemyBindManager:
                 "Requested bind is asynchronous. Use `get_async_session`"
             )
 
-    def get_async_session(self, bind: str = DEFAULT_BIND_NAME) -> AsyncSession:
-        _bind = self.get_bind(bind)
+    def get_async_session(self, bind_name: str = DEFAULT_BIND_NAME) -> AsyncSession:
+        _bind = self.get_bind(bind_name)
         if _bind.bind_async:
             return _bind.session_class()
         else:
             raise UnsupportedBind("Requested bind is synchronous. Use `get_session`")
 
-    def get_mapper(self, bind: str = DEFAULT_BIND_NAME) -> registry:
-        return self.get_bind(bind).registry_mapper
+    def get_mapper(self, bind_name: str = DEFAULT_BIND_NAME) -> registry:
+        return self.get_bind(bind_name).registry_mapper
 
 
 class SQLAlchemyRepository(Generic[MODEL], ABC):
