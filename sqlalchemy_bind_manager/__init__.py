@@ -1,5 +1,5 @@
 from abc import ABC
-from typing import Dict, Union, TypeVar, Generic, Type, Iterable, TypeGuard
+from typing import Dict, Union, TypeVar, Generic, Type, Iterable
 
 from pydantic import BaseModel
 from sqlalchemy import create_engine, MetaData, select
@@ -223,7 +223,7 @@ class SQLAlchemyRepository(Generic[MODEL], ABC):
             session.rollback()
             raise
 
-    def _is_mapped_object(self, obj: object) -> TypeGuard[MODEL]:
+    def _is_mapped_object(self, obj: object) -> bool:
         """Checks if the object is handled by the repository and is mapped in SQLAlchemy.
 
         :param obj: a mapped object instance
