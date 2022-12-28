@@ -14,5 +14,9 @@ class ModelNotFound(Exception):
     pass
 
 
+class InvalidModel(Exception):
+    pass
+
+
 class UnmappedProperty(Exception):
     pass
