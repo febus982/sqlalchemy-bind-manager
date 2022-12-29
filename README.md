@@ -1,6 +1,7 @@
 # SQLAlchemy bind manager
 [![Maintainability](https://api.codeclimate.com/v1/badges/0140f7f4e559ae806887/maintainability)](https://codeclimate.com/github/febus982/sqlalchemy-bind-manager/maintainability)
-<a href="https://codeclimate.com/github/febus982/sqlalchemy-bind-manager/test_coverage"><img src="https://api.codeclimate.com/v1/badges/0140f7f4e559ae806887/test_coverage" /></a>
+[![Test Coverage](https://api.codeclimate.com/v1/badges/0140f7f4e559ae806887/test_coverage)](https://codeclimate.com/github/febus982/sqlalchemy-bind-manager/test_coverage)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 A package to manage SQLAlchemy binds, using typed configuration and independent by any framework.
 
