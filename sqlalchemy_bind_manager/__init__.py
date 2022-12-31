@@ -1,8 +1,10 @@
 from abc import ABC
-from typing import Dict, Union, TypeVar, Generic, Type, Iterable
+from enum import Enum
+from functools import partial
+from typing import Dict, Union, TypeVar, Generic, Type, Iterable, Tuple
 
 from pydantic import BaseModel
-from sqlalchemy import create_engine, MetaData, select
+from sqlalchemy import create_engine, MetaData, select, desc, asc
 from sqlalchemy.engine import Engine
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, AsyncEngine
 from sqlalchemy.orm import sessionmaker, Session, object_mapper, Mapper, class_mapper
@@ -125,6 +127,11 @@ class SQLAlchemyBindManager:
         return self.get_bind(bind_name).registry_mapper
 
 
+class SortDirection(Enum):
+    ASC = partial(asc)
+    DESC = partial(desc)
+
+
 class SQLAlchemyRepository(Generic[MODEL], ABC):
     _sa_manager: SQLAlchemyBindManager
     _bind_name: str
@@ -192,18 +199,26 @@ class SQLAlchemyRepository(Generic[MODEL], ABC):
             session.delete(obj)
             self._commit(session)
 
-    def find(self, **search_params) -> Iterable[MODEL]:
+    def find(
+        self,
+        order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
+        **search_params,
+    ) -> Iterable[MODEL]:
         """Find models using filters
 
         E.g.
         find(name="John") finds all models with name = John
 
+        :param order_by:
         :param search_params: Any keyword argument to be used as equality filter
         :return: A collection of models
         :rtype: Iterable
         """
         stmt = select(self._model)  # type: ignore
         stmt = self._filter_select(stmt, **search_params)
+
+        if order_by is not None:
+            stmt = self._filter_order_by(stmt, order_by)
 
         with self._sa_manager.get_session() as session:  # type: ignore
             result = session.execute(stmt)
@@ -254,7 +269,7 @@ class SQLAlchemyRepository(Generic[MODEL], ABC):
         return property_name in m.column_attrs  # type: ignore
 
     def _filter_select(self, stmt: Select, **search_params) -> Select:
-        """Build the query filters from submitted parameters.
+        """Build the query filtering clauses from submitted parameters.
 
         E.g.
         _filter_select(stmt, name="John") adds a `WHERE name = John` statement
@@ -264,7 +279,6 @@ class SQLAlchemyRepository(Generic[MODEL], ABC):
         :param search_params: Any keyword argument to be used as equality filter
         :return: The filtered query
         """
-        # TODO: Add support for column sorting
         # TODO: Add support for offset/limit
         # TODO: Add support for relationship eager load
         for k, v in search_params.items():
@@ -274,4 +288,34 @@ class SQLAlchemyRepository(Generic[MODEL], ABC):
                 )
 
             stmt = stmt.where(getattr(self._model, k) == v)
+        return stmt
+
+    def _filter_order_by(
+        self, stmt: Select, order_by: Iterable[Union[str, Tuple[str, SortDirection]]]
+    ) -> Select:
+        """Build the query ordering clauses from submitted parameters.
+
+        E.g.
+        _filter_order_by(stmt, ['name']) adds a `ORDER BY name` statement
+        _filter_order_by(stmt, [('name', SortDirection.ASC)]) adds a `ORDER BY name ASC` statement
+
+        :param stmt: a statement
+        :type stmt: Select
+        :param order_by: XXXX
+        :return: The filtered query
+        """
+        for value in order_by:
+            if isinstance(value, str):
+                if not self._is_mapped_property(value):
+                    raise UnmappedProperty(
+                        f"Property `{value}` is not mapped in the ORM for model `{self._model}`"
+                    )
+                stmt = stmt.order_by(getattr(self._model, value))
+            else:
+                if not self._is_mapped_property(value[0]):
+                    raise UnmappedProperty(
+                        f"Property `{value[0]}` is not mapped in the ORM for model `{self._model}`"
+                    )
+                stmt = stmt.order_by(value[1].value(getattr(self._model, value[0])))
+
         return stmt
