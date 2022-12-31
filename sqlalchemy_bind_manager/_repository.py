@@ -136,9 +136,9 @@ class SQLAlchemyRepository(Generic[MODEL], ABC):
         """Checks if the object is handled by the repository and is mapped in SQLAlchemy.
 
         :param obj: a mapped object instance
-        :return: True if the
+        :return: True if the object is mapped and matches self._model type, False if it's not a mapped object
         :rtype: bool
-        :raises InvalidModel: when
+        :raises InvalidModel: when the object is mapped but doesn't match self._model type
         """
         # TODO: This is probably redundant, we could do these checks once in __init__
         try:
@@ -170,7 +170,7 @@ class SQLAlchemyRepository(Generic[MODEL], ABC):
         E.g.
         _filter_select(stmt, name="John") adds a `WHERE name = John` statement
 
-        :param stmt: a statement
+        :param stmt: a Select statement
         :type stmt: Select
         :param search_params: Any keyword argument to be used as equality filter
         :return: The filtered query
@@ -191,9 +191,9 @@ class SQLAlchemyRepository(Generic[MODEL], ABC):
         _filter_order_by(stmt, ['name']) adds a `ORDER BY name` statement
         _filter_order_by(stmt, [('name', SortDirection.ASC)]) adds a `ORDER BY name ASC` statement
 
-        :param stmt: a statement
+        :param stmt: a Select statement
         :type stmt: Select
-        :param order_by: XXXX
+        :param order_by: a list of columns, or tuples (column, direction)
         :return: The filtered query
         """
         for value in order_by:
