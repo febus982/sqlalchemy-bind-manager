@@ -151,16 +151,18 @@ class SQLAlchemyRepository(Generic[MODEL], ABC):
         except UnmappedInstanceError:
             return False
 
-    def _is_mapped_property(self, property_name: str) -> bool:
+    def _validate_mapped_property(self, property_name: str) -> None:
         """Checks if a property is mapped in the model class.
 
         :param property_name: The name of the property to be evaluated.
         :type property_name: str
-        :return: True if the property is mapped.
-        :rtype: bool
+        :raises UnmappedProperty: When the property is not mapped.
         """
         m: Mapper = class_mapper(self._model)
-        return property_name in m.column_attrs  # type: ignore
+        if property_name not in m.column_attrs:  # type: ignore
+            raise UnmappedProperty(
+                f"Property `{property_name}` is not mapped in the ORM for model `{self._model}`"
+            )
 
     def _filter_select(self, stmt: Select, **search_params) -> Select:
         """Build the query filtering clauses from submitted parameters.
@@ -176,11 +178,7 @@ class SQLAlchemyRepository(Generic[MODEL], ABC):
         # TODO: Add support for offset/limit
         # TODO: Add support for relationship eager load
         for k, v in search_params.items():
-            if not self._is_mapped_property(k):
-                raise UnmappedProperty(
-                    f"Property `{k}` is not mapped in the ORM for model `{self._model}`"
-                )
-
+            self._validate_mapped_property(k)
             stmt = stmt.where(getattr(self._model, k) == v)
         return stmt
 
@@ -200,16 +198,10 @@ class SQLAlchemyRepository(Generic[MODEL], ABC):
         """
         for value in order_by:
             if isinstance(value, str):
-                if not self._is_mapped_property(value):
-                    raise UnmappedProperty(
-                        f"Property `{value}` is not mapped in the ORM for model `{self._model}`"
-                    )
+                self._validate_mapped_property(value)
                 stmt = stmt.order_by(getattr(self._model, value))
             else:
-                if not self._is_mapped_property(value[0]):
-                    raise UnmappedProperty(
-                        f"Property `{value[0]}` is not mapped in the ORM for model `{self._model}`"
-                    )
+                self._validate_mapped_property(value[0])
                 stmt = stmt.order_by(value[1].value(getattr(self._model, value[0])))
 
         return stmt
