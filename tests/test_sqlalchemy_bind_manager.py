@@ -9,7 +9,11 @@ from sqlalchemy_bind_manager import (
     SQLAlchemyBindConfig,
     SQLAlchemyBindManager,
 )
-from sqlalchemy_bind_manager.exceptions import InvalidConfig, NotInitializedBind, UnsupportedBind
+from sqlalchemy_bind_manager.exceptions import (
+    InvalidConfig,
+    NotInitializedBind,
+    UnsupportedBind,
+)
 
 
 @pytest.mark.parametrize(
