@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "sqlalchemy-bind-manager"
-version = "0.1.4"
+version = "0.1.5"
 description = ""
 authors = ["Federico Busetti <729029+febus982@users.noreply.github.com>"]
 readme = "README.md"

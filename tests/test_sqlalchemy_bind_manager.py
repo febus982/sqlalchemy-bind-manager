@@ -8,9 +8,11 @@ from sqlalchemy.orm import registry, Session
 from sqlalchemy_bind_manager import (
     SQLAlchemyBindConfig,
     SQLAlchemyBindManager,
+)
+from sqlalchemy_bind_manager.exceptions import (
     InvalidConfig,
-    UnsupportedBind,
     NotInitializedBind,
+    UnsupportedBind,
 )
 
 
