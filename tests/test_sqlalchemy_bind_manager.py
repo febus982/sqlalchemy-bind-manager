@@ -8,10 +8,8 @@ from sqlalchemy.orm import registry, Session
 from sqlalchemy_bind_manager import (
     SQLAlchemyBindConfig,
     SQLAlchemyBindManager,
-    InvalidConfig,
-    UnsupportedBind,
-    NotInitializedBind,
 )
+from sqlalchemy_bind_manager.exceptions import InvalidConfig, NotInitializedBind, UnsupportedBind
 
 
 @pytest.mark.parametrize(
