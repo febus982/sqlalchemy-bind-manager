@@ -8,8 +8,10 @@
 [![Test Coverage](https://api.codeclimate.com/v1/badges/0140f7f4e559ae806887/test_coverage)](https://codeclimate.com/github/febus982/sqlalchemy-bind-manager/test_coverage)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-A package to manage SQLAlchemy binds, using typed configuration and independent by any framework.
+This package provides two functionalities:
 
+* A manager for multiple SQLAlchemy configurations, using typed inputs and decoupled from any framework.
+* A generic class implementation to be used in repository pattern
 
 ## Usage
 
@@ -135,3 +137,25 @@ async with sa_manager.get_async_session() as session:
 ```
 
 Refer to [SQLAlchemy asyncio documentation](https://docs.sqlalchemy.org/en/14/orm/extensions/asyncio.html)
+
+## Repository
+
+The generic `SQLAlchemyRepository` class can be used simply by extending it.
+
+```python
+from sqlalchemy_bind_manager import SQLAlchemyRepository
+
+class MyModel(model_declarative_base):
+    pass
+
+class ModelRepository(SQLAlchemyRepository[MyModel]):
+    _model = MyModel
+```
+
+The class provides some common use methods:
+
+* `get`: Retrieve a model by identifier
+* `save`: Persist a model
+* `save_many`: Persist multiple models in a single transaction
+* `delete`: Delete a model
+* `find`: Search for a list of models (basically an adapter for SELECT queries)
