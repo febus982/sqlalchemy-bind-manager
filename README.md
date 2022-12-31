@@ -37,8 +37,8 @@ The `SQLAlchemyBind` class has the following attributes:
 
 * `bind_async`: A boolean property, `True` when the bind uses an async dialect (Note: async is not yet fully supported, see the section about asynchronous binds)
 * `engine`: The initialised SQLALchemy `Engine`
-* `model_declarative_base`: A base class that can be used to create (declarative models)[https://docs.sqlalchemy.org/en/14/orm/mapping_styles.html#declarative-mapping]
-* `registry_mapper`: The `registry` associated with the `engine`. It can be used with Alembic or to achieve (imperative mapping)[https://docs.sqlalchemy.org/en/14/orm/mapping_styles.html#imperative-mapping]
+* `model_declarative_base`: A base class that can be used to create [declarative models](https://docs.sqlalchemy.org/en/14/orm/mapping_styles.html#declarative-mapping)
+* `registry_mapper`: The `registry` associated with the `engine`. It can be used with Alembic or to achieve [imperative mapping](https://docs.sqlalchemy.org/en/14/orm/mapping_styles.html#imperative-mapping)
 * `session_class`: The class built by [sessionmaker()](https://docs.sqlalchemy.org/en/14/orm/session_api.html#sqlalchemy.orm.sessionmaker), either `Session` or `AsyncSession`
 
 The `SQLAlchemyBindManager` provides some helper methods to quickly access some of the bind properties without using the `SQLAlchemyBind`:
@@ -134,4 +134,4 @@ async with sa_manager.get_async_session() as session:
     session.commit()
 ```
 
-Refer to (SQLAlchemy asyncio documentation)[https://docs.sqlalchemy.org/en/14/orm/extensions/asyncio.html]
+Refer to [SQLAlchemy asyncio documentation](https://docs.sqlalchemy.org/en/14/orm/extensions/asyncio.html)
