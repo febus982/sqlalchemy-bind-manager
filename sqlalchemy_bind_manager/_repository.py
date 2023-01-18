@@ -76,7 +76,7 @@ class SQLAlchemyRepository(Generic[MODEL], ABC):
         :raises ModelNotFound: No model has been found using the primary key
         """
         # TODO: implement get_many()
-        model = self._session.get(self._model, identifier)
+        model = self._session.get(self._model, identifier)  # type: ignore
         if model is None:
             raise ModelNotFound("No rows found for provided primary key.")
         return model

@@ -1,5 +1,5 @@
 import os
-from typing import Type
+from typing import Type, Tuple
 from uuid import uuid4
 
 import pytest
@@ -50,7 +50,7 @@ def repository_class(model_class) -> Type[SQLAlchemyRepository]:
 
 
 @pytest.fixture
-def related_model_classes(sa_manager) -> tuple[Type, Type]:
+def related_model_classes(sa_manager) -> Tuple[Type, Type]:
     default_bind = sa_manager.get_binds()["default"]
 
     class ParentModel(default_bind.model_declarative_base):

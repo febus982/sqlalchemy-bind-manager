@@ -82,7 +82,9 @@ def test_update_model(repository_class, model_class, sa_manager):
     assert updated_model.name == "SomeoneElse"
 
 
-def test_nested_models_are_persisted(related_repository_class, related_model_classes, sa_manager):
+def test_nested_models_are_persisted(
+    related_repository_class, related_model_classes, sa_manager
+):
     parent = related_model_classes[0](
         name="A Parent",
     )
