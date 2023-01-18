@@ -27,8 +27,7 @@ class SortDirection(Enum):
 
 
 class SQLAlchemyRepository(Generic[MODEL], ABC):
-    _sa_manager: SQLAlchemyBindManager
-    _bind_name: str
+    _session: Session
     _model: Type[MODEL]
 
     def __init__(
@@ -41,8 +40,10 @@ class SQLAlchemyRepository(Generic[MODEL], ABC):
         :param bind_name: The name of the bind as defined in the SQLAlchemyConfig. defaults to "default"
         """
         super().__init__()
-        self._sa_manager = sa_manager
-        self._bind_name = bind_name
+        self._session = sa_manager.get_bind(bind_name).session_class()
+
+    def __del__(self):
+        self._session.close()
 
     def save(self, instance: MODEL) -> MODEL:
         """Persist a model.
@@ -50,7 +51,7 @@ class SQLAlchemyRepository(Generic[MODEL], ABC):
         :param instance: A mapped object instance to be persisted
         :return: The model instance after being persisted (e.g. with primary key populated)
         """
-        with self._sa_manager.get_session() as session:  # type: ignore
+        with self._session as session:  # type: ignore
             session.add(instance)
             self._commit(session)
         return instance
@@ -62,7 +63,7 @@ class SQLAlchemyRepository(Generic[MODEL], ABC):
         :type instances: Iterable
         :return: The model instances after being persisted (e.g. with primary keys populated)
         """
-        with self._sa_manager.get_session() as session:  # type: ignore
+        with self._session as session:  # type: ignore
             session.add_all(instances)
             self._commit(session)
         return instances
@@ -75,8 +76,7 @@ class SQLAlchemyRepository(Generic[MODEL], ABC):
         :raises ModelNotFound: No model has been found using the primary key
         """
         # TODO: implement get_many()
-        with self._sa_manager.get_session() as session:  # type: ignore
-            model = session.get(self._model, identifier)
+        model = self._session.get(self._model, identifier)
         if model is None:
             raise ModelNotFound("No rows found for provided primary key.")
         return model
@@ -89,7 +89,7 @@ class SQLAlchemyRepository(Generic[MODEL], ABC):
         """
         # TODO: delete without loading the model
         obj = entity if self._is_mapped_object(entity) else self.get(entity)  # type: ignore
-        with self._sa_manager.get_session() as session:  # type: ignore
+        with self._session as session:  # type: ignore
             session.delete(obj)
             self._commit(session)
 
@@ -114,7 +114,7 @@ class SQLAlchemyRepository(Generic[MODEL], ABC):
         if order_by is not None:
             stmt = self._filter_order_by(stmt, order_by)
 
-        with self._sa_manager.get_session() as session:  # type: ignore
+        with self._session as session:  # type: ignore
             result = session.execute(stmt)
             for model_obj in result.scalars():
                 yield model_obj
