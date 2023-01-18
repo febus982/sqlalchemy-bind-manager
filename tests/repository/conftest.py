@@ -3,8 +3,8 @@ from typing import Type
 from uuid import uuid4
 
 import pytest
-from sqlalchemy import Column, Integer, String
-from sqlalchemy.orm import clear_mappers
+from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import clear_mappers, relationship
 
 from sqlalchemy_bind_manager import (
     SQLAlchemyBindManager,
@@ -47,3 +47,41 @@ def repository_class(model_class) -> Type[SQLAlchemyRepository]:
         _model = model_class
 
     return MyRepository
+
+
+@pytest.fixture
+def related_model_classes(sa_manager) -> tuple[Type, Type]:
+    default_bind = sa_manager.get_binds()["default"]
+
+    class ParentModel(default_bind.model_declarative_base):
+        __tablename__ = "parent_model"
+
+        parent_model_id = Column(Integer, primary_key=True, autoincrement=True)
+        name = Column(String)
+
+        children = relationship(
+            "ChildModel", back_populates="parent", cascade="all, delete-orphan"
+        )
+
+    class ChildModel(default_bind.model_declarative_base):
+        __tablename__ = "child_model"
+
+        child_model_id = Column(Integer, primary_key=True, autoincrement=True)
+        parent_model_id = Column(
+            Integer, ForeignKey("parent_model.parent_model_id"), nullable=False
+        )
+        name = Column(String)
+
+        parent = relationship("ParentModel", back_populates="children")
+
+    default_bind.registry_mapper.metadata.create_all(default_bind.engine)
+
+    return ParentModel, ChildModel
+
+
+@pytest.fixture
+def related_repository_class(related_model_classes) -> Type[SQLAlchemyRepository]:
+    class ParentRepository(SQLAlchemyRepository[related_model_classes[0]]):
+        _model = related_model_classes[0]
+
+    return ParentRepository
