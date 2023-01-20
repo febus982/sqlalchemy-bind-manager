@@ -68,26 +68,63 @@ class SQLAlchemyBindManager:
 
         session_options: dict = config.session_options or {}
 
-        engine: Union[Engine, AsyncEngine]
         if config.engine_async:
-            engine = create_async_engine(config.engine_url, **engine_options)
+            self.__binds[name] = self.__build_async_bind(
+                engine_url=config.engine_url,
+                engine_options=engine_options,
+                session_options=session_options,
+            )
         else:
-            engine = create_engine(config.engine_url, **engine_options)
+            self.__binds[name] = self.__build_sync_bind(
+                engine_url=config.engine_url,
+                engine_options=engine_options,
+                session_options=session_options,
+            )
 
+    def __build_sync_bind(
+            self,
+            engine_url: str,
+            engine_options: dict,
+            session_options: dict,
+    ) -> SQLAlchemyBind:
         registry_mapper = registry()
+        engine = create_engine(engine_url, **engine_options)
         session = sessionmaker(
             bind=engine,
-            class_=AsyncSession if config.engine_async else Session,
+            class_=Session,
             **session_options,
         )
-        self.__binds[name] = SQLAlchemyBind(
+        return SQLAlchemyBind(
             engine=engine,
             registry_mapper=registry_mapper,
             session_class=scoped_session(session, self.__scopefunc)
             if self.__scoped
             else session,
             model_declarative_base=registry_mapper.generate_base(),
-            bind_async=config.engine_async,
+            bind_async=False,
+        )
+
+    def __build_async_bind(
+            self,
+            engine_url: str,
+            engine_options: dict,
+            session_options: dict,
+    ) -> SQLAlchemyBind:
+        registry_mapper = registry()
+        engine = create_async_engine(engine_url, **engine_options)
+        session = sessionmaker(
+            bind=engine,
+            class_=AsyncSession,
+            **session_options,
+        )
+        return SQLAlchemyBind(
+            engine=engine,
+            registry_mapper=registry_mapper,
+            session_class=scoped_session(session, self.__scopefunc)
+            if self.__scoped
+            else session,
+            model_declarative_base=registry_mapper.generate_base(),
+            bind_async=True,
         )
 
     def teardown_scoped_sessions(self):
