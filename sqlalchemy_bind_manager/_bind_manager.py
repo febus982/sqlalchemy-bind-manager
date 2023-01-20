@@ -82,10 +82,10 @@ class SQLAlchemyBindManager:
             )
 
     def __build_sync_bind(
-            self,
-            engine_url: str,
-            engine_options: dict,
-            session_options: dict,
+        self,
+        engine_url: str,
+        engine_options: dict,
+        session_options: dict,
     ) -> SQLAlchemyBind:
         registry_mapper = registry()
         engine = create_engine(engine_url, **engine_options)
@@ -105,10 +105,10 @@ class SQLAlchemyBindManager:
         )
 
     def __build_async_bind(
-            self,
-            engine_url: str,
-            engine_options: dict,
-            session_options: dict,
+        self,
+        engine_url: str,
+        engine_options: dict,
+        session_options: dict,
     ) -> SQLAlchemyBind:
         registry_mapper = registry()
         engine = create_async_engine(engine_url, **engine_options)
