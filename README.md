@@ -29,6 +29,8 @@ config = SQLAlchemyBindConfig(
 sa_manager = SQLAlchemyBindManager(config)
 ```
 
+🚨 NOTE: Using global variables is not thread-safe, please read the [Threading support](#threading-support) section if your application uses multi-threading.
+
 `engine_url` and `engine_options` dictionary accept the same parameters as SQLAlchemy [create_engine()](https://docs.sqlalchemy.org/en/14/core/engines.html#sqlalchemy.create_engine)
 
 `session_options` dictionary accepts the same parameters as SQLALchemy [sessionmaker()](https://docs.sqlalchemy.org/en/14/orm/session_api.html#sqlalchemy.orm.sessionmaker)
@@ -115,9 +117,39 @@ All the `SQLAlchemyBindManager` helper methods accept the `bind_name` optional p
 * `get_async_session(bind_name="default")`: returns an AsyncSession object (Note: async is not yet fully supported, see the section about asynchronous binds)
 * `get_mapper(bind_name="default")`: returns the mapper associated with the bind
 
+### Threading support
+
+If the `Session` is shared between different threads, changes on models will propagate among them, causing undesired effects.
+
+To avoid this you can initialise `SQLAlchemyBindManager` using `scoped=True`, optionally passing a scope function.
+
+```python
+sa_manager = SQLAlchemyBindManager(config, scoped=True)
+```
+or
+
+```python
+def scope_function():
+    # Implementation here
+    pass
+
+sa_manager = SQLAlchemyBindManager(config, scoped=True, scopefunc=scope_function)
+```
+
+This will intialise the session using SQLAlchemy's `scoped_session` wrapper. Refer to SQLAlchemy
+documentation about [Contextual/Thread-local Sessions](https://docs.sqlalchemy.org/en/14/orm/contextual.html) for
+instructions on how to use `scoped_session`
+
+You have also to call `teardown_scoped_sessions` to cleanup the sessions before closing the thread.
+
+```python
+sa_manager = SQLAlchemyBindManager(config, scoped=True)
+sa_manager.teardown_scoped_sessions()
+```
+
 ### Asynchronous database binds [DEV]
 
-**DISCLAIMER:** The support for async binds is still in development and its interfaces might be subject to changes.
+🚨 The support for async binds is still in development and its interfaces might be subject to changes.
 
 Is it possible to supply configurations for asyncio supported engines.
 
