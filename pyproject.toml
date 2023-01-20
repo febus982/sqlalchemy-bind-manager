@@ -7,7 +7,7 @@ readme = "README.md"
 packages = [{include = "sqlalchemy_bind_manager"}]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = ">=3.8,<3.12"
 pydantic = "~1.10.2"
 SQLAlchemy = { version = "~1.4.45", extras = ["asyncio", "mypy"] }
 
