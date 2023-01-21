@@ -4,4 +4,9 @@ from ._bind_manager import (
     SQLAlchemyBind,
     SQLAlchemyConfig,
 )
-from ._repository import SQLAlchemyRepository, SortDirection
+from ._repository import (
+    SQLAlchemyRepository,
+    SQLAlchemySyncRepository,
+    SQLAlchemyAsyncRepository,
+    SortDirection,
+)
