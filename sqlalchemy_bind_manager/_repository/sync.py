@@ -2,7 +2,6 @@ from abc import ABC
 from typing import Union, Generic, Iterable, Tuple
 
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 
 from .._bind_manager import SQLAlchemyBindManager, DEFAULT_BIND_NAME, SQLAlchemyBind
@@ -108,11 +107,11 @@ class SQLAlchemySyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
             for model_obj in result.scalars():
                 yield model_obj
 
-    def _commit(self, session: Union[Session, AsyncSession]) -> None:
+    def _commit(self, session: Session) -> None:
         """Commits the session and handles rollback on errors.
 
         :param session: The session object.
-        :type session: Union[Session, AsyncSession]
+        :type session: Session
         :raises Exception: Any error is re-raised after the rollback.
         """
         try:
