@@ -1,5 +1,5 @@
 from abc import ABC
-from typing import Union, Generic, Iterable, Tuple
+from typing import Union, Generic, Iterable, Tuple, List
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -90,7 +90,7 @@ class SQLAlchemySyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         self,
         order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
         **search_params,
-    ) -> Iterable[MODEL]:
+    ) -> List[MODEL]:
         """Find models using filters
 
         E.g.
@@ -99,7 +99,7 @@ class SQLAlchemySyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         :param order_by:
         :param search_params: Any keyword argument to be used as equality filter
         :return: A collection of models
-        :rtype: Iterable
+        :rtype: List
         """
         stmt = select(self._model)  # type: ignore
         stmt = self._filter_select(stmt, **search_params)
@@ -109,8 +109,7 @@ class SQLAlchemySyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
 
         with self._session as session:  # type: ignore
             result = session.execute(stmt)
-            for model_obj in result.scalars():
-                yield model_obj
+            return [x for x in result.scalars()]
 
     def _commit(self, session: Session) -> None:
         """Commits the session and handles rollback on errors.

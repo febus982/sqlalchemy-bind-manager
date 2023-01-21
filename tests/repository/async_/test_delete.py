@@ -13,11 +13,11 @@ async def test_can_delete_by_pk(repository_class, model_class, sa_manager):
     repo = repository_class(sa_manager)
     await repo.save_many({model, model2})
 
-    results = [x async for x in repo.find()]
+    results = [x for x in await repo.find()]
     assert len(results) == 2
 
     await repo.delete(1)
-    results = [x async for x in repo.find()]
+    results = [x for x in await repo.find()]
     assert len(results) == 1
     assert results[0].model_id == 2
     assert results[0].name == "SomeoneElse"
@@ -35,11 +35,11 @@ async def test_can_delete_by_instance(repository_class, model_class, sa_manager)
     repo = repository_class(sa_manager)
     await repo.save_many({model, model2})
 
-    results = [x async for x in repo.find()]
+    results = [x for x in await repo.find()]
     assert len(results) == 2
 
     await repo.delete(model)
-    results = [x async for x in repo.find()]
+    results = [x for x in await repo.find()]
     assert len(results) == 1
     assert results[0].model_id == 2
     assert results[0].name == "SomeoneElse"
@@ -50,7 +50,7 @@ async def test_delete_inexistent_raises_exception(
 ):
     repo = repository_class(sa_manager)
 
-    results = [x async for x in repo.find()]
+    results = [x for x in await repo.find()]
     assert len(results) == 0
 
     with pytest.raises(Exception):
