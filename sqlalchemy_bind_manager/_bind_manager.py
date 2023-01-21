@@ -4,7 +4,12 @@ from typing import Dict, Union, Callable
 from pydantic import BaseModel
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.engine import Engine
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, AsyncEngine, async_scoped_session
+from sqlalchemy.ext.asyncio import (
+    AsyncSession,
+    create_async_engine,
+    AsyncEngine,
+    async_scoped_session,
+)
 from sqlalchemy.orm import sessionmaker, Session, scoped_session
 from sqlalchemy.orm.decl_api import registry
 
@@ -151,13 +156,17 @@ class SQLAlchemyBindManager:
         """
         return {k: b.registry_mapper.metadata for k, b in self.__binds.items()}
 
-    def get_bind(self, bind_name: str = DEFAULT_BIND_NAME) -> Union[SQLAlchemyBind, SQLAlchemyAsyncBind]:
+    def get_bind(
+        self, bind_name: str = DEFAULT_BIND_NAME
+    ) -> Union[SQLAlchemyBind, SQLAlchemyAsyncBind]:
         try:
             return self.__binds[bind_name]
         except KeyError as err:
             raise NotInitializedBind(f"Bind not initialized")
 
-    def get_session(self, bind_name: str = DEFAULT_BIND_NAME) -> Union[Session, AsyncSession]:
+    def get_session(
+        self, bind_name: str = DEFAULT_BIND_NAME
+    ) -> Union[Session, AsyncSession]:
         return self.get_bind(bind_name).session_class()
 
     def get_mapper(self, bind_name: str = DEFAULT_BIND_NAME) -> registry:

@@ -27,6 +27,22 @@ def sa_manager() -> SQLAlchemyBindManager:
 
 
 @pytest.fixture
+def repository_class(model_class) -> Type[SQLAlchemyRepository]:
+    class MyRepository(SQLAlchemyRepository[model_class]):
+        _model = model_class
+
+    return MyRepository
+
+
+@pytest.fixture
+def related_repository_class(related_model_classes) -> Type[SQLAlchemyRepository]:
+    class ParentRepository(SQLAlchemyRepository[related_model_classes[0]]):
+        _model = related_model_classes[0]
+
+    return ParentRepository
+
+
+@pytest.fixture
 def model_class(sa_manager) -> Type:
     default_bind = sa_manager.get_binds()["default"]
 
@@ -39,14 +55,6 @@ def model_class(sa_manager) -> Type:
     default_bind.registry_mapper.metadata.create_all(default_bind.engine)
 
     return MyModel
-
-
-@pytest.fixture
-def repository_class(model_class) -> Type[SQLAlchemyRepository]:
-    class MyRepository(SQLAlchemyRepository[model_class]):
-        _model = model_class
-
-    return MyRepository
 
 
 @pytest.fixture
@@ -77,11 +85,3 @@ def related_model_classes(sa_manager) -> Tuple[Type, Type]:
     default_bind.registry_mapper.metadata.create_all(default_bind.engine)
 
     return ParentModel, ChildModel
-
-
-@pytest.fixture
-def related_repository_class(related_model_classes) -> Type[SQLAlchemyRepository]:
-    class ParentRepository(SQLAlchemyRepository[related_model_classes[0]]):
-        _model = related_model_classes[0]
-
-    return ParentRepository
