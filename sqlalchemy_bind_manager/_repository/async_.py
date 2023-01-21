@@ -77,7 +77,8 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         :raises ModelNotFound: No model has been found using the primary key
         """
         # TODO: implement get_many()
-        model = await self._session.get(self._model, identifier)  # type: ignore
+        async with self._session as session:
+            model = await session.get(self._model, identifier)  # type: ignore
         if model is None:
             raise ModelNotFound("No rows found for provided primary key.")
         return model

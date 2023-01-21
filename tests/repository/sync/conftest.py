@@ -52,6 +52,10 @@ def model_class(sa_manager) -> Type:
 
     class MyModel(default_bind.model_declarative_base):
         __tablename__ = "mymodel"
+        # required in order to access columns with server defaults
+        # or SQL expression defaults, subsequent to a flush, without
+        # triggering an expired load
+        __mapper_args__ = {"eager_defaults": True}
 
         model_id = Column(Integer, primary_key=True, autoincrement=True)
         name = Column(String)
@@ -67,16 +71,24 @@ def related_model_classes(sa_manager) -> Tuple[Type, Type]:
 
     class ParentModel(default_bind.model_declarative_base):
         __tablename__ = "parent_model"
+        # required in order to access columns with server defaults
+        # or SQL expression defaults, subsequent to a flush, without
+        # triggering an expired load
+        __mapper_args__ = {"eager_defaults": True}
 
         parent_model_id = Column(Integer, primary_key=True, autoincrement=True)
         name = Column(String)
 
         children = relationship(
-            "ChildModel", back_populates="parent", cascade="all, delete-orphan"
+            "ChildModel", back_populates="parent", cascade="all, delete-orphan", lazy="selectin"
         )
 
     class ChildModel(default_bind.model_declarative_base):
         __tablename__ = "child_model"
+        # required in order to access columns with server defaults
+        # or SQL expression defaults, subsequent to a flush, without
+        # triggering an expired load
+        __mapper_args__ = {"eager_defaults": True}
 
         child_model_id = Column(Integer, primary_key=True, autoincrement=True)
         parent_model_id = Column(
@@ -84,7 +96,7 @@ def related_model_classes(sa_manager) -> Tuple[Type, Type]:
         )
         name = Column(String)
 
-        parent = relationship("ParentModel", back_populates="children")
+        parent = relationship("ParentModel", back_populates="children", lazy="selectin")
 
     default_bind.registry_mapper.metadata.create_all(default_bind.engine)
 

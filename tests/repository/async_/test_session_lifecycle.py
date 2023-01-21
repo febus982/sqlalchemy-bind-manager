@@ -96,3 +96,42 @@ async def test_model_ops_using_different_sessions(
     assert model_1.name == "StillSomeoneElse"
     assert model_3.name == "StillSomeoneElse"
     assert model_3 is not model_1
+
+
+async def test_update_model_doesnt_update_other_models_from_same_repo(repository_class, model_class, sa_manager):
+    repo = repository_class(sa_manager)
+
+    # Populate a database entry to be used for tests
+    model1 = model_class(
+        name="Someone",
+    )
+    model2 = model_class(
+        name="SomeoneElse",
+    )
+    await repo.save(model1)
+    await repo.save(model2)
+    assert model1.model_id is not None
+    assert model2.model_id is not None
+
+    # Retrieve the model
+    new_model1 = await repo.get(model1.model_id)
+    new_model2 = await repo.get(model2.model_id)
+    assert new_model1 != model1
+    assert new_model1.model_id == model1.model_id
+
+    # Update both models
+    new_model1.name = "StillSomeoneElse"
+    new_model2.name = "IsThisSomeoneElse?"
+    await repo.save(new_model1)
+
+    # Check model1 has been updated
+    updated_model1 = await repo.get(model1.model_id)
+    assert updated_model1 != new_model1
+    assert updated_model1.model_id == new_model1.model_id
+    assert updated_model1.name == "StillSomeoneElse"
+
+    # Check model2 has not been updated
+    updated_model2 = await repo.get(model2.model_id)
+    assert updated_model2 != new_model2
+    assert updated_model2.model_id == new_model2.model_id
+    assert updated_model2.name == "SomeoneElse"

@@ -81,6 +81,7 @@ class SQLAlchemyBindManager:
         engine_options.setdefault("future", True)
 
         session_options: dict = config.session_options or {}
+        session_options.setdefault("expire_on_commit", False)
 
         if config.engine_async:
             self.__binds[name] = self.__build_async_bind(
