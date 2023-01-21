@@ -62,7 +62,7 @@ async def test_find_ordered(repository_class, model_class, sa_manager):
     assert results2[0].name == "Abbott"
     assert results2[1].name == "Costello"
 
-    results3 = [m  for m in await repo.find(order_by=(("name", SortDirection.DESC),))]
+    results3 = [m for m in await repo.find(order_by=(("name", SortDirection.DESC),))]
     assert results3[1].name == "Abbott"
     assert results3[0].name == "Costello"
 
