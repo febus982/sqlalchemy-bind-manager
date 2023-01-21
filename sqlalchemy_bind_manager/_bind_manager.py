@@ -1,9 +1,10 @@
+from asyncio import current_task
 from typing import Dict, Union, Callable
 
 from pydantic import BaseModel
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.engine import Engine
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, AsyncEngine
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, AsyncEngine, async_scoped_session
 from sqlalchemy.orm import sessionmaker, Session, scoped_session
 from sqlalchemy.orm.decl_api import registry
 
@@ -127,7 +128,7 @@ class SQLAlchemyBindManager:
         return SQLAlchemyAsyncBind(
             engine=engine,
             registry_mapper=registry_mapper,
-            session_class=scoped_session(session, self.__scopefunc)
+            session_class=async_scoped_session(session, scopefunc=current_task)
             if self.__scoped
             else session,
             model_declarative_base=registry_mapper.generate_base(),
