@@ -21,7 +21,8 @@ def multiple_config():
             engine_options=dict(connect_args={"check_same_thread": False}),
         ),
         "async": SQLAlchemyBindConfig(
-            engine_url="postgresql+asyncpg://scott:tiger@localhost/test",
+            engine_url=f"sqlite+aiosqlite:///{uuid4()}.db",
+            engine_options=dict(connect_args={"check_same_thread": False}),
             engine_async=True,
         ),
     }
