@@ -1,6 +1,6 @@
 from abc import ABC
 from asyncio import get_event_loop
-from typing import Union, Generic, Tuple, AsyncIterable, Iterable
+from typing import Union, Generic, Tuple, Iterable, List
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -99,7 +99,7 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         self,
         order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
         **search_params,
-    ) -> AsyncIterable[MODEL]:
+    ) -> List[MODEL]:
         """Find models using filters
 
         E.g.
@@ -108,7 +108,7 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         :param order_by:
         :param search_params: Any keyword argument to be used as equality filter
         :return: A collection of models
-        :rtype: Iterable
+        :rtype: List
         """
         stmt = select(self._model)  # type: ignore
         stmt = self._filter_select(stmt, **search_params)
@@ -118,8 +118,8 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
 
         async with self._session as session:  # type: ignore
             result = await session.execute(stmt)
-            for model_obj in result.scalars():
-                yield model_obj
+
+        return [x for x in result.scalars()]
 
     async def _commit(self, session: AsyncSession) -> None:
         """Commits the session and handles rollback on errors.
