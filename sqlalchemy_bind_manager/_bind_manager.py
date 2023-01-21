@@ -9,7 +9,6 @@ from sqlalchemy.orm.decl_api import registry
 
 from sqlalchemy_bind_manager.exceptions import (
     NotInitializedBind,
-    UnsupportedBind,
     InvalidConfig,
 )
 
