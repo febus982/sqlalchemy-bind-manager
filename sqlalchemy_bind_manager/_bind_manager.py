@@ -1,5 +1,4 @@
-from asyncio import current_task
-from typing import Dict, Union, Callable
+from typing import Dict, Union
 
 from pydantic import BaseModel
 from sqlalchemy import create_engine, MetaData
@@ -8,7 +7,6 @@ from sqlalchemy.ext.asyncio import (
     AsyncSession,
     create_async_engine,
     AsyncEngine,
-    async_scoped_session,
 )
 from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.orm.decl_api import registry
@@ -158,8 +156,8 @@ class SQLAlchemyBindManager:
     ) -> Union[SQLAlchemyBind, SQLAlchemyAsyncBind]:
         try:
             return self.__binds[bind_name]
-        except KeyError as err:
-            raise NotInitializedBind(f"Bind not initialized")
+        except KeyError:
+            raise NotInitializedBind("Bind not initialized")
 
     def get_session(
         self, bind_name: str = DEFAULT_BIND_NAME
