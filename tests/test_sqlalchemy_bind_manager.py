@@ -105,12 +105,8 @@ def test_multiple_binds(multiple_config):
     assert default_bind is not None
     assert isinstance(sa_manager.get_mapper(), registry)
     assert isinstance(sa_manager.get_session(), Session)
-    with pytest.raises(UnsupportedBind):
-        sa_manager.get_async_session()
 
     async_bind = sa_manager.get_binds().get("async")
     assert async_bind is not None
     assert isinstance(sa_manager.get_mapper("async"), registry)
-    assert isinstance(sa_manager.get_async_session("async"), AsyncSession)
-    with pytest.raises(UnsupportedBind):
-        sa_manager.get_session("async")
+    assert isinstance(sa_manager.get_session("async"), AsyncSession)
