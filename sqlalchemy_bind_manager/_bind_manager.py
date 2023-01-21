@@ -138,7 +138,7 @@ class SQLAlchemyBindManager:
         for bind in self.__binds.values():
             bind.session_class.remove()
 
-    def get_binds(self) -> Dict[str, SQLAlchemyBind]:
+    def get_binds(self) -> Dict[str, Union[SQLAlchemyBind, SQLAlchemyAsyncBind]]:
         return self.__binds
 
     def get_bind_mappers_metadata(self) -> Dict[str, MetaData]:
@@ -151,7 +151,7 @@ class SQLAlchemyBindManager:
         """
         return {k: b.registry_mapper.metadata for k, b in self.__binds.items()}
 
-    def get_bind(self, bind_name: str = DEFAULT_BIND_NAME) -> SQLAlchemyBind:
+    def get_bind(self, bind_name: str = DEFAULT_BIND_NAME) -> Union[SQLAlchemyBind, SQLAlchemyAsyncBind]:
         try:
             return self.__binds[bind_name]
         except KeyError as err:
