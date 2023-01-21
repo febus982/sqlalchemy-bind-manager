@@ -51,12 +51,6 @@ async def test_failed_model_does_rollback_and_reraises_exception(
 
 
 async def test_update_model(repository_class, model_class, sa_manager):
-    """
-    This test ensure that, even if the session gets closed after
-    each repository operation, we still keep track of model changes,
-    and we are able to persist the changes using different session
-    objects.
-    """
     repo = repository_class(sa_manager)
 
     # Populate a database entry to be used for tests
