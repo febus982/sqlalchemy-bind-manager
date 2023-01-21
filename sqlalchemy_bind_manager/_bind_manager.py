@@ -22,8 +22,17 @@ class SQLAlchemyBindConfig(BaseModel):
 
 
 class SQLAlchemyBind(BaseModel):
-    bind_async: bool
-    engine: Union[Engine, AsyncEngine]
+    engine: Engine
+    model_declarative_base: type
+    registry_mapper: registry
+    session_class: Union[sessionmaker, scoped_session]
+
+    class Config:
+        arbitrary_types_allowed = True
+
+
+class SQLAlchemyAsyncBind(BaseModel):
+    engine: AsyncEngine
     model_declarative_base: type
     registry_mapper: registry
     session_class: Union[sessionmaker, scoped_session]
@@ -37,7 +46,7 @@ DEFAULT_BIND_NAME = "default"
 
 
 class SQLAlchemyBindManager:
-    __binds: Dict[str, SQLAlchemyBind]
+    __binds: Dict[str, Union[SQLAlchemyBind, SQLAlchemyAsyncBind]]
     __scoped: bool
     __scopefunc: Union[Callable, None]
 
@@ -101,7 +110,6 @@ class SQLAlchemyBindManager:
             if self.__scoped
             else session,
             model_declarative_base=registry_mapper.generate_base(),
-            bind_async=False,
         )
 
     def __build_async_bind(
@@ -109,7 +117,7 @@ class SQLAlchemyBindManager:
         engine_url: str,
         engine_options: dict,
         session_options: dict,
-    ) -> SQLAlchemyBind:
+    ) -> SQLAlchemyAsyncBind:
         registry_mapper = registry()
         engine = create_async_engine(engine_url, **engine_options)
         session = sessionmaker(
@@ -117,14 +125,13 @@ class SQLAlchemyBindManager:
             class_=AsyncSession,
             **session_options,
         )
-        return SQLAlchemyBind(
+        return SQLAlchemyAsyncBind(
             engine=engine,
             registry_mapper=registry_mapper,
             session_class=scoped_session(session, self.__scopefunc)
             if self.__scoped
             else session,
             model_declarative_base=registry_mapper.generate_base(),
-            bind_async=True,
         )
 
     def teardown_scoped_sessions(self):
@@ -152,7 +159,7 @@ class SQLAlchemyBindManager:
 
     def get_session(self, bind_name: str = DEFAULT_BIND_NAME) -> Session:
         _bind = self.get_bind(bind_name)
-        if not _bind.bind_async:
+        if isinstance(_bind, SQLAlchemyBind):
             return _bind.session_class()
         else:
             raise UnsupportedBind(
@@ -161,7 +168,7 @@ class SQLAlchemyBindManager:
 
     def get_async_session(self, bind_name: str = DEFAULT_BIND_NAME) -> AsyncSession:
         _bind = self.get_bind(bind_name)
-        if _bind.bind_async:
+        if isinstance(_bind, SQLAlchemyAsyncBind):
             return _bind.session_class()
         else:
             raise UnsupportedBind("Requested bind is synchronous. Use `get_session`")
