@@ -1,5 +1,6 @@
 from ._bind_manager import (
     SQLAlchemyBindManager,
+    SQLAlchemyAsyncBindConfig,
     SQLAlchemyBindConfig,
     SQLAlchemyBind,
     SQLAlchemyConfig,

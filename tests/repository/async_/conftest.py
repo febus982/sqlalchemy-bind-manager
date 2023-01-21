@@ -10,17 +10,17 @@ from sqlalchemy_bind_manager import (
     SQLAlchemyBindManager,
     SQLAlchemyAsyncRepository,
     SQLAlchemyBindConfig,
+    SQLAlchemyAsyncBindConfig,
 )
 
 
 @pytest.fixture
 def sa_manager() -> SQLAlchemyBindManager:
     test_db_path = f"./{uuid4()}.db"
-    config = SQLAlchemyBindConfig(
+    config = SQLAlchemyAsyncBindConfig(
         engine_url=f"sqlite+aiosqlite:///{test_db_path}",
         engine_options=dict(connect_args={"check_same_thread": False}),
         session_options=dict(expire_on_commit=False),
-        engine_async=True,
     )
     yield SQLAlchemyBindManager(config)
     try:

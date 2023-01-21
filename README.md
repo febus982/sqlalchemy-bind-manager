@@ -128,16 +128,13 @@ Make sure you check Python [Threading](https://docs.python.org/3/library/threadi
 documentation, especially the [Thread-local Data](https://docs.python.org/3/library/threading.html#thread-local-data)
 chapter to avoid issues.
 
-### Asynchronous database binds [In development]
-
-🚨 The support for async binds is still in development and its interfaces might be subject to changes.
+### Asynchronous database binds
 
 Is it possible to supply configurations for asyncio supported engines.
 
 ```python
-config = SQLAlchemyBindConfig(
+config = SQLAlchemyAsyncBindConfig(
     engine_url="postgresql+asyncpg://scott:tiger@localhost/test",
-    engine_async=True,
 )
 ```
 

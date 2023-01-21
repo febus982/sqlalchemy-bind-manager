@@ -20,7 +20,12 @@ from sqlalchemy_bind_manager.exceptions import (
 
 
 class SQLAlchemyBindConfig(BaseModel):
-    engine_async: bool = False
+    engine_options: Union[Dict, None]
+    engine_url: str
+    session_options: Union[Dict, None]
+
+
+class SQLAlchemyAsyncBindConfig(BaseModel):
     engine_options: Union[Dict, None]
     engine_url: str
     session_options: Union[Dict, None]
@@ -64,10 +69,17 @@ class SQLAlchemyBindManager:
         else:
             self.__init_bind(DEFAULT_BIND_NAME, config)
 
-    def __init_bind(self, name: str, config: SQLAlchemyBindConfig):
-        if not isinstance(config, SQLAlchemyBindConfig):
+    def __init_bind(
+        self, name: str, config: Union[SQLAlchemyBindConfig, SQLAlchemyAsyncBindConfig]
+    ):
+        if not any(
+            [
+                isinstance(config, SQLAlchemyBindConfig),
+                isinstance(config, SQLAlchemyAsyncBindConfig),
+            ]
+        ):
             raise InvalidConfig(
-                f"Config for bind `{name}` is not a SQLAlchemyBindConfig object"
+                f"Config for bind `{name}` is not a SQLAlchemyBindConfig or SQLAlchemyAsyncBindConfig object"
             )
 
         engine_options: dict = config.engine_options or {}
@@ -77,7 +89,7 @@ class SQLAlchemyBindManager:
         session_options: dict = config.session_options or {}
         session_options.setdefault("expire_on_commit", False)
 
-        if config.engine_async:
+        if isinstance(config, SQLAlchemyAsyncBindConfig):
             self.__binds[name] = self.__build_async_bind(
                 engine_url=config.engine_url,
                 engine_options=engine_options,

@@ -5,7 +5,11 @@ from uuid import uuid4
 import pytest
 from sqlalchemy.orm import clear_mappers
 
-from sqlalchemy_bind_manager import SQLAlchemyBindConfig, SQLAlchemyBindManager
+from sqlalchemy_bind_manager import (
+    SQLAlchemyBindConfig,
+    SQLAlchemyBindManager,
+    SQLAlchemyAsyncBindConfig,
+)
 
 
 @pytest.fixture
@@ -17,10 +21,9 @@ def sync_async_sa_manager(multiple_config) -> Iterator[SQLAlchemyBindManager]:
             engine_url=f"sqlite:///{test_sync_db_path}",
             engine_options=dict(connect_args={"check_same_thread": False}),
         ),
-        "async": SQLAlchemyBindConfig(
+        "async": SQLAlchemyAsyncBindConfig(
             engine_url=f"sqlite+aiosqlite:///{test_sync_db_path}",
             engine_options=dict(connect_args={"check_same_thread": False}),
-            engine_async=True,
         ),
     }
 
