@@ -1,5 +1,7 @@
-test:
+test: mypy
 	poetry run pytest -n auto --cov
+
+mypy:
 	poetry run mypy
 
 format:

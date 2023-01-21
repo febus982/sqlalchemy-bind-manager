@@ -1,6 +1,6 @@
 from abc import ABC
 from asyncio import get_event_loop
-from typing import Union, Generic, Iterable, Tuple
+from typing import Union, Generic, Tuple, AsyncIterable, Iterable
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -99,7 +99,7 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         self,
         order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
         **search_params,
-    ) -> Iterable[MODEL]:
+    ) -> AsyncIterable[MODEL]:
         """Find models using filters
 
         E.g.

@@ -68,8 +68,8 @@ class SQLAlchemySyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         :raises ModelNotFound: No model has been found using the primary key
         """
         # TODO: implement get_many()
-        with self._session as session:
-            model = session.get(self._model, identifier)  # type: ignore
+        with self._session as session:  # type: ignore
+            model = session.get(self._model, identifier)
         if model is None:
             raise ModelNotFound("No rows found for provided primary key.")
         return model
