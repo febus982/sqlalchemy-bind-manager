@@ -80,7 +80,10 @@ def related_model_classes(sa_manager) -> Tuple[Type, Type]:
         name = Column(String)
 
         children = relationship(
-            "ChildModel", back_populates="parent", cascade="all, delete-orphan", lazy="selectin"
+            "ChildModel",
+            back_populates="parent",
+            cascade="all, delete-orphan",
+            lazy="selectin",
         )
 
     class ChildModel(default_bind.model_declarative_base):

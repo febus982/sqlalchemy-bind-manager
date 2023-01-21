@@ -78,7 +78,9 @@ def test_model_ops_using_different_sessions(repository_class, model_class, sa_ma
     assert model_3 is not model_1
 
 
-def test_update_model_doesnt_update_other_models_from_same_repo(repository_class, model_class, sa_manager):
+def test_update_model_doesnt_update_other_models_from_same_repo(
+    repository_class, model_class, sa_manager
+):
     repo = repository_class(sa_manager)
 
     # Populate a database entry to be used for tests
