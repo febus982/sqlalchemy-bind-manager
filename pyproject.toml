@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "sqlalchemy-bind-manager"
-version = "0.1.7"
+version = "0.2.0"
 description = ""
 authors = ["Federico Busetti <729029+febus982@users.noreply.github.com>"]
 readme = "README.md"
@@ -11,18 +11,30 @@ python = ">=3.8,<3.12"
 pydantic = "~1.10.2"
 SQLAlchemy = { version = "~1.4.45", extras = ["asyncio", "mypy"] }
 
+[tool.poetry.group.dev]
+optional = true
+
 [tool.poetry.group.dev.dependencies]
+aiosqlite = "~0.18.0"
 coverage = "~6.5.0"
 black = "~22.10.0"
 flake8 = "~5.0.4"
 mypy = "~0.990"
 pytest = "~7.2.0"
-pytest-cov = "^4.0.0"
+pytest-asyncio = "~0.20.3"
+pytest-cov = "~4.0.0"
 pytest-factoryboy = "~2.5.0"
 pytest-xdist = "~3.0.2"
 sqlalchemy-stubs = "~0.4"
-asyncpg = "~0.27.0"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+minversion = "6.0"
+addopts = "-n auto --cov-report=term-missing"
+testpaths = [
+    "tests",
+]
