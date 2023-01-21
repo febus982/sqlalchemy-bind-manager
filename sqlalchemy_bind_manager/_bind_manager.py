@@ -10,7 +10,7 @@ from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     async_scoped_session,
 )
-from sqlalchemy.orm import sessionmaker, Session, scoped_session
+from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.orm.decl_api import registry
 
 from sqlalchemy_bind_manager.exceptions import (
@@ -30,7 +30,7 @@ class SQLAlchemyBind(BaseModel):
     engine: Engine
     model_declarative_base: type
     registry_mapper: registry
-    session_class: Union[sessionmaker, scoped_session]
+    session_class: sessionmaker
 
     class Config:
         arbitrary_types_allowed = True
@@ -40,7 +40,7 @@ class SQLAlchemyAsyncBind(BaseModel):
     engine: AsyncEngine
     model_declarative_base: type
     registry_mapper: registry
-    session_class: Union[sessionmaker, scoped_session]
+    session_class: sessionmaker
 
     class Config:
         arbitrary_types_allowed = True
@@ -52,18 +52,12 @@ DEFAULT_BIND_NAME = "default"
 
 class SQLAlchemyBindManager:
     __binds: Dict[str, Union[SQLAlchemyBind, SQLAlchemyAsyncBind]]
-    __scoped: bool
-    __scopefunc: Union[Callable, None]
 
     def __init__(
         self,
         config: SQLAlchemyConfig,
-        scoped: bool = False,
-        scopefunc: Union[Callable, None] = None,
     ) -> None:
         self.__binds = {}
-        self.__scoped = scoped
-        self.__scopefunc = scopefunc
         if isinstance(config, dict):
             for name, conf in config.items():
                 self.__init_bind(name, conf)
@@ -104,17 +98,14 @@ class SQLAlchemyBindManager:
     ) -> SQLAlchemyBind:
         registry_mapper = registry()
         engine = create_engine(engine_url, **engine_options)
-        session = sessionmaker(
-            bind=engine,
-            class_=Session,
-            **session_options,
-        )
         return SQLAlchemyBind(
             engine=engine,
             registry_mapper=registry_mapper,
-            session_class=scoped_session(session, self.__scopefunc)
-            if self.__scoped
-            else session,
+            session_class=sessionmaker(
+                bind=engine,
+                class_=Session,
+                **session_options,
+            ),
             model_declarative_base=registry_mapper.generate_base(),
         )
 
@@ -126,23 +117,16 @@ class SQLAlchemyBindManager:
     ) -> SQLAlchemyAsyncBind:
         registry_mapper = registry()
         engine = create_async_engine(engine_url, **engine_options)
-        session = sessionmaker(
-            bind=engine,
-            class_=AsyncSession,
-            **session_options,
-        )
         return SQLAlchemyAsyncBind(
             engine=engine,
             registry_mapper=registry_mapper,
-            session_class=async_scoped_session(session, scopefunc=current_task)
-            if self.__scoped
-            else session,
+            session_class=sessionmaker(
+                bind=engine,
+                class_=AsyncSession,
+                **session_options,
+            ),
             model_declarative_base=registry_mapper.generate_base(),
         )
-
-    def teardown_scoped_sessions(self):
-        for bind in self.__binds.values():
-            bind.session_class.remove()
 
     def get_binds(self) -> Dict[str, Union[SQLAlchemyBind, SQLAlchemyAsyncBind]]:
         return self.__binds
