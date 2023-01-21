@@ -31,6 +31,10 @@ class SQLAlchemySyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         self._session = bind.session_class()
 
     def __del__(self):
+        # If we fail to initialise the repository we might have no session attribute
+        if not getattr(self, "_session", None):
+            return
+
         self._session.close()
 
     def save(self, instance: MODEL) -> MODEL:

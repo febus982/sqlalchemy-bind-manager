@@ -22,7 +22,11 @@ def sa_manager() -> SQLAlchemyBindManager:
         session_options=dict(expire_on_commit=False),
     )
     yield SQLAlchemyBindManager(config)
-    os.unlink(test_db_path)
+    try:
+        os.unlink(test_db_path)
+    except FileNotFoundError:
+        pass
+
     clear_mappers()
 
 

@@ -36,6 +36,10 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         self._session = bind.session_class()
 
     def __del__(self):
+        # If we fail to initialise the repository we might have no session attribute
+        if not getattr(self, "_session", None):
+            return
+
         loop = get_event_loop()
         if loop.is_running():
             loop.create_task(self._session.close())

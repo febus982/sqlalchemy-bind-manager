@@ -23,7 +23,11 @@ def sa_manager() -> SQLAlchemyBindManager:
         engine_async=True,
     )
     yield SQLAlchemyBindManager(config)
-    os.unlink(test_db_path)
+    try:
+        os.unlink(test_db_path)
+    except FileNotFoundError:
+        pass
+
     clear_mappers()
 
 
