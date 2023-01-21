@@ -1,4 +1,5 @@
 from abc import ABC
+from asyncio import get_event_loop
 from typing import Union, Generic, Iterable, Tuple
 
 from sqlalchemy import select
@@ -35,7 +36,11 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         self._session = bind.session_class()
 
     def __del__(self):
-        self._session.close()
+        loop = get_event_loop()
+        if loop.is_running():
+            loop.create_task(self._session.close())
+        else:
+            loop.run_until_complete(self._session.close())
 
     async def save(self, instance: MODEL) -> MODEL:
         """Persist a model.
