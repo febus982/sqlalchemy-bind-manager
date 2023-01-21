@@ -18,6 +18,7 @@ def test_get_returns_model(repository_class, model_class, sa_manager):
     assert result.name == "Someone"
     assert isinstance(result, model_class)
 
+
 def test_get_raises_exception_if_not_found(repository_class, sa_manager):
     repo = repository_class(sa_manager)
 

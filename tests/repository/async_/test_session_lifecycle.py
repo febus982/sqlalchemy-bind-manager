@@ -21,7 +21,9 @@ async def test_session_is_destroyed_on_cleanup(repository_class, sa_manager):
     mocked_close.assert_called_once()
 
 
-def test_session_is_destroyed_on_cleanup_if_loop_is_not_running(repository_class, sa_manager):
+def test_session_is_destroyed_on_cleanup_if_loop_is_not_running(
+    repository_class, sa_manager
+):
     # Running the test without a loop will trigger the loop creation
     repo = repository_class(sa_manager)
     original_session_close = repo._session.close
