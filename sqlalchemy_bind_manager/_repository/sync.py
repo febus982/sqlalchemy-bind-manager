@@ -1,32 +1,22 @@
 from abc import ABC
-from enum import Enum
-from functools import partial
-from typing import Union, TypeVar, Generic, Type, Iterable, Tuple
+from typing import Union, Generic, Type, Iterable, Tuple
 
-from sqlalchemy import select, desc, asc
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session, object_mapper, Mapper, class_mapper
 from sqlalchemy.orm.exc import UnmappedInstanceError
 from sqlalchemy.sql import Select
 
-from ._bind_manager import SQLAlchemyBindManager, DEFAULT_BIND_NAME
-from .exceptions import (
+from .._bind_manager import SQLAlchemyBindManager, DEFAULT_BIND_NAME, SQLAlchemyBind
+from ..exceptions import (
     ModelNotFound,
     UnmappedProperty,
-    InvalidModel,
+    InvalidModel, UnsupportedBind,
 )
+from .common import MODEL, PRIMARY_KEY, SortDirection
 
 
-MODEL = TypeVar("MODEL")
-PRIMARY_KEY = Union[str, int, tuple, dict]
-
-
-class SortDirection(Enum):
-    ASC = partial(asc)
-    DESC = partial(desc)
-
-
-class SQLAlchemyRepository(Generic[MODEL], ABC):
+class SQLAlchemySyncRepository(Generic[MODEL], ABC):
     _session: Session
     _model: Type[MODEL]
 
@@ -40,7 +30,10 @@ class SQLAlchemyRepository(Generic[MODEL], ABC):
         :param bind_name: The name of the bind as defined in the SQLAlchemyConfig. defaults to "default"
         """
         super().__init__()
-        self._session = sa_manager.get_bind(bind_name).session_class()
+        bind = sa_manager.get_bind(bind_name)
+        if not isinstance(bind, SQLAlchemyBind):
+            raise UnsupportedBind("Bind is not an instance of SQLAlchemyBind")
+        self._session = bind.session_class()
 
     def __del__(self):
         self._session.close()
