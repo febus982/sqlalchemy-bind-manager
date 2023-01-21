@@ -49,7 +49,11 @@ class SQLAlchemyAsyncBind(BaseModel):
         arbitrary_types_allowed = True
 
 
-SQLAlchemyConfig = Union[Dict[str, SQLAlchemyBindConfig], SQLAlchemyBindConfig]
+SQLAlchemyConfig = Union[
+    Dict[str, Union[SQLAlchemyBindConfig, SQLAlchemyAsyncBindConfig]],
+    SQLAlchemyBindConfig,
+    SQLAlchemyAsyncBindConfig,
+]
 DEFAULT_BIND_NAME = "default"
 
 
