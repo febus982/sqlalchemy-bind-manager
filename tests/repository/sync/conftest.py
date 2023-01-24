@@ -48,7 +48,7 @@ def related_repository_class(related_model_classes) -> Type[SQLAlchemyRepository
 
 @pytest.fixture
 def model_class(sa_manager) -> Type:
-    default_bind = sa_manager.get_binds()["default"]
+    default_bind = sa_manager.get_bind()
 
     class MyModel(default_bind.model_declarative_base):
         __tablename__ = "mymodel"
@@ -67,7 +67,7 @@ def model_class(sa_manager) -> Type:
 
 @pytest.fixture
 def related_model_classes(sa_manager) -> Tuple[Type, Type]:
-    default_bind = sa_manager.get_binds()["default"]
+    default_bind = sa_manager.get_bind()
 
     class ParentModel(default_bind.model_declarative_base):
         __tablename__ = "parent_model"
