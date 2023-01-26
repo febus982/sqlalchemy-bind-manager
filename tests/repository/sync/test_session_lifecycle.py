@@ -1,24 +1,7 @@
-from unittest.mock import patch
-
 import pytest
 
 from sqlalchemy_bind_manager import SQLAlchemySyncRepository
 from sqlalchemy_bind_manager.exceptions import UnsupportedBind
-
-
-def test_session_is_removed_on_cleanup(repository_class, sa_manager):
-    repo = repository_class(sa_manager)
-    original_session_remove = repo.Session.remove
-
-    with patch.object(
-        repo.Session,
-        "remove",
-        wraps=original_session_remove,
-    ) as mocked_remove:
-        # This should trigger the garbage collector and close the session
-        repo = None
-
-    mocked_remove.assert_called_once()
 
 
 def test_repository_fails_if_not_sync_bind(sync_async_sa_manager):
@@ -29,9 +12,9 @@ def test_repository_fails_if_not_sync_bind(sync_async_sa_manager):
         SyncRepo(sync_async_sa_manager, "async")
 
 
-def test_model_ops_using_different_sessions(repository_class, model_class, sa_manager):
+def test_model_ops_using_different_uows(repository_class, model_class, sa_manager):
     """
-    This test ensure that, even if the session gets closed after
+    This test ensure that, even if the UOW session gets closed after
     each repository operation, we still keep track of model changes,
     and we are able to persist the changes using different session
     objects.
@@ -39,9 +22,9 @@ def test_model_ops_using_different_sessions(repository_class, model_class, sa_ma
     repo1 = repository_class(sa_manager)
     repo2 = repository_class(sa_manager)
     repo3 = repository_class(sa_manager)
-    assert repo1.Session is not repo2.Session
-    assert repo1.Session is not repo3.Session
-    assert repo2.Session is not repo3.Session
+    assert repo1._UOW is not repo2._UOW
+    assert repo1._UOW is not repo3._UOW
+    assert repo2._UOW is not repo3._UOW
 
     # Populate a database entry to be used for tests using first repo
     model_1 = model_class(

@@ -1,12 +1,12 @@
 from abc import ABC
 from contextlib import contextmanager
 from typing import Union, Generic, Iterable, Tuple, List, Iterator
-from uuid import uuid4
 
 from sqlalchemy import select
-from sqlalchemy.orm import Session, scoped_session
+from sqlalchemy.orm import scoped_session
 
 from .._bind_manager import SQLAlchemyBindManager, DEFAULT_BIND_NAME, SQLAlchemyBind
+from .._unit_of_work import SAUnitOfWork
 from ..exceptions import (
     ModelNotFound,
     UnsupportedBind,
@@ -15,7 +15,7 @@ from .common import MODEL, PRIMARY_KEY, SortDirection, BaseRepository
 
 
 class SQLAlchemySyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
-    Session: scoped_session
+    _UOW: SAUnitOfWork
 
     def __init__(
         self, sa_manager: SQLAlchemyBindManager, bind_name: str = DEFAULT_BIND_NAME
@@ -30,25 +30,15 @@ class SQLAlchemySyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         if not isinstance(bind, SQLAlchemyBind):
             raise UnsupportedBind("Bind is not an instance of SQLAlchemyBind")
         super().__init__()
-        u = str(uuid4())
-        self.Session = scoped_session(bind.session_class, scopefunc=lambda: str(u))
-
-    def __del__(self):
-        # If we fail to initialise the repository we might have no session attribute
-        if not getattr(self, "Session", None):
-            return
-
-        self.Session.remove()
+        self._UOW = SAUnitOfWork(sa_manager, bind_name)
 
     @contextmanager
     def _get_session(
         self, session: Union[scoped_session, None] = None, commit: bool = True
     ) -> Iterator[scoped_session]:
         if not session:
-            with self.Session() as _session:
+            with self._UOW.get_session(commit) as _session:
                 yield _session
-                if commit:
-                    self._commit(_session)
         else:
             yield session
 
@@ -63,7 +53,6 @@ class SQLAlchemySyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         """
         with self._get_session(session) as session:  # type: ignore
             session.add(instance)
-            self._commit(session)
         return instance
 
     def save_many(
@@ -78,7 +67,6 @@ class SQLAlchemySyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         """
         with self._get_session(session) as session:  # type: ignore
             session.add_all(instances)
-            self._commit(session)
         return instances
 
     def get(
@@ -113,7 +101,6 @@ class SQLAlchemySyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         obj = entity if self._is_mapped_object(entity) else self.get(entity)  # type: ignore
         with self._get_session(session) as session:
             session.delete(obj)
-            self._commit(session)
 
     def find(
         self,
@@ -141,16 +128,3 @@ class SQLAlchemySyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         with self._get_session(session) as session:
             result = session.execute(stmt)
             return [x for x in result.scalars()]
-
-    def _commit(self, session: scoped_session) -> None:
-        """Commits the session and handles rollback on errors.
-
-        :param session: The session object.
-        :type session: Session
-        :raises Exception: Any error is re-raised after the rollback.
-        """
-        try:
-            session.commit()
-        except:
-            session.rollback()
-            raise
