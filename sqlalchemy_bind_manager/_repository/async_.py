@@ -1,9 +1,11 @@
 from abc import ABC
 from asyncio import get_event_loop
-from typing import Union, Generic, Tuple, Iterable, List
+from contextlib import asynccontextmanager
+from typing import Union, Generic, Tuple, Iterable, List, Iterator
+from uuid import uuid4
 
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.ext.asyncio import AsyncSession, async_scoped_session
 
 from .._bind_manager import (
     SQLAlchemyBindManager,
@@ -18,7 +20,7 @@ from .common import MODEL, PRIMARY_KEY, SortDirection, BaseRepository
 
 
 class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
-    _session: AsyncSession
+    Session: async_scoped_session
 
     def __init__(
         self, sa_manager: SQLAlchemyBindManager, bind_name: str = DEFAULT_BIND_NAME
@@ -33,43 +35,66 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         bind = sa_manager.get_bind(bind_name)
         if not isinstance(bind, SQLAlchemyAsyncBind):
             raise UnsupportedBind("Bind is not an instance of SQLAlchemyBind")
-        self._session = bind.session_class()
+        u = str(uuid4())
+        self.Session = async_scoped_session(
+            bind.session_class, scopefunc=lambda: str(u)
+        )
 
     def __del__(self):
         # If we fail to initialise the repository we might have no session attribute
-        if not getattr(self, "_session", None):
+        if not getattr(self, "Session", None):
             return
 
         loop = get_event_loop()
         if loop.is_running():
-            loop.create_task(self._session.close())
+            loop.create_task(self.Session.remove())
         else:
-            loop.run_until_complete(self._session.close())
+            loop.run_until_complete(self.Session.remove())
 
-    async def save(self, instance: MODEL) -> MODEL:
+    @asynccontextmanager
+    async def _get_session(
+        self, session: Union[async_scoped_session, None] = None, commit: bool = True
+    ) -> Iterator[async_scoped_session]:
+        if not session:
+            async with self.Session() as _session:
+                yield _session
+                if commit:
+                    await self._commit(_session)
+        else:
+            yield session
+
+    async def save(
+        self, instance: MODEL, session: Union[async_scoped_session, None] = None
+    ) -> MODEL:
         """Persist a model.
 
         :param instance: A mapped object instance to be persisted
         :return: The model instance after being persisted (e.g. with primary key populated)
         """
-        async with self._session as session:  # type: ignore
+        async with self._get_session(session) as session:  # type: ignore
             session.add(instance)
             await self._commit(session)
         return instance
 
-    async def save_many(self, instances: Iterable[MODEL]) -> Iterable[MODEL]:
+    async def save_many(
+        self,
+        instances: Iterable[MODEL],
+        session: Union[async_scoped_session, None] = None,
+    ) -> Iterable[MODEL]:
         """Persist many models in a single database transaction.
 
         :param instances: A list of mapped objects to be persisted
         :type instances: Iterable
         :return: The model instances after being persisted (e.g. with primary keys populated)
         """
-        async with self._session as session:  # type: ignore
+        async with self._get_session(session) as session:  # type: ignore
             session.add_all(instances)
             await self._commit(session)
         return instances
 
-    async def get(self, identifier: PRIMARY_KEY) -> MODEL:
+    async def get(
+        self, identifier: PRIMARY_KEY, session: Union[async_scoped_session, None] = None
+    ) -> MODEL:
         """Get a model by primary key.
 
         :param identifier: The primary key
@@ -77,13 +102,17 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         :raises ModelNotFound: No model has been found using the primary key
         """
         # TODO: implement get_many()
-        async with self._session as session:
+        async with self._get_session(session) as session:
             model = await session.get(self._model, identifier)  # type: ignore
         if model is None:
             raise ModelNotFound("No rows found for provided primary key.")
         return model
 
-    async def delete(self, entity: Union[MODEL, PRIMARY_KEY]) -> None:
+    async def delete(
+        self,
+        entity: Union[MODEL, PRIMARY_KEY],
+        session: Union[async_scoped_session, None] = None,
+    ) -> None:
         """Deletes a model.
 
         :param entity: The model instance or the primary key
@@ -91,13 +120,14 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         """
         # TODO: delete without loading the model
         obj = entity if self._is_mapped_object(entity) else await self.get(entity)  # type: ignore
-        async with self._session as session:  # type: ignore
+        async with self._get_session(session) as session:  # type: ignore
             await session.delete(obj)
             await self._commit(session)
 
     async def find(
         self,
         order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
+        session: Union[async_scoped_session, None] = None,
         **search_params,
     ) -> List[MODEL]:
         """Find models using filters
@@ -116,7 +146,7 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         if order_by is not None:
             stmt = self._filter_order_by(stmt, order_by)
 
-        async with self._session as session:  # type: ignore
+        async with self._get_session(session) as session:  # type: ignore
             result = await session.execute(stmt)
 
         return [x for x in result.scalars()]
