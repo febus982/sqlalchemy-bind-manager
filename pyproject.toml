@@ -9,7 +9,7 @@ packages = [{include = "sqlalchemy_bind_manager"}]
 [tool.poetry.dependencies]
 python = ">=3.8,<3.12"
 pydantic = "~1.10.2"
-SQLAlchemy = { version = "~1.4.45", extras = ["asyncio", "mypy"] }
+SQLAlchemy = { version = "~2.0.0", extras = ["asyncio", "mypy"] }
 
 [tool.poetry.group.dev]
 optional = true
@@ -25,7 +25,6 @@ pytest-asyncio = "~0.20.3"
 pytest-cov = "~4.0.0"
 pytest-factoryboy = "~2.5.0"
 pytest-xdist = "~3.0.2"
-sqlalchemy-stubs = "~0.4"
 
 [build-system]
 requires = ["poetry-core"]
