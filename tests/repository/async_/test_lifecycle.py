@@ -1,42 +1,10 @@
-from unittest.mock import patch
+from unittest.mock import patch, AsyncMock
 
 import pytest
 
 from sqlalchemy_bind_manager import SQLAlchemyAsyncRepository
+from sqlalchemy_bind_manager._unit_of_work import SAAsyncUnitOfWork
 from sqlalchemy_bind_manager.exceptions import UnsupportedBind
-
-
-async def test_session_is_destroyed_on_cleanup(repository_class, sa_manager):
-    repo = repository_class(sa_manager)
-    original_session_remove = repo.Session.remove
-
-    with patch.object(
-        repo.Session,
-        "remove",
-        wraps=original_session_remove,
-    ) as mocked_remove:
-        # This should trigger the garbage collector and close the session
-        repo = None
-
-    mocked_remove.assert_called_once()
-
-
-def test_session_is_destroyed_on_cleanup_if_loop_is_not_running(
-    repository_class, sa_manager
-):
-    # Running the test without a loop will trigger the loop creation
-    repo = repository_class(sa_manager)
-    original_session_close = repo.Session.remove
-
-    with patch.object(
-        repo.Session,
-        "remove",
-        wraps=original_session_close,
-    ) as mocked_close:
-        # This should trigger the garbage collector and close the session
-        repo = None
-
-    mocked_close.assert_called_once()
 
 
 def test_repository_fails_if_not_async_bind(sync_async_sa_manager):
@@ -47,7 +15,7 @@ def test_repository_fails_if_not_async_bind(sync_async_sa_manager):
         AsyncRepo(sync_async_sa_manager, "sync")
 
 
-async def test_model_ops_using_different_sessions(
+async def test_model_ops_using_different_uows(
     repository_class, model_class, sa_manager
 ):
     """
@@ -59,9 +27,9 @@ async def test_model_ops_using_different_sessions(
     repo1 = repository_class(sa_manager)
     repo2 = repository_class(sa_manager)
     repo3 = repository_class(sa_manager)
-    assert repo1.Session is not repo2.Session
-    assert repo1.Session is not repo3.Session
-    assert repo2.Session is not repo3.Session
+    assert repo1._UOW is not repo2._UOW
+    assert repo1._UOW is not repo3._UOW
+    assert repo2._UOW is not repo3._UOW
 
     # Populate a database entry to be used for tests using first repo
     model_1 = model_class(
@@ -137,3 +105,43 @@ async def test_update_model_doesnt_update_other_models_from_same_repo(
     assert updated_model2 != new_model2
     assert updated_model2.model_id == new_model2.model_id
     assert updated_model2.name == "SomeoneElse"
+
+
+@patch.object(SAAsyncUnitOfWork, "_commit", return_value=None, new_callable=AsyncMock)
+async def test_commit_triggers_once_per_operation_using_internal_uow(
+    mocked_uow_commit: AsyncMock, repository_class, model_class, sa_manager
+):
+    repo1 = repository_class(sa_manager)
+    repo2 = repository_class(sa_manager)
+
+    # Populate a database entry to be used for tests
+    model1 = model_class(
+        name="Someone",
+    )
+    model2 = model_class(
+        name="SomeoneElse",
+    )
+    await repo1.save(model1)
+    await repo2.save(model2)
+    assert mocked_uow_commit.call_count == 2
+
+
+@patch.object(SAAsyncUnitOfWork, "_commit", return_value=None, new_callable=AsyncMock)
+async def test_commit_triggers_only_once_with_external_uow(
+    mocked_uow_commit: AsyncMock, repository_class, model_class, sa_manager
+):
+    uow = SAAsyncUnitOfWork(sa_manager)
+    repo1 = repository_class(sa_manager)
+    repo2 = repository_class(sa_manager)
+
+    # Populate a database entry to be used for tests
+    model1 = model_class(
+        name="Someone",
+    )
+    model2 = model_class(
+        name="SomeoneElse",
+    )
+    async with uow.get_session() as _session:
+        await repo1.save(model1, session=_session)
+        await repo2.save(model2, session=_session)
+    assert mocked_uow_commit.call_count == 1

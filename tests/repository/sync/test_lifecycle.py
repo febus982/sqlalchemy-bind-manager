@@ -1,6 +1,9 @@
+from unittest.mock import patch, MagicMock
+
 import pytest
 
 from sqlalchemy_bind_manager import SQLAlchemySyncRepository
+from sqlalchemy_bind_manager._unit_of_work import SASyncUnitOfWork
 from sqlalchemy_bind_manager.exceptions import UnsupportedBind
 
 
@@ -100,3 +103,43 @@ def test_update_model_doesnt_update_other_models_from_same_repo(
     assert updated_model2 != new_model2
     assert updated_model2.model_id == new_model2.model_id
     assert updated_model2.name == "SomeoneElse"
+
+
+@patch.object(SASyncUnitOfWork, "_commit", return_value=None)
+def test_commit_triggers_once_per_operation_using_internal_uow(
+    mocked_uow_commit: MagicMock, repository_class, model_class, sa_manager
+):
+    repo1 = repository_class(sa_manager)
+    repo2 = repository_class(sa_manager)
+
+    # Populate a database entry to be used for tests
+    model1 = model_class(
+        name="Someone",
+    )
+    model2 = model_class(
+        name="SomeoneElse",
+    )
+    repo1.save(model1)
+    repo2.save(model2)
+    assert mocked_uow_commit.call_count == 2
+
+
+@patch.object(SASyncUnitOfWork, "_commit", return_value=None)
+def test_commit_triggers_only_once_with_external_uow(
+    mocked_uow_commit: MagicMock, repository_class, model_class, sa_manager
+):
+    uow = SASyncUnitOfWork(sa_manager)
+    repo1 = repository_class(sa_manager)
+    repo2 = repository_class(sa_manager)
+
+    # Populate a database entry to be used for tests
+    model1 = model_class(
+        name="Someone",
+    )
+    model2 = model_class(
+        name="SomeoneElse",
+    )
+    with uow.get_session() as _session:
+        repo1.save(model1, session=_session)
+        repo2.save(model2, session=_session)
+    assert mocked_uow_commit.call_count == 1

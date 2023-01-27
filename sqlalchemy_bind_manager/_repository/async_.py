@@ -1,26 +1,19 @@
 from abc import ABC
-from asyncio import get_event_loop
+from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
-from typing import Union, Generic, Tuple, Iterable, List, Iterator
-from uuid import uuid4
+from typing import Union, Generic, Tuple, Iterable, List
 
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession, async_scoped_session
+from sqlalchemy.ext.asyncio import async_scoped_session
 
-from .._bind_manager import (
-    SQLAlchemyBindManager,
-    DEFAULT_BIND_NAME,
-    SQLAlchemyAsyncBind,
-)
-from ..exceptions import (
-    ModelNotFound,
-    UnsupportedBind,
-)
+from .._bind_manager import SQLAlchemyBindManager, DEFAULT_BIND_NAME
+from .._unit_of_work import SAAsyncUnitOfWork
+from ..exceptions import ModelNotFound
 from .common import MODEL, PRIMARY_KEY, SortDirection, BaseRepository
 
 
 class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
-    Session: async_scoped_session
+    _UOW: SAAsyncUnitOfWork
 
     def __init__(
         self, sa_manager: SQLAlchemyBindManager, bind_name: str = DEFAULT_BIND_NAME
@@ -32,34 +25,15 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         :param bind_name: The name of the bind as defined in the SQLAlchemyConfig. defaults to "default"
         """
         super().__init__()
-        bind = sa_manager.get_bind(bind_name)
-        if not isinstance(bind, SQLAlchemyAsyncBind):
-            raise UnsupportedBind("Bind is not an instance of SQLAlchemyBind")
-        u = str(uuid4())
-        self.Session = async_scoped_session(
-            bind.session_class, scopefunc=lambda: str(u)
-        )
-
-    def __del__(self):
-        # If we fail to initialise the repository we might have no session attribute
-        if not getattr(self, "Session", None):
-            return
-
-        loop = get_event_loop()
-        if loop.is_running():
-            loop.create_task(self.Session.remove())
-        else:
-            loop.run_until_complete(self.Session.remove())
+        self._UOW = SAAsyncUnitOfWork(sa_manager, bind_name)
 
     @asynccontextmanager
     async def _get_session(
         self, session: Union[async_scoped_session, None] = None, commit: bool = True
-    ) -> Iterator[async_scoped_session]:
+    ) -> AsyncIterator[async_scoped_session]:
         if not session:
-            async with self.Session() as _session:
+            async with self._UOW.get_session(commit) as _session:
                 yield _session
-                if commit:
-                    await self._commit(_session)
         else:
             yield session
 
@@ -69,11 +43,11 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         """Persist a model.
 
         :param instance: A mapped object instance to be persisted
+        :param session: Optional session with externally-managed lifecycle
         :return: The model instance after being persisted (e.g. with primary key populated)
         """
         async with self._get_session(session) as session:  # type: ignore
             session.add(instance)
-            await self._commit(session)
         return instance
 
     async def save_many(
@@ -85,11 +59,11 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
 
         :param instances: A list of mapped objects to be persisted
         :type instances: Iterable
+        :param session: Optional session with externally-managed lifecycle
         :return: The model instances after being persisted (e.g. with primary keys populated)
         """
         async with self._get_session(session) as session:  # type: ignore
             session.add_all(instances)
-            await self._commit(session)
         return instances
 
     async def get(
@@ -99,10 +73,11 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
 
         :param identifier: The primary key
         :return: A model instance
+        :param session: Optional session with externally-managed lifecycle
         :raises ModelNotFound: No model has been found using the primary key
         """
         # TODO: implement get_many()
-        async with self._get_session(session) as session:
+        async with self._get_session(session, commit=False) as session:
             model = await session.get(self._model, identifier)  # type: ignore
         if model is None:
             raise ModelNotFound("No rows found for provided primary key.")
@@ -117,12 +92,12 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
 
         :param entity: The model instance or the primary key
         :type entity: Union[MODEL, PRIMARY_KEY]
+        :param session: Optional session with externally-managed lifecycle
         """
         # TODO: delete without loading the model
         obj = entity if self._is_mapped_object(entity) else await self.get(entity)  # type: ignore
         async with self._get_session(session) as session:  # type: ignore
             await session.delete(obj)
-            await self._commit(session)
 
     async def find(
         self,
@@ -137,6 +112,7 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
 
         :param order_by:
         :param search_params: Any keyword argument to be used as equality filter
+        :param session: Optional session with externally-managed lifecycle
         :return: A collection of models
         :rtype: List
         """
@@ -148,18 +124,4 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
 
         async with self._get_session(session) as session:  # type: ignore
             result = await session.execute(stmt)
-
-        return [x for x in result.scalars()]
-
-    async def _commit(self, session: AsyncSession) -> None:
-        """Commits the session and handles rollback on errors.
-
-        :param session: The session object.
-        :type session: AsyncSession
-        :raises Exception: Any error is re-raised after the rollback.
-        """
-        try:
-            await session.commit()
-        except:
-            await session.rollback()
-            raise
+            return [x for x in result.scalars()]

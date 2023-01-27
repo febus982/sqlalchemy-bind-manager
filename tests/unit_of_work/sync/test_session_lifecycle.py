@@ -1,10 +1,10 @@
 from unittest.mock import patch
 
-from sqlalchemy_bind_manager._unit_of_work import SAUnitOfWork
+from sqlalchemy_bind_manager._unit_of_work import SASyncUnitOfWork
 
 
 def test_session_is_removed_on_cleanup(sa_manager):
-    uow = SAUnitOfWork(sa_manager)
+    uow = SASyncUnitOfWork(sa_manager)
     original_session_remove = uow.Session.remove
     with patch.object(
         uow.Session,
