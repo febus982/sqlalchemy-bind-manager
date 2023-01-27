@@ -130,7 +130,7 @@ async def test_commit_triggers_once_per_operation_using_internal_uow(
 async def test_commit_triggers_only_once_with_external_uow(
     mocked_uow_commit: AsyncMock, repository_class, model_class, sa_manager
 ):
-    uow = SAAsyncUnitOfWork(sa_manager)
+    uow = SAAsyncUnitOfWork(sa_manager.get_bind())
     repo1 = repository_class(sa_manager)
     repo2 = repository_class(sa_manager)
 

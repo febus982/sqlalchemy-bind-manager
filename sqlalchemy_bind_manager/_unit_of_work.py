@@ -8,9 +8,7 @@ from sqlalchemy.ext.asyncio import (
 )
 from sqlalchemy.orm import scoped_session
 
-from sqlalchemy_bind_manager import SQLAlchemyBindManager
 from sqlalchemy_bind_manager._bind_manager import (
-    DEFAULT_BIND_NAME,
     SQLAlchemyBind,
     SQLAlchemyAsyncBind,
 )
@@ -21,9 +19,8 @@ class SASyncUnitOfWork:
     Session: scoped_session
 
     def __init__(
-        self, sa_manager: SQLAlchemyBindManager, bind_name: str = DEFAULT_BIND_NAME
+        self, bind: SQLAlchemyBind
     ):
-        bind = sa_manager.get_bind(bind_name)
         if not isinstance(bind, SQLAlchemyBind):
             raise UnsupportedBind("Bind is not an instance of SQLAlchemyBind")
         else:
@@ -59,9 +56,8 @@ class SAAsyncUnitOfWork:
     Session: async_scoped_session
 
     def __init__(
-        self, sa_manager: SQLAlchemyBindManager, bind_name: str = DEFAULT_BIND_NAME
+        self, bind: SQLAlchemyAsyncBind
     ):
-        bind = sa_manager.get_bind(bind_name)
         if not isinstance(bind, SQLAlchemyAsyncBind):
             raise UnsupportedBind("Bind is not an instance of SQLAlchemyAsyncBind")
         else:

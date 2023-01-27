@@ -4,7 +4,7 @@ from sqlalchemy_bind_manager._unit_of_work import SAAsyncUnitOfWork
 
 
 async def test_session_is_destroyed_on_cleanup(sa_manager):
-    uow = SAAsyncUnitOfWork(sa_manager)
+    uow = SAAsyncUnitOfWork(sa_manager.get_bind())
     original_session_remove = uow.Session.remove
 
     with patch.object(
@@ -20,7 +20,7 @@ async def test_session_is_destroyed_on_cleanup(sa_manager):
 
 def test_session_is_destroyed_on_cleanup_if_loop_is_not_running(sa_manager):
     # Running the test without a loop will trigger the loop creation
-    uow = SAAsyncUnitOfWork(sa_manager)
+    uow = SAAsyncUnitOfWork(sa_manager.get_bind())
     original_session_close = uow.Session.remove
 
     with patch.object(

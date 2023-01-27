@@ -25,7 +25,7 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         :param bind_name: The name of the bind as defined in the SQLAlchemyConfig. defaults to "default"
         """
         super().__init__()
-        self._UOW = SAAsyncUnitOfWork(sa_manager, bind_name)
+        self._UOW = SAAsyncUnitOfWork(sa_manager.get_bind(bind_name))
 
     @asynccontextmanager
     async def _get_session(

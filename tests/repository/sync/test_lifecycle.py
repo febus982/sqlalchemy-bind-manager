@@ -128,7 +128,7 @@ def test_commit_triggers_once_per_operation_using_internal_uow(
 def test_commit_triggers_only_once_with_external_uow(
     mocked_uow_commit: MagicMock, repository_class, model_class, sa_manager
 ):
-    uow = SASyncUnitOfWork(sa_manager)
+    uow = SASyncUnitOfWork(sa_manager.get_bind())
     repo1 = repository_class(sa_manager)
     repo2 = repository_class(sa_manager)
 
