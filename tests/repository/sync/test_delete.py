@@ -10,7 +10,7 @@ def test_can_delete_by_pk(repository_class, model_class, sa_manager):
         model_id=2,
         name="SomeoneElse",
     )
-    repo = repository_class(sa_manager)
+    repo = repository_class(sa_manager.get_bind())
     repo.save_many({model, model2})
 
     results = [x for x in repo.find()]
@@ -32,7 +32,7 @@ def test_can_delete_by_instance(repository_class, model_class, sa_manager):
         model_id=2,
         name="SomeoneElse",
     )
-    repo = repository_class(sa_manager)
+    repo = repository_class(sa_manager.get_bind())
     repo.save_many({model, model2})
 
     results = [x for x in repo.find()]
@@ -46,7 +46,7 @@ def test_can_delete_by_instance(repository_class, model_class, sa_manager):
 
 
 def test_delete_inexistent_raises_exception(repository_class, model_class, sa_manager):
-    repo = repository_class(sa_manager)
+    repo = repository_class(sa_manager.get_bind())
 
     results = [x for x in repo.find()]
     assert len(results) == 0

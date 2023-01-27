@@ -18,9 +18,7 @@ from sqlalchemy_bind_manager.exceptions import UnsupportedBind
 class SASyncUnitOfWork:
     Session: scoped_session
 
-    def __init__(
-        self, bind: SQLAlchemyBind
-    ):
+    def __init__(self, bind: SQLAlchemyBind):
         if not isinstance(bind, SQLAlchemyBind):
             raise UnsupportedBind("Bind is not an instance of SQLAlchemyBind")
         else:
@@ -55,9 +53,7 @@ class SASyncUnitOfWork:
 class SAAsyncUnitOfWork:
     Session: async_scoped_session
 
-    def __init__(
-        self, bind: SQLAlchemyAsyncBind
-    ):
+    def __init__(self, bind: SQLAlchemyAsyncBind):
         if not isinstance(bind, SQLAlchemyAsyncBind):
             raise UnsupportedBind("Bind is not an instance of SQLAlchemyAsyncBind")
         else:
@@ -77,7 +73,9 @@ class SAAsyncUnitOfWork:
             loop.run_until_complete(self.Session.remove())
 
     @asynccontextmanager
-    async def get_session(self, commit: bool = True) -> AsyncIterator[async_scoped_session]:
+    async def get_session(
+        self, commit: bool = True
+    ) -> AsyncIterator[async_scoped_session]:
         async with self.Session() as _session:
             yield _session
             if commit:

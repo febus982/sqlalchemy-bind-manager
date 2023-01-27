@@ -5,7 +5,7 @@ from typing import Union, Generic, Iterable, Tuple, List, Iterator
 from sqlalchemy import select
 from sqlalchemy.orm import scoped_session
 
-from .._bind_manager import SQLAlchemyBindManager, DEFAULT_BIND_NAME
+from .._bind_manager import SQLAlchemyBindManager, SQLAlchemyBind
 from .._unit_of_work import SASyncUnitOfWork
 from ..exceptions import ModelNotFound
 from .common import MODEL, PRIMARY_KEY, SortDirection, BaseRepository
@@ -14,17 +14,13 @@ from .common import MODEL, PRIMARY_KEY, SortDirection, BaseRepository
 class SQLAlchemySyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
     _UOW: SASyncUnitOfWork
 
-    def __init__(
-        self, sa_manager: SQLAlchemyBindManager, bind_name: str = DEFAULT_BIND_NAME
-    ) -> None:
+    def __init__(self, bind: SQLAlchemyBind) -> None:
         """
-
-        :param sa_manager: A configured instance of SQLAlchemyBindManager
-        :type sa_manager: SQLAlchemyBindManager
-        :param bind_name: The name of the bind as defined in the SQLAlchemyConfig. defaults to "default"
+        :param bind: A configured instance of SQLAlchemyBind
+        :type bind: SQLAlchemyBind
         """
         super().__init__()
-        self._UOW = SASyncUnitOfWork(sa_manager.get_bind(bind_name))
+        self._UOW = SASyncUnitOfWork(bind)
 
     @contextmanager
     def _get_session(

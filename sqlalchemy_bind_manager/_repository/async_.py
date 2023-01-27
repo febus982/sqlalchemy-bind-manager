@@ -6,7 +6,7 @@ from typing import Union, Generic, Tuple, Iterable, List
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import async_scoped_session
 
-from .._bind_manager import SQLAlchemyBindManager, DEFAULT_BIND_NAME
+from .._bind_manager import SQLAlchemyBindManager, SQLAlchemyAsyncBind
 from .._unit_of_work import SAAsyncUnitOfWork
 from ..exceptions import ModelNotFound
 from .common import MODEL, PRIMARY_KEY, SortDirection, BaseRepository
@@ -15,17 +15,13 @@ from .common import MODEL, PRIMARY_KEY, SortDirection, BaseRepository
 class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
     _UOW: SAAsyncUnitOfWork
 
-    def __init__(
-        self, sa_manager: SQLAlchemyBindManager, bind_name: str = DEFAULT_BIND_NAME
-    ) -> None:
+    def __init__(self, bind: SQLAlchemyAsyncBind) -> None:
         """
-
-        :param sa_manager: A configured instance of SQLAlchemyBindManager
-        :type sa_manager: SQLAlchemyBindManager
-        :param bind_name: The name of the bind as defined in the SQLAlchemyConfig. defaults to "default"
+        :param bind: A configured instance of SQLAlchemyAsyncBind
+        :type bind: SQLAlchemyAsyncBind
         """
         super().__init__()
-        self._UOW = SAAsyncUnitOfWork(sa_manager.get_bind(bind_name))
+        self._UOW = SAAsyncUnitOfWork(bind)
 
     @asynccontextmanager
     async def _get_session(

@@ -12,7 +12,7 @@ def test_repository_fails_if_not_async_bind(sync_async_sa_manager):
         Session = None
 
     with pytest.raises(UnsupportedBind):
-        AsyncRepo(sync_async_sa_manager, "sync")
+        AsyncRepo(sync_async_sa_manager.get_bind("sync"))
 
 
 async def test_model_ops_using_different_uows(
@@ -24,9 +24,9 @@ async def test_model_ops_using_different_uows(
     and we are able to persist the changes using different session
     objects.
     """
-    repo1 = repository_class(sa_manager)
-    repo2 = repository_class(sa_manager)
-    repo3 = repository_class(sa_manager)
+    repo1 = repository_class(sa_manager.get_bind())
+    repo2 = repository_class(sa_manager.get_bind())
+    repo3 = repository_class(sa_manager.get_bind())
     assert repo1._UOW is not repo2._UOW
     assert repo1._UOW is not repo3._UOW
     assert repo2._UOW is not repo3._UOW
@@ -69,7 +69,7 @@ async def test_model_ops_using_different_uows(
 async def test_update_model_doesnt_update_other_models_from_same_repo(
     repository_class, model_class, sa_manager
 ):
-    repo = repository_class(sa_manager)
+    repo = repository_class(sa_manager.get_bind())
 
     # Populate a database entry to be used for tests
     model1 = model_class(
@@ -111,8 +111,8 @@ async def test_update_model_doesnt_update_other_models_from_same_repo(
 async def test_commit_triggers_once_per_operation_using_internal_uow(
     mocked_uow_commit: AsyncMock, repository_class, model_class, sa_manager
 ):
-    repo1 = repository_class(sa_manager)
-    repo2 = repository_class(sa_manager)
+    repo1 = repository_class(sa_manager.get_bind())
+    repo2 = repository_class(sa_manager.get_bind())
 
     # Populate a database entry to be used for tests
     model1 = model_class(
@@ -131,8 +131,8 @@ async def test_commit_triggers_only_once_with_external_uow(
     mocked_uow_commit: AsyncMock, repository_class, model_class, sa_manager
 ):
     uow = SAAsyncUnitOfWork(sa_manager.get_bind())
-    repo1 = repository_class(sa_manager)
-    repo2 = repository_class(sa_manager)
+    repo1 = repository_class(sa_manager.get_bind())
+    repo2 = repository_class(sa_manager.get_bind())
 
     # Populate a database entry to be used for tests
     model1 = model_class(
