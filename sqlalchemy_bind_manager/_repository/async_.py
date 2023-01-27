@@ -1,12 +1,11 @@
 from abc import ABC
-from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
-from typing import Union, Generic, Tuple, Iterable, List
+from typing import Union, Generic, Tuple, Iterable, List, AsyncIterator
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import async_scoped_session
 
-from .._bind_manager import SQLAlchemyBindManager, SQLAlchemyAsyncBind
+from .._bind_manager import SQLAlchemyAsyncBind
 from .._unit_of_work import SAAsyncUnitOfWork
 from ..exceptions import ModelNotFound
 from .common import MODEL, PRIMARY_KEY, SortDirection, BaseRepository

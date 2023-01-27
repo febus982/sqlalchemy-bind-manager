@@ -1,5 +1,5 @@
 from asyncio import get_event_loop
-from collections.abc import Iterator, AsyncIterator
+from typing import Iterator, AsyncIterator
 from contextlib import contextmanager, asynccontextmanager
 from uuid import uuid4
 

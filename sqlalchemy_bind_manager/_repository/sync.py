@@ -5,7 +5,7 @@ from typing import Union, Generic, Iterable, Tuple, List, Iterator
 from sqlalchemy import select
 from sqlalchemy.orm import scoped_session
 
-from .._bind_manager import SQLAlchemyBindManager, SQLAlchemyBind
+from .._bind_manager import SQLAlchemyBind
 from .._unit_of_work import SASyncUnitOfWork
 from ..exceptions import ModelNotFound
 from .common import MODEL, PRIMARY_KEY, SortDirection, BaseRepository

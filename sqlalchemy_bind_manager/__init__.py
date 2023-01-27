@@ -10,3 +10,7 @@ from ._repository import (
     SQLAlchemyAsyncRepository,
     SortDirection,
 )
+from ._unit_of_work import (
+    SASyncUnitOfWork,
+    SAAsyncUnitOfWork,
+)
