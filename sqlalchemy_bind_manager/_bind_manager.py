@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import (
     AsyncSession,
     create_async_engine,
     AsyncEngine,
+    async_sessionmaker,
 )
 from sqlalchemy.orm import sessionmaker, Session
 from sqlalchemy.orm.decl_api import registry
@@ -33,7 +34,7 @@ class SQLAlchemyBind(BaseModel):
     engine: Engine
     model_declarative_base: type
     registry_mapper: registry
-    session_class: sessionmaker
+    session_class: sessionmaker[Session]
 
     class Config:
         arbitrary_types_allowed = True
@@ -43,7 +44,7 @@ class SQLAlchemyAsyncBind(BaseModel):
     engine: AsyncEngine
     model_declarative_base: type
     registry_mapper: registry
-    session_class: sessionmaker
+    session_class: async_sessionmaker[AsyncSession]
 
     class Config:
         arbitrary_types_allowed = True
@@ -134,9 +135,8 @@ class SQLAlchemyBindManager:
         return SQLAlchemyAsyncBind(
             engine=engine,
             registry_mapper=registry_mapper,
-            session_class=sessionmaker(
+            session_class=async_sessionmaker(
                 bind=engine,
-                class_=AsyncSession,
                 **session_options,
             ),
             model_declarative_base=registry_mapper.generate_base(),

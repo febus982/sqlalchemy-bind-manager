@@ -147,7 +147,7 @@ async with sa_manager.get_session() as session:
 ```
 
 Note that async implementation has several differences from the sync one, make sure
-to check [SQLAlchemy asyncio documentation](https://docs.sqlalchemy.org/en/14/orm/extensions/asyncio.html)
+to check [SQLAlchemy asyncio documentation](https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html)
 
 ## Repository
 
@@ -175,7 +175,7 @@ The classes provide some common use methods:
 
 ### Session lifecycle in repositories
 
-[SQLAlchemy documentation](https://docs.sqlalchemy.org/en/14/orm/session_basics.html#when-do-i-construct-a-session-when-do-i-commit-it-and-when-do-i-close-it)
+[SQLAlchemy documentation](https://docs.sqlalchemy.org/en/20/orm/session_basics.html#when-do-i-construct-a-session-when-do-i-commit-it-and-when-do-i-close-it)
 recommends we create `Session` object at the beginning of a logical operation where
 database access is potentially anticipated.
 
@@ -195,7 +195,7 @@ relationship are loaded eagerly. You can do this by:
 * Setup your model/table relationships to always use always eager loading
 * Implement ad-hoc methods to deal with relationships as necessary
 
-Also `AsyncSession` has [the same limitation on lazy loading](https://docs.sqlalchemy.org/en/14/orm/extensions/asyncio.html#asyncio-orm-avoid-lazyloads)
+Also `AsyncSession` has [the same limitation on lazy loading](https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html#asyncio-orm-avoid-lazyloads)
 so it makes sense that the two repository implementations behave consistently.
 
 ### Handling shared session among multiple repositories
@@ -228,5 +228,5 @@ with uow.get(session, commit=False) as _session:
 ```
 
 Both the UnitOfWork classes create an internal `scoped_session` or `async_scoped_session`, behaving
-in the same way at the repositories do. This provide the freedom to tune the session lifecycle based
+in the same way at the repositories do. This provides the freedom to tune the session lifecycle based
 on our application requirements (e.g. one session per http request, per domain, etc.)
