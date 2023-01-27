@@ -6,8 +6,11 @@ from ._bind_manager import (
     SQLAlchemyConfig,
 )
 from ._repository import (
-    SQLAlchemyRepository,
     SQLAlchemySyncRepository,
     SQLAlchemyAsyncRepository,
     SortDirection,
+)
+from ._unit_of_work import (
+    SASyncUnitOfWork,
+    SAAsyncUnitOfWork,
 )

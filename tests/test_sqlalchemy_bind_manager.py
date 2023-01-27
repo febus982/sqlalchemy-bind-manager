@@ -1,10 +1,9 @@
-from unittest.mock import patch
 from uuid import uuid4
 
 import pytest
 from sqlalchemy import MetaData
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import registry, Session, sessionmaker, scoped_session
+from sqlalchemy.orm import registry, Session
 
 from sqlalchemy_bind_manager import (
     SQLAlchemyBindConfig,
@@ -13,7 +12,6 @@ from sqlalchemy_bind_manager import (
 from sqlalchemy_bind_manager.exceptions import (
     InvalidConfig,
     NotInitializedBind,
-    UnsupportedBind,
 )
 
 
@@ -49,20 +47,11 @@ def test_single_config_creates_default_bind(single_config):
 
     assert len(sa_manager.get_binds()) == 1
 
-    default_bind = sa_manager.get_binds().get("default")
+    default_bind = sa_manager.get_bind()
     assert default_bind is not None
     assert isinstance(sa_manager.get_mapper(), registry)
     assert isinstance(sa_manager.get_session(), Session)
     assert sa_manager.get_session().get_bind() == default_bind.engine
-
-
-def test_cant_teardown_not_scoped_session(single_config):
-    sa_manager = SQLAlchemyBindManager(single_config)
-    default_bind = sa_manager.get_binds().get("default")
-    assert isinstance(default_bind.session_class, sessionmaker)
-    assert not isinstance(default_bind.session_class, scoped_session)
-    with pytest.raises(AttributeError):
-        sa_manager.teardown_scoped_sessions()
 
 
 def test_multiple_binds(multiple_config):
@@ -75,12 +64,12 @@ def test_multiple_binds(multiple_config):
         assert key in mappers_metadata
         assert isinstance(mappers_metadata[key], MetaData)
 
-    default_bind = sa_manager.get_binds().get("default")
+    default_bind = sa_manager.get_bind()
     assert default_bind is not None
     assert isinstance(sa_manager.get_mapper(), registry)
     assert isinstance(sa_manager.get_session(), Session)
 
-    async_bind = sa_manager.get_binds().get("async")
+    async_bind = sa_manager.get_bind("async")
     assert async_bind is not None
     assert isinstance(sa_manager.get_mapper("async"), registry)
     assert isinstance(sa_manager.get_session("async"), AsyncSession)

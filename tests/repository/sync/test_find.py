@@ -14,7 +14,7 @@ def test_find(repository_class, model_class, sa_manager):
     model3 = model_class(
         name="StillSomeoneElse",
     )
-    repo = repository_class(sa_manager)
+    repo = repository_class(sa_manager.get_bind())
     repo.save_many({model, model2, model3})
 
     results = [m for m in repo.find()]
@@ -31,7 +31,7 @@ def test_find_filtered(repository_class, model_class, sa_manager):
     model3 = model_class(
         name="StillSomeoneElse",
     )
-    repo = repository_class(sa_manager)
+    repo = repository_class(sa_manager.get_bind())
     repo.save_many({model, model2, model3})
 
     results = [m for m in repo.find(name="Someone")]
@@ -39,7 +39,7 @@ def test_find_filtered(repository_class, model_class, sa_manager):
 
 
 def test_find_filtered_fails_if_invalid_filter(repository_class, sa_manager):
-    repo = repository_class(sa_manager)
+    repo = repository_class(sa_manager.get_bind())
     with pytest.raises(UnmappedProperty):
         results = [m for m in repo.find(somename="Someone")]
 
@@ -51,7 +51,7 @@ def test_find_ordered(repository_class, model_class, sa_manager):
     model2 = model_class(
         name="Costello",
     )
-    repo = repository_class(sa_manager)
+    repo = repository_class(sa_manager.get_bind())
     repo.save_many({model, model2})
 
     results = [m for m in repo.find(order_by=("name",))]
@@ -68,7 +68,7 @@ def test_find_ordered(repository_class, model_class, sa_manager):
 
 
 def test_find_ordered_fails_if_invalid_column(repository_class, sa_manager):
-    repo = repository_class(sa_manager)
+    repo = repository_class(sa_manager.get_bind())
     with pytest.raises(UnmappedProperty):
         results = [m for m in repo.find(order_by=("unexisting",))]
     with pytest.raises(UnmappedProperty):

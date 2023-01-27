@@ -9,7 +9,7 @@ async def test_save_model(repository_class, model_class, sa_manager):
         name="Someone",
     )
     assert model.model_id is None
-    repo = repository_class(sa_manager)
+    repo = repository_class(sa_manager.get_bind())
     await repo.save(model)
     assert model.model_id is not None
 
@@ -23,7 +23,7 @@ async def test_save_many_models(repository_class, model_class, sa_manager):
     )
     assert model.model_id is None
     assert model2.model_id is None
-    repo = repository_class(sa_manager)
+    repo = repository_class(sa_manager.get_bind())
     await repo.save_many({model, model2})
     assert model.model_id is not None
     assert model2.model_id is not None
@@ -43,7 +43,7 @@ async def test_failed_model_does_rollback_and_reraises_exception(
         model = model_class(
             name="Someone",
         )
-        repo = repository_class(sa_manager)
+        repo = repository_class(sa_manager.get_bind())
 
         with pytest.raises(SomeTestException):
             await repo.save(model)
@@ -51,7 +51,7 @@ async def test_failed_model_does_rollback_and_reraises_exception(
 
 
 async def test_update_model(repository_class, model_class, sa_manager):
-    repo = repository_class(sa_manager)
+    repo = repository_class(sa_manager.get_bind())
 
     # Populate a database entry to be used for tests
     model = model_class(
@@ -87,7 +87,7 @@ async def test_nested_models_are_persisted(
     assert parent.parent_model_id is None
     assert child.child_model_id is None
     assert child.parent_model_id is None
-    repo = related_repository_class(sa_manager)
+    repo = related_repository_class(sa_manager.get_bind())
     await repo.save(parent)
     assert parent.parent_model_id is not None
     assert child.child_model_id is not None
@@ -104,7 +104,7 @@ async def test_nested_models_are_updated(
     child2 = related_model_classes[1](name="Another Child")
     parent.children.append(child)
     parent.children.append(child2)
-    repo = related_repository_class(sa_manager)
+    repo = related_repository_class(sa_manager.get_bind())
     await repo.save(parent)
 
     retrieved_parent = await repo.get(parent.parent_model_id)
@@ -125,7 +125,7 @@ async def test_nested_models_are_deleted(
     child2 = related_model_classes[1](name="Another Child")
     parent.children.append(child)
     parent.children.append(child2)
-    repo = related_repository_class(sa_manager)
+    repo = related_repository_class(sa_manager.get_bind())
     await repo.save(parent)
 
     retrieved_parent = await repo.get(parent.parent_model_id)

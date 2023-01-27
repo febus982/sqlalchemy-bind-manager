@@ -1,6 +1,3 @@
-from .sync import (
-    SQLAlchemySyncRepository as SQLAlchemyRepository,
-    SQLAlchemySyncRepository,
-)
+from .sync import SQLAlchemySyncRepository
 from .async_ import SQLAlchemyAsyncRepository
 from .common import SortDirection

@@ -1,24 +1,10 @@
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 
 import pytest
 
 from sqlalchemy_bind_manager import SQLAlchemySyncRepository
+from sqlalchemy_bind_manager._unit_of_work import SASyncUnitOfWork
 from sqlalchemy_bind_manager.exceptions import UnsupportedBind
-
-
-def test_session_is_destroyed_on_cleanup(repository_class, sa_manager):
-    repo = repository_class(sa_manager)
-    original_session_close = repo._session.close
-
-    with patch.object(
-        repo._session,
-        "close",
-        wraps=original_session_close,
-    ) as mocked_close:
-        # This should trigger the garbage collector and close the session
-        repo = None
-
-    mocked_close.assert_called_once()
 
 
 def test_repository_fails_if_not_sync_bind(sync_async_sa_manager):
@@ -26,22 +12,22 @@ def test_repository_fails_if_not_sync_bind(sync_async_sa_manager):
         pass
 
     with pytest.raises(UnsupportedBind):
-        SyncRepo(sync_async_sa_manager, "async")
+        SyncRepo(sync_async_sa_manager.get_bind("async"))
 
 
-def test_model_ops_using_different_sessions(repository_class, model_class, sa_manager):
+def test_model_ops_using_different_uows(repository_class, model_class, sa_manager):
     """
-    This test ensure that, even if the session gets closed after
+    This test ensure that, even if the UOW session gets closed after
     each repository operation, we still keep track of model changes,
     and we are able to persist the changes using different session
     objects.
     """
-    repo1 = repository_class(sa_manager)
-    repo2 = repository_class(sa_manager)
-    repo3 = repository_class(sa_manager)
-    assert repo1._session is not repo2._session
-    assert repo1._session is not repo3._session
-    assert repo2._session is not repo3._session
+    repo1 = repository_class(sa_manager.get_bind())
+    repo2 = repository_class(sa_manager.get_bind())
+    repo3 = repository_class(sa_manager.get_bind())
+    assert repo1._UOW is not repo2._UOW
+    assert repo1._UOW is not repo3._UOW
+    assert repo2._UOW is not repo3._UOW
 
     # Populate a database entry to be used for tests using first repo
     model_1 = model_class(
@@ -81,7 +67,7 @@ def test_model_ops_using_different_sessions(repository_class, model_class, sa_ma
 def test_update_model_doesnt_update_other_models_from_same_repo(
     repository_class, model_class, sa_manager
 ):
-    repo = repository_class(sa_manager)
+    repo = repository_class(sa_manager.get_bind())
 
     # Populate a database entry to be used for tests
     model1 = model_class(
@@ -117,3 +103,43 @@ def test_update_model_doesnt_update_other_models_from_same_repo(
     assert updated_model2 != new_model2
     assert updated_model2.model_id == new_model2.model_id
     assert updated_model2.name == "SomeoneElse"
+
+
+@patch.object(SASyncUnitOfWork, "_commit", return_value=None)
+def test_commit_triggers_once_per_operation_using_internal_uow(
+    mocked_uow_commit: MagicMock, repository_class, model_class, sa_manager
+):
+    repo1 = repository_class(sa_manager.get_bind())
+    repo2 = repository_class(sa_manager.get_bind())
+
+    # Populate a database entry to be used for tests
+    model1 = model_class(
+        name="Someone",
+    )
+    model2 = model_class(
+        name="SomeoneElse",
+    )
+    repo1.save(model1)
+    repo2.save(model2)
+    assert mocked_uow_commit.call_count == 2
+
+
+@patch.object(SASyncUnitOfWork, "_commit", return_value=None)
+def test_commit_triggers_only_once_with_external_uow(
+    mocked_uow_commit: MagicMock, repository_class, model_class, sa_manager
+):
+    uow = SASyncUnitOfWork(sa_manager.get_bind())
+    repo1 = repository_class(sa_manager.get_bind())
+    repo2 = repository_class(sa_manager.get_bind())
+
+    # Populate a database entry to be used for tests
+    model1 = model_class(
+        name="Someone",
+    )
+    model2 = model_class(
+        name="SomeoneElse",
+    )
+    with uow.get_session() as _session:
+        repo1.save(model1, session=_session)
+        repo2.save(model2, session=_session)
+    assert mocked_uow_commit.call_count == 1

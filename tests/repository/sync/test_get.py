@@ -10,7 +10,7 @@ def test_get_returns_model(repository_class, model_class, sa_manager):
         model_id=2,
         name="SomeoneElse",
     )
-    repo = repository_class(sa_manager)
+    repo = repository_class(sa_manager.get_bind())
     repo.save_many({model, model2})
 
     result = repo.get(1)
@@ -20,7 +20,7 @@ def test_get_returns_model(repository_class, model_class, sa_manager):
 
 
 def test_get_raises_exception_if_not_found(repository_class, sa_manager):
-    repo = repository_class(sa_manager)
+    repo = repository_class(sa_manager.get_bind())
 
     with pytest.raises(Exception):
         repo.get(3)

@@ -8,7 +8,7 @@ from sqlalchemy.orm import clear_mappers, relationship
 
 from sqlalchemy_bind_manager import (
     SQLAlchemyBindManager,
-    SQLAlchemyRepository,
+    SQLAlchemySyncRepository,
     SQLAlchemyBindConfig,
 )
 
@@ -31,16 +31,16 @@ def sa_manager() -> SQLAlchemyBindManager:
 
 
 @pytest.fixture
-def repository_class(model_class) -> Type[SQLAlchemyRepository]:
-    class MyRepository(SQLAlchemyRepository[model_class]):
+def repository_class(model_class) -> Type[SQLAlchemySyncRepository]:
+    class MyRepository(SQLAlchemySyncRepository[model_class]):
         _model = model_class
 
     return MyRepository
 
 
 @pytest.fixture
-def related_repository_class(related_model_classes) -> Type[SQLAlchemyRepository]:
-    class ParentRepository(SQLAlchemyRepository[related_model_classes[0]]):
+def related_repository_class(related_model_classes) -> Type[SQLAlchemySyncRepository]:
+    class ParentRepository(SQLAlchemySyncRepository[related_model_classes[0]]):
         _model = related_model_classes[0]
 
     return ParentRepository
@@ -48,7 +48,7 @@ def related_repository_class(related_model_classes) -> Type[SQLAlchemyRepository
 
 @pytest.fixture
 def model_class(sa_manager) -> Type:
-    default_bind = sa_manager.get_binds()["default"]
+    default_bind = sa_manager.get_bind()
 
     class MyModel(default_bind.model_declarative_base):
         __tablename__ = "mymodel"
@@ -67,7 +67,7 @@ def model_class(sa_manager) -> Type:
 
 @pytest.fixture
 def related_model_classes(sa_manager) -> Tuple[Type, Type]:
-    default_bind = sa_manager.get_binds()["default"]
+    default_bind = sa_manager.get_bind()
 
     class ParentModel(default_bind.model_declarative_base):
         __tablename__ = "parent_model"

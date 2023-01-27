@@ -161,6 +161,8 @@ class MyModel(model_declarative_base):
 
 class ModelRepository(SQLAlchemySyncRepository[MyModel]):
     _model = MyModel
+
+repo_instance = ModelRepository(sqlalchemy_bind_manager.get_bind())
 ```
 
 The classes provide some common use methods:
@@ -195,3 +197,36 @@ relationship are loaded eagerly. You can do this by:
 
 Also `AsyncSession` has [the same limitation on lazy loading](https://docs.sqlalchemy.org/en/14/orm/extensions/asyncio.html#asyncio-orm-avoid-lazyloads)
 so it makes sense that the two repository implementations behave consistently.
+
+### Handling shared session among multiple repositories
+
+It is possible we need to run several operations in a single database transaction. While a single
+repository provide by itself an isolated session for single operations, we have to use a different
+approach for multiple operations.
+
+We can use the `SASyncUnitOfWork` or the `SASyncUnitOfWork` class to provide a shared session to
+be used for repository operations, **assumed the same bind is used for all the repositories**.
+(Two phase transactions are not currently supported).
+
+All repositories operation methods accept the `session` parameter for this purpose. This makes the
+operations to bypass the internal repository-managed session.
+
+```python
+bind = sa_manager.get_bind()
+repo1 = MyRepo(bind)
+repo2 = MyOtherRepo(bind)
+uow = SASyncUnitOfWork(bind)
+
+with uow.get(session) as _session:
+    repo1.save(some_model, session=_session)
+    repo2.save(some_model, session=_session)
+
+# Optionally disable the commit/rollback handling
+with uow.get(session, commit=False) as _session:
+    model1 = repo1.get(1, session=_session)
+    model2 = repo1.get(1, session=_session)
+```
+
+Both the UnitOfWork classes create an internal `scoped_session` or `async_scoped_session`, behaving
+in the same way at the repositories do. This provide the freedom to tune the session lifecycle based
+on our application requirements (e.g. one session per http request, per domain, etc.)

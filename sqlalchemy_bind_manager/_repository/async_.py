@@ -1,103 +1,103 @@
 from abc import ABC
-from asyncio import get_event_loop
-from typing import Union, Generic, Tuple, Iterable, List
+from contextlib import asynccontextmanager
+from typing import Union, Generic, Tuple, Iterable, List, AsyncIterator
 
 from sqlalchemy import select
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.ext.asyncio import async_scoped_session
 
-from .._bind_manager import (
-    SQLAlchemyBindManager,
-    DEFAULT_BIND_NAME,
-    SQLAlchemyAsyncBind,
-)
-from ..exceptions import (
-    ModelNotFound,
-    UnsupportedBind,
-)
+from .._bind_manager import SQLAlchemyAsyncBind
+from .._unit_of_work import SAAsyncUnitOfWork
+from ..exceptions import ModelNotFound
 from .common import MODEL, PRIMARY_KEY, SortDirection, BaseRepository
 
 
 class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
-    _session: AsyncSession
+    _UOW: SAAsyncUnitOfWork
 
-    def __init__(
-        self, sa_manager: SQLAlchemyBindManager, bind_name: str = DEFAULT_BIND_NAME
-    ) -> None:
+    def __init__(self, bind: SQLAlchemyAsyncBind) -> None:
         """
-
-        :param sa_manager: A configured instance of SQLAlchemyBindManager
-        :type sa_manager: SQLAlchemyBindManager
-        :param bind_name: The name of the bind as defined in the SQLAlchemyConfig. defaults to "default"
+        :param bind: A configured instance of SQLAlchemyAsyncBind
+        :type bind: SQLAlchemyAsyncBind
         """
         super().__init__()
-        bind = sa_manager.get_bind(bind_name)
-        if not isinstance(bind, SQLAlchemyAsyncBind):
-            raise UnsupportedBind("Bind is not an instance of SQLAlchemyBind")
-        self._session = bind.session_class()
+        self._UOW = SAAsyncUnitOfWork(bind)
 
-    def __del__(self):
-        # If we fail to initialise the repository we might have no session attribute
-        if not getattr(self, "_session", None):
-            return
-
-        loop = get_event_loop()
-        if loop.is_running():
-            loop.create_task(self._session.close())
+    @asynccontextmanager
+    async def _get_session(
+        self, session: Union[async_scoped_session, None] = None, commit: bool = True
+    ) -> AsyncIterator[async_scoped_session]:
+        if not session:
+            async with self._UOW.get_session(commit) as _session:
+                yield _session
         else:
-            loop.run_until_complete(self._session.close())
+            yield session
 
-    async def save(self, instance: MODEL) -> MODEL:
+    async def save(
+        self, instance: MODEL, session: Union[async_scoped_session, None] = None
+    ) -> MODEL:
         """Persist a model.
 
         :param instance: A mapped object instance to be persisted
+        :param session: Optional session with externally-managed lifecycle
         :return: The model instance after being persisted (e.g. with primary key populated)
         """
-        async with self._session as session:  # type: ignore
+        async with self._get_session(session) as session:  # type: ignore
             session.add(instance)
-            await self._commit(session)
         return instance
 
-    async def save_many(self, instances: Iterable[MODEL]) -> Iterable[MODEL]:
+    async def save_many(
+        self,
+        instances: Iterable[MODEL],
+        session: Union[async_scoped_session, None] = None,
+    ) -> Iterable[MODEL]:
         """Persist many models in a single database transaction.
 
         :param instances: A list of mapped objects to be persisted
         :type instances: Iterable
+        :param session: Optional session with externally-managed lifecycle
         :return: The model instances after being persisted (e.g. with primary keys populated)
         """
-        async with self._session as session:  # type: ignore
+        async with self._get_session(session) as session:  # type: ignore
             session.add_all(instances)
-            await self._commit(session)
         return instances
 
-    async def get(self, identifier: PRIMARY_KEY) -> MODEL:
+    async def get(
+        self, identifier: PRIMARY_KEY, session: Union[async_scoped_session, None] = None
+    ) -> MODEL:
         """Get a model by primary key.
 
         :param identifier: The primary key
         :return: A model instance
+        :param session: Optional session with externally-managed lifecycle
         :raises ModelNotFound: No model has been found using the primary key
         """
         # TODO: implement get_many()
-        async with self._session as session:
+        async with self._get_session(session, commit=False) as session:
             model = await session.get(self._model, identifier)  # type: ignore
         if model is None:
             raise ModelNotFound("No rows found for provided primary key.")
         return model
 
-    async def delete(self, entity: Union[MODEL, PRIMARY_KEY]) -> None:
+    async def delete(
+        self,
+        entity: Union[MODEL, PRIMARY_KEY],
+        session: Union[async_scoped_session, None] = None,
+    ) -> None:
         """Deletes a model.
 
         :param entity: The model instance or the primary key
         :type entity: Union[MODEL, PRIMARY_KEY]
+        :param session: Optional session with externally-managed lifecycle
         """
         # TODO: delete without loading the model
         obj = entity if self._is_mapped_object(entity) else await self.get(entity)  # type: ignore
-        async with self._session as session:  # type: ignore
+        async with self._get_session(session) as session:  # type: ignore
             await session.delete(obj)
-            await self._commit(session)
 
     async def find(
         self,
         order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
+        session: Union[async_scoped_session, None] = None,
         **search_params,
     ) -> List[MODEL]:
         """Find models using filters
@@ -107,6 +107,7 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
 
         :param order_by:
         :param search_params: Any keyword argument to be used as equality filter
+        :param session: Optional session with externally-managed lifecycle
         :return: A collection of models
         :rtype: List
         """
@@ -116,20 +117,6 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         if order_by is not None:
             stmt = self._filter_order_by(stmt, order_by)
 
-        async with self._session as session:  # type: ignore
+        async with self._get_session(session) as session:  # type: ignore
             result = await session.execute(stmt)
-
-        return [x for x in result.scalars()]
-
-    async def _commit(self, session: AsyncSession) -> None:
-        """Commits the session and handles rollback on errors.
-
-        :param session: The session object.
-        :type session: AsyncSession
-        :raises Exception: Any error is re-raised after the rollback.
-        """
-        try:
-            await session.commit()
-        except:
-            await session.rollback()
-            raise
+            return [x for x in result.scalars()]

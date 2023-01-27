@@ -20,3 +20,7 @@ class InvalidModel(Exception):
 
 class UnmappedProperty(Exception):
     pass
+
+
+class SessionNotFound(Exception):
+    pass
