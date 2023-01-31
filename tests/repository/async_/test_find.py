@@ -34,14 +34,14 @@ async def test_find_filtered(repository_class, model_class, sa_manager):
     repo = repository_class(sa_manager.get_bind())
     await repo.save_many({model, model2, model3})
 
-    results = [m for m in await repo.find(name="Someone")]
+    results = [m for m in await repo.find(search_params={"name": "Someone"})]
     assert len(results) == 1
 
 
 async def test_find_filtered_fails_if_invalid_filter(repository_class, sa_manager):
     repo = repository_class(sa_manager.get_bind())
     with pytest.raises(UnmappedProperty):
-        results = [m for m in await repo.find(somename="Someone")]
+        results = [m for m in await repo.find(search_params={"somename": "Someone"})]
 
 
 async def test_find_ordered(repository_class, model_class, sa_manager):

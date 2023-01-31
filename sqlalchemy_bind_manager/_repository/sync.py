@@ -1,6 +1,7 @@
 from abc import ABC
+from collections.abc import Mapping
 from contextlib import contextmanager
-from typing import Union, Generic, Iterable, Tuple, List, Iterator
+from typing import Union, Generic, Iterable, Tuple, List, Iterator, Any
 
 from sqlalchemy import select
 from sqlalchemy.orm import scoped_session
@@ -94,9 +95,9 @@ class SQLAlchemySyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
 
     def find(
         self,
+        search_params: Union[None, Mapping[str, Any]] = None,
         order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
         session: Union[scoped_session, None] = None,
-        **search_params,
     ) -> List[MODEL]:
         """Find models using filters
 
@@ -104,13 +105,14 @@ class SQLAlchemySyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         find(name="John") finds all models with name = John
 
         :param order_by:
-        :param search_params: Any keyword argument to be used as equality filter
+        :param search_params: A dictionary containing equality filters
         :param session: Optional session with externally-managed lifecycle
         :return: A collection of models
         :rtype: List
         """
         stmt = select(self._model)  # type: ignore
-        stmt = self._filter_select(stmt, **search_params)
+        if search_params:
+            stmt = self._filter_select(stmt, search_params)
 
         if order_by is not None:
             stmt = self._filter_order_by(stmt, order_by)
