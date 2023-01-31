@@ -1,4 +1,5 @@
-from typing import Dict, Union
+from collections.abc import Mapping, MutableMapping
+from typing import Union
 
 from pydantic import BaseModel
 from sqlalchemy import create_engine, MetaData
@@ -19,15 +20,15 @@ from sqlalchemy_bind_manager.exceptions import (
 
 
 class SQLAlchemyBindConfig(BaseModel):
-    engine_options: Union[Dict, None]
+    engine_options: Union[dict, None]
     engine_url: str
-    session_options: Union[Dict, None]
+    session_options: Union[dict, None]
 
 
 class SQLAlchemyAsyncBindConfig(BaseModel):
-    engine_options: Union[Dict, None]
+    engine_options: Union[dict, None]
     engine_url: str
-    session_options: Union[Dict, None]
+    session_options: Union[dict, None]
 
 
 class SQLAlchemyBind(BaseModel):
@@ -51,7 +52,7 @@ class SQLAlchemyAsyncBind(BaseModel):
 
 
 SQLAlchemyConfig = Union[
-    Dict[str, Union[SQLAlchemyBindConfig, SQLAlchemyAsyncBindConfig]],
+    Mapping[str, Union[SQLAlchemyBindConfig, SQLAlchemyAsyncBindConfig]],
     SQLAlchemyBindConfig,
     SQLAlchemyAsyncBindConfig,
 ]
@@ -59,14 +60,14 @@ DEFAULT_BIND_NAME = "default"
 
 
 class SQLAlchemyBindManager:
-    __binds: Dict[str, Union[SQLAlchemyBind, SQLAlchemyAsyncBind]]
+    __binds: MutableMapping[str, Union[SQLAlchemyBind, SQLAlchemyAsyncBind]]
 
     def __init__(
         self,
         config: SQLAlchemyConfig,
     ) -> None:
         self.__binds = {}
-        if isinstance(config, dict):
+        if isinstance(config, Mapping):
             for name, conf in config.items():
                 self.__init_bind(name, conf)
         else:
@@ -142,10 +143,10 @@ class SQLAlchemyBindManager:
             model_declarative_base=registry_mapper.generate_base(),
         )
 
-    def get_binds(self) -> Dict[str, Union[SQLAlchemyBind, SQLAlchemyAsyncBind]]:
+    def get_binds(self) -> Mapping[str, Union[SQLAlchemyBind, SQLAlchemyAsyncBind]]:
         return self.__binds
 
-    def get_bind_mappers_metadata(self) -> Dict[str, MetaData]:
+    def get_bind_mappers_metadata(self) -> Mapping[str, MetaData]:
         """
         Returns the mappers metadata in a format that can be used
         in Alembic configuration
