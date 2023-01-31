@@ -1,7 +1,6 @@
 from abc import ABC
-from collections.abc import Mapping
 from contextlib import asynccontextmanager
-from typing import Union, Generic, Tuple, Iterable, List, AsyncIterator, Any
+from typing import Union, Generic, Tuple, Iterable, List, AsyncIterator, Any, Mapping
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import async_scoped_session

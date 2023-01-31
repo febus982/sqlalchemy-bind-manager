@@ -1,5 +1,4 @@
-from collections.abc import Mapping, MutableMapping
-from typing import Union
+from typing import Union, Mapping, MutableMapping
 
 from pydantic import BaseModel
 from sqlalchemy import create_engine, MetaData

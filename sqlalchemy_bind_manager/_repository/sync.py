@@ -1,7 +1,6 @@
 from abc import ABC
-from collections.abc import Mapping
 from contextlib import contextmanager
-from typing import Union, Generic, Iterable, Tuple, List, Iterator, Any
+from typing import Union, Generic, Iterable, Tuple, List, Iterator, Any, Mapping
 
 from sqlalchemy import select
 from sqlalchemy.orm import scoped_session

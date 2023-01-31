@@ -1,8 +1,7 @@
 from abc import ABC
-from collections.abc import Mapping
 from enum import Enum
 from functools import partial
-from typing import TypeVar, Union, Generic, Type, Tuple, Iterable, Any
+from typing import TypeVar, Union, Generic, Type, Tuple, Iterable, Any, Mapping
 
 from sqlalchemy import asc, desc
 from sqlalchemy.orm import object_mapper, class_mapper, Mapper
