@@ -1,6 +1,6 @@
 from abc import ABC
 from contextlib import asynccontextmanager
-from typing import Union, Generic, Tuple, Iterable, List, AsyncIterator
+from typing import Union, Generic, Tuple, Iterable, List, AsyncIterator, Any, Mapping
 
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import async_scoped_session
@@ -96,23 +96,24 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
 
     async def find(
         self,
+        search_params: Union[None, Mapping[str, Any]] = None,
         order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
         session: Union[async_scoped_session, None] = None,
-        **search_params,
     ) -> List[MODEL]:
         """Find models using filters
 
         E.g.
-        find(name="John") finds all models with name = John
+        find(search_params={"name": "John"}) finds all models with name = John
 
         :param order_by:
-        :param search_params: Any keyword argument to be used as equality filter
+        :param search_params: A dictionary containing equality filters
         :param session: Optional session with externally-managed lifecycle
         :return: A collection of models
         :rtype: List
         """
         stmt = select(self._model)  # type: ignore
-        stmt = self._filter_select(stmt, **search_params)
+        if search_params:
+            stmt = self._filter_select(stmt, search_params)
 
         if order_by is not None:
             stmt = self._filter_order_by(stmt, order_by)

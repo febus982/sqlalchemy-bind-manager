@@ -1,7 +1,7 @@
 from abc import ABC
 from enum import Enum
 from functools import partial
-from typing import TypeVar, Union, Generic, Type, Tuple, Iterable
+from typing import TypeVar, Union, Generic, Type, Tuple, Iterable, Any, Mapping
 
 from sqlalchemy import asc, desc
 from sqlalchemy.orm import object_mapper, class_mapper, Mapper
@@ -54,7 +54,7 @@ class BaseRepository(Generic[MODEL], ABC):
                 f"Property `{property_name}` is not mapped in the ORM for model `{self._model}`"
             )
 
-    def _filter_select(self, stmt: Select, **search_params) -> Select:
+    def _filter_select(self, stmt: Select, search_params: Mapping[str, Any]) -> Select:
         """Build the query filtering clauses from submitted parameters.
 
         E.g.
@@ -68,6 +68,11 @@ class BaseRepository(Generic[MODEL], ABC):
         # TODO: Add support for offset/limit
         # TODO: Add support for relationship eager load
         for k, v in search_params.items():
+            """
+            This acts as a TypeGuard but using TypeGuard typing would break
+            compatibility with python < 3.10, for the moment we prefer to ignore
+            typing issues here
+            """
             self._validate_mapped_property(k)
             stmt = stmt.where(getattr(self._model, k) == v)
         return stmt
