@@ -1,10 +1,16 @@
 import os
+from typing import Type
 from uuid import uuid4
 
 import pytest
+from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import clear_mappers
 
-from sqlalchemy_bind_manager import SQLAlchemyBindManager, SQLAlchemyAsyncBindConfig
+from sqlalchemy_bind_manager import (
+    SQLAlchemyBindManager,
+    SQLAlchemyAsyncBindConfig,
+    SQLAlchemyAsyncRepository,
+)
 
 
 @pytest.fixture
@@ -22,3 +28,27 @@ def sa_manager() -> SQLAlchemyBindManager:
         pass
 
     clear_mappers()
+
+
+@pytest.fixture
+def repository_class(model_class) -> Type[SQLAlchemyAsyncRepository]:
+    class MyRepository(SQLAlchemyAsyncRepository[model_class]):
+        _model = model_class
+
+    return MyRepository
+
+
+@pytest.fixture
+async def model_class(sa_manager):
+    default_bind = sa_manager.get_bind()
+
+    class MyModel(default_bind.model_declarative_base):
+        __tablename__ = "mymodel"
+
+        model_id = Column(Integer, primary_key=True, autoincrement=True)
+        name = Column(String)
+
+    async with default_bind.engine.begin() as conn:
+        await conn.run_sync(default_bind.registry_mapper.metadata.create_all)
+
+    yield MyModel
