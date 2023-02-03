@@ -29,7 +29,7 @@ config = SQLAlchemyBindConfig(
 sa_manager = SQLAlchemyBindManager(config)
 ```
 
-🚨 NOTE: Using global variables is not thread-safe, please read the [Threading support](#threading-support) section if your application uses multi-threading.
+🚨 NOTE: Using global variables is not thread-safe, please read the [Threading](#threading) section if your application uses multi-threading.
 
 `engine_url` and `engine_options` dictionary accept the same parameters as SQLAlchemy [create_engine()](https://docs.sqlalchemy.org/en/14/core/engines.html#sqlalchemy.create_engine)
 
