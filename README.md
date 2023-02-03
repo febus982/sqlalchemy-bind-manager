@@ -217,12 +217,12 @@ repo1 = MyRepo(bind)
 repo2 = MyOtherRepo(bind)
 uow = SASyncUnitOfWork(bind)
 
-with uow.get(session) as _session:
+with uow.get_session() as _session:
     repo1.save(some_model, session=_session)
     repo2.save(some_model, session=_session)
 
 # Optionally disable the commit/rollback handling
-with uow.get(session, commit=False) as _session:
+with uow.get_session(commit=False) as _session:
     model1 = repo1.get(1, session=_session)
     model2 = repo1.get(1, session=_session)
 ```
