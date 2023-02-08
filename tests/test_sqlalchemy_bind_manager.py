@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import registry, Session
 
 from sqlalchemy_bind_manager import (
-    SQLAlchemyBindConfig,
+    SQLAlchemyConfig,
     SQLAlchemyBindManager,
 )
 from sqlalchemy_bind_manager.exceptions import (
@@ -20,7 +20,7 @@ from sqlalchemy_bind_manager.exceptions import (
     [
         {"bind_name": "Invalid Config"},
         {
-            "valid": SQLAlchemyBindConfig(
+            "valid": SQLAlchemyConfig(
                 engine_url=f"sqlite:///{uuid4}.db",
                 engine_options=dict(connect_args={"check_same_thread": False}),
                 session_options=dict(expire_on_commit=False),

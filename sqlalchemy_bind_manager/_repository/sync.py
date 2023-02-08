@@ -6,13 +6,13 @@ from sqlalchemy import select
 from sqlalchemy.orm import scoped_session
 
 from .._bind_manager import SQLAlchemyBind
-from .._unit_of_work import SASyncUnitOfWork
+from .._unit_of_work import SQLAlchemyUnitOfWork
 from ..exceptions import ModelNotFound
 from .common import MODEL, PRIMARY_KEY, SortDirection, BaseRepository
 
 
-class SQLAlchemySyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
-    _UOW: SASyncUnitOfWork
+class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
+    _UOW: SQLAlchemyUnitOfWork
 
     def __init__(self, bind: SQLAlchemyBind) -> None:
         """
@@ -20,7 +20,7 @@ class SQLAlchemySyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         :type bind: SQLAlchemyBind
         """
         super().__init__()
-        self._UOW = SASyncUnitOfWork(bind)
+        self._UOW = SQLAlchemyUnitOfWork(bind)
 
     @contextmanager
     def _get_session(

@@ -9,14 +9,14 @@ from sqlalchemy.orm import clear_mappers, relationship
 from sqlalchemy_bind_manager import (
     SQLAlchemyBindManager,
     SQLAlchemyAsyncRepository,
-    SQLAlchemyAsyncBindConfig,
+    SQLAlchemyAsyncConfig,
 )
 
 
 @pytest.fixture
 def sa_manager() -> SQLAlchemyBindManager:
     test_db_path = f"./{uuid4()}.db"
-    config = SQLAlchemyAsyncBindConfig(
+    config = SQLAlchemyAsyncConfig(
         engine_url=f"sqlite+aiosqlite:///{test_db_path}",
         engine_options=dict(connect_args={"check_same_thread": False}),
         session_options=dict(expire_on_commit=False),

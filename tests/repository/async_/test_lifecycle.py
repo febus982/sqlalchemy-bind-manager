@@ -3,7 +3,7 @@ from unittest.mock import patch, AsyncMock
 import pytest
 
 from sqlalchemy_bind_manager import SQLAlchemyAsyncRepository
-from sqlalchemy_bind_manager._unit_of_work import SAAsyncUnitOfWork
+from sqlalchemy_bind_manager._unit_of_work import SQLAlchemyAsyncUnitOfWork
 from sqlalchemy_bind_manager.exceptions import UnsupportedBind
 
 
@@ -107,7 +107,9 @@ async def test_update_model_doesnt_update_other_models_from_same_repo(
     assert updated_model2.name == "SomeoneElse"
 
 
-@patch.object(SAAsyncUnitOfWork, "_commit", return_value=None, new_callable=AsyncMock)
+@patch.object(
+    SQLAlchemyAsyncUnitOfWork, "_commit", return_value=None, new_callable=AsyncMock
+)
 async def test_commit_triggers_once_per_operation_using_internal_uow(
     mocked_uow_commit: AsyncMock, repository_class, model_class, sa_manager
 ):
@@ -126,11 +128,13 @@ async def test_commit_triggers_once_per_operation_using_internal_uow(
     assert mocked_uow_commit.call_count == 2
 
 
-@patch.object(SAAsyncUnitOfWork, "_commit", return_value=None, new_callable=AsyncMock)
+@patch.object(
+    SQLAlchemyAsyncUnitOfWork, "_commit", return_value=None, new_callable=AsyncMock
+)
 async def test_commit_triggers_only_once_with_external_uow(
     mocked_uow_commit: AsyncMock, repository_class, model_class, sa_manager
 ):
-    uow = SAAsyncUnitOfWork(sa_manager.get_bind())
+    uow = SQLAlchemyAsyncUnitOfWork(sa_manager.get_bind())
     repo1 = repository_class(sa_manager.get_bind())
     repo2 = repository_class(sa_manager.get_bind())
 
@@ -150,7 +154,7 @@ async def test_commit_triggers_only_once_with_external_uow(
 async def test_models_are_persisted_using_external_uow(
     repository_class, model_class, sa_manager
 ):
-    uow = SAAsyncUnitOfWork(sa_manager.get_bind())
+    uow = SQLAlchemyAsyncUnitOfWork(sa_manager.get_bind())
     repo1 = repository_class(sa_manager.get_bind())
     repo2 = repository_class(sa_manager.get_bind())
 

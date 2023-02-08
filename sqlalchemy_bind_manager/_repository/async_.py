@@ -6,13 +6,13 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import async_scoped_session
 
 from .._bind_manager import SQLAlchemyAsyncBind
-from .._unit_of_work import SAAsyncUnitOfWork
+from .._unit_of_work import SQLAlchemyAsyncUnitOfWork
 from ..exceptions import ModelNotFound
 from .common import MODEL, PRIMARY_KEY, SortDirection, BaseRepository
 
 
 class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
-    _UOW: SAAsyncUnitOfWork
+    _UOW: SQLAlchemyAsyncUnitOfWork
 
     def __init__(self, bind: SQLAlchemyAsyncBind) -> None:
         """
@@ -20,7 +20,7 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         :type bind: SQLAlchemyAsyncBind
         """
         super().__init__()
-        self._UOW = SAAsyncUnitOfWork(bind)
+        self._UOW = SQLAlchemyAsyncUnitOfWork(bind)
 
     @asynccontextmanager
     async def _get_session(

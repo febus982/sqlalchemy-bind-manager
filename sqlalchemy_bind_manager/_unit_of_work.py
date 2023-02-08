@@ -15,7 +15,7 @@ from sqlalchemy_bind_manager._bind_manager import (
 from sqlalchemy_bind_manager.exceptions import UnsupportedBind
 
 
-class SASyncUnitOfWork:
+class SQLAlchemyUnitOfWork:
     Session: scoped_session
 
     def __init__(self, bind: SQLAlchemyBind):
@@ -50,7 +50,7 @@ class SASyncUnitOfWork:
             raise
 
 
-class SAAsyncUnitOfWork:
+class SQLAlchemyAsyncUnitOfWork:
     Session: async_scoped_session
 
     def __init__(self, bind: SQLAlchemyAsyncBind):

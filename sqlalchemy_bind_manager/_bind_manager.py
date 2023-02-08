@@ -18,13 +18,13 @@ from sqlalchemy_bind_manager.exceptions import (
 )
 
 
-class SQLAlchemyBindConfig(BaseModel):
+class SQLAlchemyConfig(BaseModel):
     engine_options: Union[dict, None]
     engine_url: str
     session_options: Union[dict, None]
 
 
-class SQLAlchemyAsyncBindConfig(BaseModel):
+class SQLAlchemyAsyncConfig(BaseModel):
     engine_options: Union[dict, None]
     engine_url: str
     session_options: Union[dict, None]
@@ -50,10 +50,10 @@ class SQLAlchemyAsyncBind(BaseModel):
         arbitrary_types_allowed = True
 
 
-SQLAlchemyConfig = Union[
-    Mapping[str, Union[SQLAlchemyBindConfig, SQLAlchemyAsyncBindConfig]],
-    SQLAlchemyBindConfig,
-    SQLAlchemyAsyncBindConfig,
+_SQLAlchemyConfig = Union[
+    Mapping[str, Union[SQLAlchemyConfig, SQLAlchemyAsyncConfig]],
+    SQLAlchemyConfig,
+    SQLAlchemyAsyncConfig,
 ]
 DEFAULT_BIND_NAME = "default"
 
@@ -63,7 +63,7 @@ class SQLAlchemyBindManager:
 
     def __init__(
         self,
-        config: SQLAlchemyConfig,
+        config: _SQLAlchemyConfig,
     ) -> None:
         self.__binds = {}
         if isinstance(config, Mapping):
@@ -73,16 +73,16 @@ class SQLAlchemyBindManager:
             self.__init_bind(DEFAULT_BIND_NAME, config)
 
     def __init_bind(
-        self, name: str, config: Union[SQLAlchemyBindConfig, SQLAlchemyAsyncBindConfig]
+        self, name: str, config: Union[SQLAlchemyConfig, SQLAlchemyAsyncConfig]
     ):
         if not any(
             [
-                isinstance(config, SQLAlchemyBindConfig),
-                isinstance(config, SQLAlchemyAsyncBindConfig),
+                isinstance(config, SQLAlchemyConfig),
+                isinstance(config, SQLAlchemyAsyncConfig),
             ]
         ):
             raise InvalidConfig(
-                f"Config for bind `{name}` is not a SQLAlchemyBindConfig or SQLAlchemyAsyncBindConfig object"
+                f"Config for bind `{name}` is not a SQLAlchemyConfig or SQLAlchemyAsyncConfig object"
             )
 
         engine_options: dict = config.engine_options or {}
@@ -92,7 +92,7 @@ class SQLAlchemyBindManager:
         session_options: dict = config.session_options or {}
         session_options.setdefault("expire_on_commit", False)
 
-        if isinstance(config, SQLAlchemyAsyncBindConfig):
+        if isinstance(config, SQLAlchemyAsyncConfig):
             self.__binds[name] = self.__build_async_bind(
                 engine_url=config.engine_url,
                 engine_options=engine_options,
