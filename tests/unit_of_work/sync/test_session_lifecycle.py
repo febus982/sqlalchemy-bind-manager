@@ -3,11 +3,11 @@ from unittest.mock import patch, MagicMock
 import pytest
 from sqlalchemy.orm import scoped_session
 
-from sqlalchemy_bind_manager._unit_of_work import SASyncUnitOfWork
+from sqlalchemy_bind_manager._unit_of_work import SQLAlchemyUnitOfWork
 
 
 def test_session_is_removed_on_cleanup(sa_manager):
-    uow = SASyncUnitOfWork(sa_manager.get_bind())
+    uow = SQLAlchemyUnitOfWork(sa_manager.get_bind())
     original_session_remove = uow.Session.remove
     with patch.object(
         uow.Session,
@@ -21,11 +21,11 @@ def test_session_is_removed_on_cleanup(sa_manager):
 
 
 @pytest.mark.parametrize("commit_flag", [True, False])
-@patch.object(SASyncUnitOfWork, "_commit", return_value=None)
+@patch.object(SQLAlchemyUnitOfWork, "_commit", return_value=None)
 def test_commit_is_called_only_if_commit(
     mocked_uow_commit: MagicMock, commit_flag, repository_class, model_class, sa_manager
 ):
-    uow = SASyncUnitOfWork(sa_manager.get_bind())
+    uow = SQLAlchemyUnitOfWork(sa_manager.get_bind())
     repo1 = repository_class(sa_manager.get_bind())
 
     # Populate a database entry to be used for tests
@@ -43,7 +43,7 @@ def test_rollback_is_called_if_commit_fails(
     commit_fails,
     sa_manager,
 ):
-    uow = SASyncUnitOfWork(sa_manager.get_bind())
+    uow = SQLAlchemyUnitOfWork(sa_manager.get_bind())
 
     failure_exception = Exception("Some Error")
     mocked_session = MagicMock(spec=scoped_session)

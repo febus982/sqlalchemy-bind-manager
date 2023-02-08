@@ -8,15 +8,15 @@ from sqlalchemy.orm import clear_mappers, relationship
 
 from sqlalchemy_bind_manager import (
     SQLAlchemyBindManager,
-    SQLAlchemySyncRepository,
-    SQLAlchemyBindConfig,
+    SQLAlchemyRepository,
+    SQLAlchemyConfig,
 )
 
 
 @pytest.fixture
 def sa_manager() -> SQLAlchemyBindManager:
     test_db_path = f"./{uuid4()}.db"
-    config = SQLAlchemyBindConfig(
+    config = SQLAlchemyConfig(
         engine_url=f"sqlite:///{test_db_path}",
         engine_options=dict(connect_args={"check_same_thread": False}),
         session_options=dict(expire_on_commit=False),
@@ -31,16 +31,16 @@ def sa_manager() -> SQLAlchemyBindManager:
 
 
 @pytest.fixture
-def repository_class(model_class) -> Type[SQLAlchemySyncRepository]:
-    class MyRepository(SQLAlchemySyncRepository[model_class]):
+def repository_class(model_class) -> Type[SQLAlchemyRepository]:
+    class MyRepository(SQLAlchemyRepository[model_class]):
         _model = model_class
 
     return MyRepository
 
 
 @pytest.fixture
-def related_repository_class(related_model_classes) -> Type[SQLAlchemySyncRepository]:
-    class ParentRepository(SQLAlchemySyncRepository[related_model_classes[0]]):
+def related_repository_class(related_model_classes) -> Type[SQLAlchemyRepository]:
+    class ParentRepository(SQLAlchemyRepository[related_model_classes[0]]):
         _model = related_model_classes[0]
 
     return ParentRepository

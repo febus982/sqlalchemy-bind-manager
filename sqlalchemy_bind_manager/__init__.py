@@ -1,16 +1,16 @@
 from ._bind_manager import (
     SQLAlchemyBindManager,
-    SQLAlchemyAsyncBindConfig,
-    SQLAlchemyBindConfig,
-    SQLAlchemyBind,
+    SQLAlchemyAsyncConfig,
     SQLAlchemyConfig,
+    SQLAlchemyBind,
+    _SQLAlchemyConfig,
 )
 from ._repository import (
-    SQLAlchemySyncRepository,
+    SQLAlchemyRepository,
     SQLAlchemyAsyncRepository,
     SortDirection,
 )
 from ._unit_of_work import (
-    SASyncUnitOfWork,
-    SAAsyncUnitOfWork,
+    SQLAlchemyUnitOfWork,
+    SQLAlchemyAsyncUnitOfWork,
 )

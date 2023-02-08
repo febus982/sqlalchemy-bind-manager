@@ -15,12 +15,12 @@ This package provides two functionalities:
 
 ## Usage
 
-Initialise the manager providing an instance of `SQLAlchemyBindConfig`
+Initialise the manager providing an instance of `SQLAlchemyConfig`
 
 ```python
-from sqlalchemy_bind_manager import SQLAlchemyBindConfig, SQLAlchemyBindManager
+from sqlalchemy_bind_manager import SQLAlchemyConfig, SQLAlchemyBindManager
 
-config = SQLAlchemyBindConfig(
+config = SQLAlchemyConfig(
     engine_url="sqlite:///./sqlite.db",
     engine_options=dict(connect_args={"check_same_thread": False}, echo=True),
     session_options=dict(expire_on_commit=False),
@@ -92,15 +92,15 @@ with sa_manager.get_session() as session:
 `SQLAlchemyBindManager` accepts also multiple databases configuration, provided as a dictionary. The dictionary keys are used as a reference name for each bind.
 
 ```python
-from sqlalchemy_bind_manager import SQLAlchemyBindConfig, SQLAlchemyBindManager
+from sqlalchemy_bind_manager import SQLAlchemyConfig, SQLAlchemyBindManager
 
 config = {
-    "default": SQLAlchemyBindConfig(
+    "default": SQLAlchemyConfig(
         engine_url="sqlite:///./sqlite.db",
         engine_options=dict(connect_args={"check_same_thread": False}, echo=True),
         session_options=dict(expire_on_commit=False),
     ),
-    "secondary": SQLAlchemyBindConfig(
+    "secondary": SQLAlchemyConfig(
         engine_url="sqlite:///./secondary.db",
         engine_options=dict(connect_args={"check_same_thread": False}, echo=True),
         session_options=dict(expire_on_commit=False),
@@ -133,7 +133,7 @@ chapter to avoid issues.
 Is it possible to supply configurations for asyncio supported engines.
 
 ```python
-config = SQLAlchemyAsyncBindConfig(
+config = SQLAlchemyAsyncConfig(
     engine_url="postgresql+asyncpg://scott:tiger@localhost/test",
 )
 ```
@@ -151,16 +151,19 @@ to check [SQLAlchemy asyncio documentation](https://docs.sqlalchemy.org/en/20/or
 
 ## Repository
 
-The `SQLAlchemySyncRepository` and `SQLAlchemyAsyncRepository` class can be used simply by extending them.
+The `SQLAlchemyRepository` and `SQLAlchemyAsyncRepository` class can be used simply by extending them.
 
 ```python
-from sqlalchemy_bind_manager import SQLAlchemySyncRepository
+from sqlalchemy_bind_manager import SQLAlchemyRepository
+
 
 class MyModel(model_declarative_base):
     pass
 
-class ModelRepository(SQLAlchemySyncRepository[MyModel]):
+
+class ModelRepository(SQLAlchemyRepository[MyModel]):
     _model = MyModel
+
 
 repo_instance = ModelRepository(sqlalchemy_bind_manager.get_bind())
 ```
@@ -204,7 +207,7 @@ It is possible we need to run several operations in a single database transactio
 repository provide by itself an isolated session for single operations, we have to use a different
 approach for multiple operations.
 
-We can use the `SASyncUnitOfWork` or the `SASyncUnitOfWork` class to provide a shared session to
+We can use the `SQLAlchemyUnitOfWork` or the `SQLAlchemyUnitOfWork` class to provide a shared session to
 be used for repository operations, **assumed the same bind is used for all the repositories**.
 (Two phase transactions are not currently supported).
 
@@ -215,7 +218,7 @@ operations to bypass the internal repository-managed session.
 bind = sa_manager.get_bind()
 repo1 = MyRepo(bind)
 repo2 = MyOtherRepo(bind)
-uow = SASyncUnitOfWork(bind)
+uow = SQLAlchemyUnitOfWork(bind)
 
 with uow.get_session() as _session:
     repo1.save(some_model, session=_session)

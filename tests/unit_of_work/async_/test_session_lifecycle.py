@@ -3,11 +3,11 @@ from unittest.mock import patch, AsyncMock
 import pytest
 from sqlalchemy.ext.asyncio import async_scoped_session
 
-from sqlalchemy_bind_manager._unit_of_work import SAAsyncUnitOfWork
+from sqlalchemy_bind_manager._unit_of_work import SQLAlchemyAsyncUnitOfWork
 
 
 async def test_session_is_destroyed_on_cleanup(sa_manager):
-    uow = SAAsyncUnitOfWork(sa_manager.get_bind())
+    uow = SQLAlchemyAsyncUnitOfWork(sa_manager.get_bind())
     original_session_remove = uow.Session.remove
 
     with patch.object(
@@ -23,7 +23,7 @@ async def test_session_is_destroyed_on_cleanup(sa_manager):
 
 def test_session_is_destroyed_on_cleanup_if_loop_is_not_running(sa_manager):
     # Running the test without a loop will trigger the loop creation
-    uow = SAAsyncUnitOfWork(sa_manager.get_bind())
+    uow = SQLAlchemyAsyncUnitOfWork(sa_manager.get_bind())
     original_session_close = uow.Session.remove
 
     with patch.object(
@@ -38,11 +38,11 @@ def test_session_is_destroyed_on_cleanup_if_loop_is_not_running(sa_manager):
 
 
 @pytest.mark.parametrize("commit_flag", [True, False])
-@patch.object(SAAsyncUnitOfWork, "_commit", return_value=None)
+@patch.object(SQLAlchemyAsyncUnitOfWork, "_commit", return_value=None)
 async def test_commit_is_called_only_if_commit(
     mocked_uow_commit: AsyncMock, commit_flag, repository_class, model_class, sa_manager
 ):
-    uow = SAAsyncUnitOfWork(sa_manager.get_bind())
+    uow = SQLAlchemyAsyncUnitOfWork(sa_manager.get_bind())
     repo1 = repository_class(sa_manager.get_bind())
 
     # Populate a database entry to be used for tests
@@ -60,7 +60,7 @@ async def test_rollback_is_called_if_commit_fails(
     commit_fails,
     sa_manager,
 ):
-    uow = SAAsyncUnitOfWork(sa_manager.get_bind())
+    uow = SQLAlchemyAsyncUnitOfWork(sa_manager.get_bind())
 
     failure_exception = Exception("Some Error")
     mocked_session = AsyncMock(spec=async_scoped_session)
