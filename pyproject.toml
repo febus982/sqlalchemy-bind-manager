@@ -1,7 +1,7 @@
 [tool.poetry]
-name = "sqlalchemy-bind-manager"
+name = "SQLAlchemy-bind-manager"
 version = "0.0.0"
-description = ""
+description = "A manager to easily handle multiple SQLAlchemy configurations"
 license = "MIT"
 authors = ["Federico Busetti <729029+febus982@users.noreply.github.com>"]
 repository = "https://github.com/febus982/sqlalchemy-bind-manager"
