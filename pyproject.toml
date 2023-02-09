@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "SQLAlchemy-bind-manager"
+name = "sqlalchemy-bind-manager"
 version = "0.0.0"
 description = "A manager to easily handle multiple SQLAlchemy configurations"
 license = "MIT"
