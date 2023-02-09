@@ -20,6 +20,12 @@ It is composed by two main components:
 * A manager class for SQLAlchemy engine configuration
 * A repository/unit-of-work pattern implementation for model retrieval and persistence
 
+## Installation
+
+```bash
+pip install sqlalchemy-bind-manager
+```
+
 ## Components maturity
 
 [//]: # (https://github.com/mkenney/software-guides/blob/master/STABILITY-BADGES.md)
