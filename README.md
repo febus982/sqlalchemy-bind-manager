@@ -6,14 +6,25 @@
 
 [![Maintainability](https://api.codeclimate.com/v1/badges/0140f7f4e559ae806887/maintainability)](https://codeclimate.com/github/febus982/sqlalchemy-bind-manager/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/0140f7f4e559ae806887/test_coverage)](https://codeclimate.com/github/febus982/sqlalchemy-bind-manager/test_coverage)
+[![Checked with mypy](https://www.mypy-lang.org/static/mypy_badge.svg)](https://mypy-lang.org/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-This package provides two functionalities:
+This package provides an easy way to configure and use SQLAlchemy engines and sessions
+without depending on frameworks.
 
-* A manager for multiple SQLAlchemy configurations, using typed inputs and decoupled from any framework.
-* A generic class implementation to be used in repository pattern
+It is composed by two main components:
 
-## Usage
+* A manager class for SQLAlchemy engine configuration
+* A repository/unit-of-work pattern implementation for model retrieval and persistence
+
+## Components maturity
+
+[//]: # (https://github.com/mkenney/software-guides/blob/master/STABILITY-BADGES.md)
+* [![stability-beta](https://img.shields.io/badge/stability-beta-33bbff.svg)](https://github.com/mkenney/software-guides/blob/master/STABILITY-BADGES.md#beta) **SQLAlchemy manager:** Implementation is mostly final, needs testing in production.
+* [![stability-wip](https://img.shields.io/badge/stability-wip-lightgrey.svg)](https://github.com/mkenney/software-guides/blob/master/STABILITY-BADGES.md#work-in-progress) **Repository / Unit of work:** Major work is stil necessary to finalise the interface, to hide the session management implementation details from the application.
+
+
+## SQLAlchemy manager 
 
 Initialise the manager providing an instance of `SQLAlchemyConfig`
 
@@ -149,7 +160,7 @@ async with sa_manager.get_session() as session:
 Note that async implementation has several differences from the sync one, make sure
 to check [SQLAlchemy asyncio documentation](https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html)
 
-## Repository
+## Repository / Unit of work
 
 The `SQLAlchemyRepository` and `SQLAlchemyAsyncRepository` class can be used simply by extending them.
 
@@ -201,7 +212,7 @@ relationship are loaded eagerly. You can do this by:
 Also `AsyncSession` has [the same limitation on lazy loading](https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html#asyncio-orm-avoid-lazyloads)
 so it makes sense that the two repository implementations behave consistently.
 
-### Handling shared session among multiple repositories
+### Use the Unit Of Work to share a session among multiple repositories [alpha]
 
 It is possible we need to run several operations in a single database transaction. While a single
 repository provide by itself an isolated session for single operations, we have to use a different
