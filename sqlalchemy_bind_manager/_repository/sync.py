@@ -13,14 +13,23 @@ from .common import MODEL, PRIMARY_KEY, SortDirection, BaseRepository
 
 class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
     _UOW: SQLAlchemyUnitOfWork
+    _external_session: Union[scoped_session, None]
 
-    def __init__(self, bind: SQLAlchemyBind) -> None:
+    def __init__(
+            self,
+            bind: SQLAlchemyBind,
+            session: Union[scoped_session, None] = None
+    ) -> None:
         """
         :param bind: A configured instance of SQLAlchemyBind
         :type bind: SQLAlchemyBind
+        :param session: An externally managed session
+        :type session: scoped_session
         """
         super().__init__()
-        self._UOW = SQLAlchemyUnitOfWork(bind)
+        self._external_session = session
+        if not session:
+            self._UOW = SQLAlchemyUnitOfWork(bind)
 
     @contextmanager
     def _get_session(
@@ -30,7 +39,7 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
             with self._UOW.get_session(commit) as _session:
                 yield _session
         else:
-            yield session
+            yield session or self._external_session
 
     def save(
         self, instance: MODEL, session: Union[scoped_session, None] = None

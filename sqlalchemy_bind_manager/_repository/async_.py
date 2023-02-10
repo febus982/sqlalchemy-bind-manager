@@ -13,14 +13,23 @@ from .common import MODEL, PRIMARY_KEY, SortDirection, BaseRepository
 
 class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
     _UOW: SQLAlchemyAsyncUnitOfWork
+    _external_session: Union[async_scoped_session, None]
 
-    def __init__(self, bind: SQLAlchemyAsyncBind) -> None:
+    def __init__(
+            self,
+            bind: SQLAlchemyAsyncBind,
+            session: Union[async_scoped_session, None] = None
+    ) -> None:
         """
         :param bind: A configured instance of SQLAlchemyAsyncBind
         :type bind: SQLAlchemyAsyncBind
+        :param session: An externally managed session
+        :type session: async_scoped_session
         """
         super().__init__()
-        self._UOW = SQLAlchemyAsyncUnitOfWork(bind)
+        self._external_session = session
+        if not session:
+            self._UOW = SQLAlchemyAsyncUnitOfWork(bind)
 
     @asynccontextmanager
     async def _get_session(
@@ -30,7 +39,7 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
             async with self._UOW.get_session(commit) as _session:
                 yield _session
         else:
-            yield session
+            yield session or self._external_session
 
     async def save(
         self, instance: MODEL, session: Union[async_scoped_session, None] = None
