@@ -108,7 +108,7 @@ async def test_update_model_doesnt_update_other_models_from_same_repo(
 
 
 @patch.object(
-    SQLAlchemyAsyncUnitOfWork, "_commit", return_value=None, new_callable=AsyncMock
+    SQLAlchemyAsyncUnitOfWork, "commit", return_value=None, new_callable=AsyncMock
 )
 async def test_commit_triggers_once_per_operation_using_internal_uow(
     mocked_uow_commit: AsyncMock, repository_class, model_class, sa_manager
@@ -129,7 +129,7 @@ async def test_commit_triggers_once_per_operation_using_internal_uow(
 
 
 @patch.object(
-    SQLAlchemyAsyncUnitOfWork, "_commit", return_value=None, new_callable=AsyncMock
+    SQLAlchemyAsyncUnitOfWork, "commit", return_value=None, new_callable=AsyncMock
 )
 async def test_commit_triggers_only_once_with_external_uow(
     mocked_uow_commit: AsyncMock, repository_class, model_class, sa_manager

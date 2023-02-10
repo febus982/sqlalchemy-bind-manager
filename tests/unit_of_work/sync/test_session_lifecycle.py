@@ -21,7 +21,7 @@ def test_session_is_removed_on_cleanup(sa_manager):
 
 
 @pytest.mark.parametrize("commit_flag", [True, False])
-@patch.object(SQLAlchemyUnitOfWork, "_commit", return_value=None)
+@patch.object(SQLAlchemyUnitOfWork, "commit", return_value=None)
 def test_commit_is_called_only_if_commit(
     mocked_uow_commit: MagicMock, commit_flag, repository_class, model_class, sa_manager
 ):
@@ -51,7 +51,7 @@ def test_rollback_is_called_if_commit_fails(
         mocked_session.commit.side_effect = failure_exception
 
     try:
-        uow._commit(mocked_session)
+        uow.commit(mocked_session)
     except Exception as e:
         assert commit_fails is True
         assert e == failure_exception

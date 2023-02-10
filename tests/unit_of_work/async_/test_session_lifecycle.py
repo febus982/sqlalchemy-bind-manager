@@ -38,7 +38,7 @@ def test_session_is_destroyed_on_cleanup_if_loop_is_not_running(sa_manager):
 
 
 @pytest.mark.parametrize("commit_flag", [True, False])
-@patch.object(SQLAlchemyAsyncUnitOfWork, "_commit", return_value=None)
+@patch.object(SQLAlchemyAsyncUnitOfWork, "commit", return_value=None)
 async def test_commit_is_called_only_if_commit(
     mocked_uow_commit: AsyncMock, commit_flag, repository_class, model_class, sa_manager
 ):
@@ -68,7 +68,7 @@ async def test_rollback_is_called_if_commit_fails(
         mocked_session.commit.side_effect = failure_exception
 
     try:
-        await uow._commit(mocked_session)
+        await uow.commit(mocked_session)
     except Exception as e:
         assert commit_fails is True
         assert e == failure_exception

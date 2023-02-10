@@ -34,9 +34,9 @@ class SQLAlchemyUnitOfWork:
         with self._session() as _session:
             yield _session
             if commit:
-                self._commit(_session)
+                self.commit(_session)
 
-    def _commit(self, session: scoped_session) -> None:
+    def commit(self, session: scoped_session) -> None:
         """Commits the session and handles rollback on errors.
 
         :param session: The session object.
@@ -79,9 +79,9 @@ class SQLAlchemyAsyncUnitOfWork:
         async with self._session() as _session:
             yield _session
             if commit:
-                await self._commit(_session)
+                await self.commit(_session)
 
-    async def _commit(self, session: async_scoped_session) -> None:
+    async def commit(self, session: async_scoped_session) -> None:
         """Commits the session and handles rollback on errors.
 
         :param session: The session object.

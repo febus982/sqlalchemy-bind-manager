@@ -105,7 +105,7 @@ def test_update_model_doesnt_update_other_models_from_same_repo(
     assert updated_model2.name == "SomeoneElse"
 
 
-@patch.object(SQLAlchemyUnitOfWork, "_commit", return_value=None)
+@patch.object(SQLAlchemyUnitOfWork, "commit", return_value=None)
 def test_commit_triggers_once_per_operation_using_internal_uow(
     mocked_uow_commit: MagicMock, repository_class, model_class, sa_manager
 ):
@@ -124,7 +124,7 @@ def test_commit_triggers_once_per_operation_using_internal_uow(
     assert mocked_uow_commit.call_count == 2
 
 
-@patch.object(SQLAlchemyUnitOfWork, "_commit", return_value=None)
+@patch.object(SQLAlchemyUnitOfWork, "commit", return_value=None)
 def test_commit_triggers_only_once_with_external_uow(
     mocked_uow_commit: MagicMock, repository_class, model_class, sa_manager
 ):
