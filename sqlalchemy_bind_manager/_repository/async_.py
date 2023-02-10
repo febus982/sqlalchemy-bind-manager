@@ -6,19 +6,19 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import async_scoped_session
 
 from .._bind_manager import SQLAlchemyAsyncBind
-from .._unit_of_work import SQLAlchemyAsyncUnitOfWork
+from .._transaction_handler import AsyncSessionHandler
 from ..exceptions import ModelNotFound
 from .common import MODEL, PRIMARY_KEY, SortDirection, BaseRepository
 
 
 class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
-    _UOW: SQLAlchemyAsyncUnitOfWork
+    _UOW: AsyncSessionHandler
     _external_session: Union[async_scoped_session, None]
 
     def __init__(
-            self,
-            bind: SQLAlchemyAsyncBind,
-            session: Union[async_scoped_session, None] = None
+        self,
+        bind: SQLAlchemyAsyncBind,
+        session: Union[async_scoped_session, None] = None,
     ) -> None:
         """
         :param bind: A configured instance of SQLAlchemyAsyncBind
@@ -29,14 +29,14 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         super().__init__()
         self._external_session = session
         if not session:
-            self._UOW = SQLAlchemyAsyncUnitOfWork(bind)
+            self._UOW = AsyncSessionHandler(bind)
 
     @asynccontextmanager
     async def _get_session(
         self, session: Union[async_scoped_session, None] = None, commit: bool = True
     ) -> AsyncIterator[async_scoped_session]:
         if not session:
-            async with self._UOW.get_session(commit) as _session:
+            async with self._UOW.get_session(not commit) as _session:
                 yield _session
         else:
             yield session or self._external_session
@@ -59,7 +59,7 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         instances: Iterable[MODEL],
         session: Union[async_scoped_session, None] = None,
     ) -> Iterable[MODEL]:
-        """Persist many models in a single database transaction.
+        """Persist many models in a single database get_session.
 
         :param instances: A list of mapped objects to be persisted
         :type instances: Iterable

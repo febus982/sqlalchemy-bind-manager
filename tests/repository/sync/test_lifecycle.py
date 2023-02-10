@@ -3,7 +3,7 @@ from unittest.mock import patch, MagicMock
 import pytest
 
 from sqlalchemy_bind_manager import SQLAlchemyRepository
-from sqlalchemy_bind_manager._unit_of_work import SQLAlchemyUnitOfWork
+from sqlalchemy_bind_manager._transaction_handler import SessionHandler
 from sqlalchemy_bind_manager.exceptions import UnsupportedBind
 
 
@@ -105,7 +105,7 @@ def test_update_model_doesnt_update_other_models_from_same_repo(
     assert updated_model2.name == "SomeoneElse"
 
 
-@patch.object(SQLAlchemyUnitOfWork, "commit", return_value=None)
+@patch.object(SessionHandler, "commit", return_value=None)
 def test_commit_triggers_once_per_operation_using_internal_uow(
     mocked_uow_commit: MagicMock, repository_class, model_class, sa_manager
 ):
@@ -124,11 +124,11 @@ def test_commit_triggers_once_per_operation_using_internal_uow(
     assert mocked_uow_commit.call_count == 2
 
 
-@patch.object(SQLAlchemyUnitOfWork, "commit", return_value=None)
+@patch.object(SessionHandler, "commit", return_value=None)
 def test_commit_triggers_only_once_with_external_uow(
     mocked_uow_commit: MagicMock, repository_class, model_class, sa_manager
 ):
-    uow = SQLAlchemyUnitOfWork(sa_manager.get_bind())
+    uow = SessionHandler(sa_manager.get_bind())
     repo1 = repository_class(sa_manager.get_bind())
     repo2 = repository_class(sa_manager.get_bind())
 
@@ -148,7 +148,7 @@ def test_commit_triggers_only_once_with_external_uow(
 def test_models_are_persisted_using_external_uow(
     repository_class, model_class, sa_manager
 ):
-    uow = SQLAlchemyUnitOfWork(sa_manager.get_bind())
+    uow = SessionHandler(sa_manager.get_bind())
     repo1 = repository_class(sa_manager.get_bind())
     repo2 = repository_class(sa_manager.get_bind())
 

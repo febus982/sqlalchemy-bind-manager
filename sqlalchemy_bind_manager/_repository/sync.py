@@ -6,19 +6,17 @@ from sqlalchemy import select
 from sqlalchemy.orm import scoped_session
 
 from .._bind_manager import SQLAlchemyBind
-from .._unit_of_work import SQLAlchemyUnitOfWork
+from .._transaction_handler import SessionHandler
 from ..exceptions import ModelNotFound
 from .common import MODEL, PRIMARY_KEY, SortDirection, BaseRepository
 
 
 class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
-    _UOW: SQLAlchemyUnitOfWork
+    _UOW: SessionHandler
     _external_session: Union[scoped_session, None]
 
     def __init__(
-            self,
-            bind: SQLAlchemyBind,
-            session: Union[scoped_session, None] = None
+        self, bind: SQLAlchemyBind, session: Union[scoped_session, None] = None
     ) -> None:
         """
         :param bind: A configured instance of SQLAlchemyBind
@@ -29,14 +27,14 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         super().__init__()
         self._external_session = session
         if not session:
-            self._UOW = SQLAlchemyUnitOfWork(bind)
+            self._UOW = SessionHandler(bind)
 
     @contextmanager
     def _get_session(
         self, session: Union[scoped_session, None] = None, commit: bool = True
     ) -> Iterator[scoped_session]:
         if not session:
-            with self._UOW.get_session(commit) as _session:
+            with self._UOW.get_session(not commit) as _session:
                 yield _session
         else:
             yield session or self._external_session
@@ -57,7 +55,7 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
     def save_many(
         self, instances: Iterable[MODEL], session: Union[scoped_session, None] = None
     ) -> Iterable[MODEL]:
-        """Persist many models in a single database transaction.
+        """Persist many models in a single database get_session.
 
         :param instances: A list of mapped objects to be persisted
         :type instances: Iterable

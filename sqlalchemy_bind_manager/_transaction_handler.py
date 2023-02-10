@@ -5,8 +5,9 @@ from uuid import uuid4
 
 from sqlalchemy.ext.asyncio import (
     async_scoped_session,
+    AsyncSession,
 )
-from sqlalchemy.orm import scoped_session
+from sqlalchemy.orm import scoped_session, Session
 
 from sqlalchemy_bind_manager._bind_manager import (
     SQLAlchemyBind,
@@ -15,73 +16,79 @@ from sqlalchemy_bind_manager._bind_manager import (
 from sqlalchemy_bind_manager.exceptions import UnsupportedBind
 
 
-class SQLAlchemyUnitOfWork:
-    _session: scoped_session
+class SessionHandler:
+    _session_class: scoped_session
+    _session: Session
 
     def __init__(self, bind: SQLAlchemyBind):
         if not isinstance(bind, SQLAlchemyBind):
             raise UnsupportedBind("Bind is not an instance of SQLAlchemyBind")
         else:
             u = uuid4()
-            self._session = scoped_session(bind.session_class, scopefunc=lambda: str(u))
+            self._session_class = scoped_session(
+                bind.session_class, scopefunc=lambda: str(u)
+            )
+            self._session = self._session_class()
 
     def __del__(self):
-        if getattr(self, "_session", None):
-            self._session.remove()
+        if getattr(self, "_session_class", None):
+            self._session_class.remove()
 
     @contextmanager
-    def get_session(self, commit: bool = True) -> Iterator[scoped_session]:
-        with self._session() as _session:
-            yield _session
-            if commit:
-                self.commit(_session)
+    def get_session(self, read_only: bool = False) -> Iterator[Session]:
+        try:
+            yield self._session
+            if not read_only:
+                self.commit()
+        finally:
+            self._session.close()
 
-    def commit(self, session: scoped_session) -> None:
+    def commit(self) -> None:
         """Commits the session and handles rollback on errors.
 
-        :param session: The session object.
-        :type session: _session
         :raises Exception: Any error is re-raised after the rollback.
         """
         try:
-            session.commit()
+            self._session.commit()
         except:
-            session.rollback()
+            self._session.rollback()
             raise
 
 
-class SQLAlchemyAsyncUnitOfWork:
-    _session: async_scoped_session
+class AsyncSessionHandler:
+    _session_class: async_scoped_session
+    _session: AsyncSession
 
     def __init__(self, bind: SQLAlchemyAsyncBind):
         if not isinstance(bind, SQLAlchemyAsyncBind):
             raise UnsupportedBind("Bind is not an instance of SQLAlchemyAsyncBind")
         else:
             u = uuid4()
-            self._session = async_scoped_session(
+            self._session_class = async_scoped_session(
                 bind.session_class, scopefunc=lambda: str(u)
             )
+            self._session = self._session_class()
 
     def __del__(self):
-        if not getattr(self, "_session", None):
+        if not getattr(self, "_session_class", None):
             return
 
         loop = get_event_loop()
         if loop.is_running():
-            loop.create_task(self._session.remove())
+            loop.create_task(self._session_class.remove())
         else:
-            loop.run_until_complete(self._session.remove())
+            loop.run_until_complete(self._session_class.remove())
 
     @asynccontextmanager
-    async def get_session(
-        self, commit: bool = True
-    ) -> AsyncIterator[async_scoped_session]:
-        async with self._session() as _session:
-            yield _session
-            if commit:
-                await self.commit(_session)
+    async def get_session(self, read_only: bool = False) -> AsyncIterator[AsyncSession]:
+        try:
+            yield self._session
+            if not read_only:
+                await self.commit()
+        finally:
+            await self._session.close()
 
-    async def commit(self, session: async_scoped_session) -> None:
+    async def commit(self) -> None:
         """Commits the session and handles rollback on errors.
 
         :param session: The session object.
@@ -89,7 +96,7 @@ class SQLAlchemyAsyncUnitOfWork:
         :raises Exception: Any error is re-raised after the rollback.
         """
         try:
-            await session.commit()
+            await self._session.commit()
         except:
-            await session.rollback()
+            await self._session.rollback()
             raise
