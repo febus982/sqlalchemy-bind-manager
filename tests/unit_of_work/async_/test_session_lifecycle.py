@@ -8,10 +8,10 @@ from sqlalchemy_bind_manager._unit_of_work import SQLAlchemyAsyncUnitOfWork
 
 async def test_session_is_destroyed_on_cleanup(sa_manager):
     uow = SQLAlchemyAsyncUnitOfWork(sa_manager.get_bind())
-    original_session_remove = uow.Session.remove
+    original_session_remove = uow._session.remove
 
     with patch.object(
-        uow.Session,
+        uow._session,
         "remove",
         wraps=original_session_remove,
     ) as mocked_remove:
@@ -24,10 +24,10 @@ async def test_session_is_destroyed_on_cleanup(sa_manager):
 def test_session_is_destroyed_on_cleanup_if_loop_is_not_running(sa_manager):
     # Running the test without a loop will trigger the loop creation
     uow = SQLAlchemyAsyncUnitOfWork(sa_manager.get_bind())
-    original_session_close = uow.Session.remove
+    original_session_close = uow._session.remove
 
     with patch.object(
-        uow.Session,
+        uow._session,
         "remove",
         wraps=original_session_close,
     ) as mocked_close:

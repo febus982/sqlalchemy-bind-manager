@@ -8,9 +8,9 @@ from sqlalchemy_bind_manager._unit_of_work import SQLAlchemyUnitOfWork
 
 def test_session_is_removed_on_cleanup(sa_manager):
     uow = SQLAlchemyUnitOfWork(sa_manager.get_bind())
-    original_session_remove = uow.Session.remove
+    original_session_remove = uow._session.remove
     with patch.object(
-        uow.Session,
+        uow._session,
         "remove",
         wraps=original_session_remove,
     ) as mocked_remove:
