@@ -47,14 +47,13 @@ async def test_commit_is_called_only_if_not_read_only(
     sa_manager,
 ):
     uow = AsyncSessionHandler(sa_manager.get_bind())
-    repo1 = repository_class(sa_manager.get_bind())
 
     # Populate a database entry to be used for tests
     model1 = model_class(
         name="Someone",
     )
     async with uow.get_session(read_only=read_only_flag) as _session:
-        await repo1.save(model1, session=_session)
+        _session.add(model1)
 
     assert mocked_uow_commit.call_count == int(not read_only_flag)
 
@@ -68,7 +67,7 @@ async def test_rollback_is_called_if_commit_fails(
 
     failure_exception = Exception("Some Error")
     mocked_session = AsyncMock(spec=async_scoped_session)
-    uow._session = mocked_session
+    uow.session = mocked_session
     if commit_fails:
         mocked_session.commit.side_effect = failure_exception
 

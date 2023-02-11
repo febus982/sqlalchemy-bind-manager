@@ -18,7 +18,7 @@ from sqlalchemy_bind_manager.exceptions import UnsupportedBind
 
 class SessionHandler:
     _session_class: scoped_session
-    _session: Session
+    session: Session
 
     def __init__(self, bind: SQLAlchemyBind):
         if not isinstance(bind, SQLAlchemyBind):
@@ -28,7 +28,7 @@ class SessionHandler:
             self._session_class = scoped_session(
                 bind.session_class, scopefunc=lambda: str(u)
             )
-            self._session = self._session_class()
+            self.session = self._session_class()
 
     def __del__(self):
         if getattr(self, "_session_class", None):
@@ -37,11 +37,11 @@ class SessionHandler:
     @contextmanager
     def get_session(self, read_only: bool = False) -> Iterator[Session]:
         try:
-            yield self._session
+            yield self.session
             if not read_only:
                 self.commit()
         finally:
-            self._session.close()
+            self.session.close()
 
     def commit(self) -> None:
         """Commits the session and handles rollback on errors.
@@ -49,15 +49,15 @@ class SessionHandler:
         :raises Exception: Any error is re-raised after the rollback.
         """
         try:
-            self._session.commit()
+            self.session.commit()
         except:
-            self._session.rollback()
+            self.session.rollback()
             raise
 
 
 class AsyncSessionHandler:
     _session_class: async_scoped_session
-    _session: AsyncSession
+    session: AsyncSession
 
     def __init__(self, bind: SQLAlchemyAsyncBind):
         if not isinstance(bind, SQLAlchemyAsyncBind):
@@ -67,7 +67,7 @@ class AsyncSessionHandler:
             self._session_class = async_scoped_session(
                 bind.session_class, scopefunc=lambda: str(u)
             )
-            self._session = self._session_class()
+            self.session = self._session_class()
 
     def __del__(self):
         if not getattr(self, "_session_class", None):
@@ -82,21 +82,21 @@ class AsyncSessionHandler:
     @asynccontextmanager
     async def get_session(self, read_only: bool = False) -> AsyncIterator[AsyncSession]:
         try:
-            yield self._session
+            yield self.session
             if not read_only:
                 await self.commit()
         finally:
-            await self._session.close()
+            await self.session.close()
 
     async def commit(self) -> None:
         """Commits the session and handles rollback on errors.
 
         :param session: The session object.
-        :type session: _session
+        :type session: Session
         :raises Exception: Any error is re-raised after the rollback.
         """
         try:
-            await self._session.commit()
+            await self.session.commit()
         except:
-            await self._session.rollback()
+            await self.session.rollback()
             raise
