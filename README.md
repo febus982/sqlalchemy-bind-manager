@@ -75,11 +75,14 @@ Example:
 ```python
 bind = sa_manager.get_bind()
 
+
 class DeclarativeModel(bind.model_declarative_base):
     pass
-    
+
+
 class ImperativeModel:
     id: int
+
 
 imperative_table = Table(
     "imperative",
@@ -94,7 +97,7 @@ bind.registry_mapper.map_imperatively(ImperativeModel, imperative_table)
 sa_manager.get_mapper().map_imperatively(ImperativeModel, imperative_table)
 
 # Persist an object
-o = ImperativeModel() # also o = DeclarativeModel()
+o = ImperativeModel()  # also o = DeclarativeModel()
 o.name = "John"
 with sa_manager.get_bind().session_class()() as session:
     session.add(o)
@@ -192,7 +195,7 @@ The classes provide some common use methods:
 
 * `get`: Retrieve a model by identifier
 * `save`: Persist a model
-* `save_many`: Persist multiple models in a single transaction
+* `save_many`: Persist multiple models in a single get_session
 * `delete`: Delete a model
 * `find`: Search for a list of models (basically an adapter for SELECT queries)
 
@@ -223,11 +226,11 @@ so it makes sense that the two repository implementations behave consistently.
 
 ### Use the Unit Of Work to share a session among multiple repositories [alpha]
 
-It is possible we need to run several operations in a single database transaction. While a single
+It is possible we need to run several operations in a single database get_session. While a single
 repository provide by itself an isolated session for single operations, we have to use a different
 approach for multiple operations.
 
-We can use the `SQLAlchemyUnitOfWork` or the `SQLAlchemyUnitOfWork` class to provide a shared session to
+We can use the `SessionHandler` or the `SessionHandler` class to provide a shared session to
 be used for repository operations, **assumed the same bind is used for all the repositories**.
 (Two phase transactions are not currently supported).
 
@@ -238,7 +241,7 @@ operations to bypass the internal repository-managed session.
 bind = sa_manager.get_bind()
 repo1 = MyRepo(bind)
 repo2 = MyOtherRepo(bind)
-uow = SQLAlchemyUnitOfWork(bind)
+uow = SessionHandler(bind)
 
 with uow.get_session() as _session:
     repo1.save(some_model, session=_session)
