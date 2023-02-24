@@ -37,6 +37,7 @@ class SessionHandler:
     @contextmanager
     def get_session(self, read_only: bool = False) -> Iterator[Session]:
         try:
+            self.session.begin()
             yield self.session
             if not read_only:
                 self.commit()
@@ -82,6 +83,7 @@ class AsyncSessionHandler:
     @asynccontextmanager
     async def get_session(self, read_only: bool = False) -> AsyncIterator[AsyncSession]:
         try:
+            await self.session.begin()
             yield self.session
             if not read_only:
                 await self.commit()
