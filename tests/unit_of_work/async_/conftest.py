@@ -30,7 +30,9 @@ def sa_manager() -> SQLAlchemyBindManager:
 
 
 @pytest.fixture
-def repository_classes(model_classes) -> Tuple[Type[SQLAlchemyAsyncRepository], Type[SQLAlchemyAsyncRepository]]:
+def repository_classes(
+    model_classes,
+) -> Tuple[Type[SQLAlchemyAsyncRepository], Type[SQLAlchemyAsyncRepository]]:
     class MyFirstRepository(SQLAlchemyAsyncRepository[model_classes[0]]):
         _model = model_classes[0]
 

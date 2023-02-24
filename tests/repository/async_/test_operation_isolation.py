@@ -3,7 +3,9 @@ from unittest.mock import patch, AsyncMock
 from sqlalchemy_bind_manager._transaction_handler import AsyncSessionHandler
 
 
-async def test_repository_instance_return_always_different_models(repository_class, model_class, sa_manager):
+async def test_repository_instance_return_always_different_models(
+    repository_class, model_class, sa_manager
+):
     repo1 = repository_class(sa_manager.get_bind())
 
     # Populate a database entry to be used for tests using first repo

@@ -24,7 +24,6 @@ def test_repository_fails_if_both_bind_and_session():
         SyncRepo(bind, session)
 
 
-
 # @patch.object(SessionHandler, "commit", return_value=None)
 # def test_commit_triggers_only_once_with_external_uow(
 #     mocked_uow_commit: MagicMock, repository_class, model_class, sa_manager

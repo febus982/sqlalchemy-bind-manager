@@ -1,7 +1,9 @@
 from sqlalchemy_bind_manager._unit_of_work import AsyncUnitOfWork
 
 
-async def test_repositories_are_initialised_with_uow_session(sa_manager, repository_classes):
+async def test_repositories_are_initialised_with_uow_session(
+    sa_manager, repository_classes
+):
     uow = AsyncUnitOfWork(
         bind=sa_manager.get_bind(),
         repositories=repository_classes,

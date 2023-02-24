@@ -3,7 +3,9 @@ from unittest.mock import patch, MagicMock
 from sqlalchemy_bind_manager._transaction_handler import SessionHandler
 
 
-def test_repository_instance_return_always_different_models(repository_class, model_class, sa_manager):
+def test_repository_instance_return_always_different_models(
+    repository_class, model_class, sa_manager
+):
     repo1 = repository_class(sa_manager.get_bind())
 
     # Populate a database entry to be used for tests using first repo
