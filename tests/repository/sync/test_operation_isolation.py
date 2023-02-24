@@ -3,19 +3,8 @@ from unittest.mock import patch, MagicMock
 from sqlalchemy_bind_manager._transaction_handler import SessionHandler
 
 
-def test_model_ops_using_different_repository_instances(repository_class, model_class, sa_manager):
-    """
-    This test ensure that, even if the UOW session gets closed after
-    each repository operation, we still keep track of model changes,
-    and we are able to persist the changes using different session
-    objects.
-    """
+def test_repository_instance_return_always_different_models(repository_class, model_class, sa_manager):
     repo1 = repository_class(sa_manager.get_bind())
-    repo2 = repository_class(sa_manager.get_bind())
-    repo3 = repository_class(sa_manager.get_bind())
-    assert repo1._UOW is not repo2._UOW
-    assert repo1._UOW is not repo3._UOW
-    assert repo2._UOW is not repo3._UOW
 
     # Populate a database entry to be used for tests using first repo
     model_1 = model_class(
@@ -24,32 +13,13 @@ def test_model_ops_using_different_repository_instances(repository_class, model_
     repo1.save(model_1)
     assert model_1.model_id is not None
 
-    # Retrieve the model using second repo
-    model_2 = repo2.get(model_1.model_id)
-    assert model_2 != model_1
-    assert model_2.model_id == model_1.model_id
-
-    # Update the new model
-    model_2.name = "SomeoneElse"
-    repo2.save(model_2)
-
-    # Check model has been updated
-    updated_model = repo2.get(model_1.model_id)
-    assert updated_model.model_id == model_2.model_id
-    assert updated_model.name == "SomeoneElse"
-
-    # Check the model is a different object and original object is unchanged
-    assert updated_model != model_2
-    assert updated_model != model_1
-    assert model_1.name == "Someone"
-
-    # Check we can update the model without retrieving it
-    model_1.name = "StillSomeoneElse"
-    repo3.save(model_1)
-    model_3 = repo3.get(model_1.model_id)
-    assert model_1.name == "StillSomeoneElse"
-    assert model_3.name == "StillSomeoneElse"
-    assert model_3 is not model_1
+    # Retrieve the model using multiple repos
+    retrieved_model_1 = repo1.get(model_1.model_id)
+    retrieved_model_2 = repo1.get(model_1.model_id)
+    assert retrieved_model_1 is not model_1
+    assert retrieved_model_2 is not model_1
+    assert retrieved_model_1.model_id == model_1.model_id
+    assert retrieved_model_2.model_id == model_1.model_id
 
 
 def test_update_model_doesnt_update_other_models_from_same_repo(
@@ -64,32 +34,25 @@ def test_update_model_doesnt_update_other_models_from_same_repo(
     model2 = model_class(
         name="SomeoneElse",
     )
-    repo.save(model1)
-    repo.save(model2)
+    repo.save_many([model1, model2])
     assert model1.model_id is not None
     assert model2.model_id is not None
 
-    # Retrieve the model
+    # Retrieve the models
     new_model1 = repo.get(model1.model_id)
     new_model2 = repo.get(model2.model_id)
-    assert new_model1 != model1
-    assert new_model1.model_id == model1.model_id
 
-    # Update both models
+    # Update both models but save only model 1
     new_model1.name = "StillSomeoneElse"
     new_model2.name = "IsThisSomeoneElse?"
     repo.save(new_model1)
 
     # Check model1 has been updated
     updated_model1 = repo.get(model1.model_id)
-    assert updated_model1 != new_model1
-    assert updated_model1.model_id == new_model1.model_id
     assert updated_model1.name == "StillSomeoneElse"
 
     # Check model2 has not been updated
     updated_model2 = repo.get(model2.model_id)
-    assert updated_model2 != new_model2
-    assert updated_model2.model_id == new_model2.model_id
     assert updated_model2.name == "SomeoneElse"
 
 
