@@ -12,7 +12,7 @@ from .common import MODEL, PRIMARY_KEY, SortDirection, BaseRepository
 
 
 class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
-    _UOW: SessionHandler
+    _session_handler: SessionHandler
     _external_session: Union[Session, None]
 
     def __init__(
@@ -31,12 +31,12 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
             raise InvalidConfig("Either `bind` or `session` have to be used, not both")
         self._external_session = session
         if bind:
-            self._UOW = SessionHandler(bind)
+            self._session_handler = SessionHandler(bind)
 
     @contextmanager
     def _get_session(self, commit: bool = True) -> Iterator[Session]:
         if not self._external_session:
-            with self._UOW.get_session(not commit) as _session:
+            with self._session_handler.get_session(not commit) as _session:
                 yield _session
         else:
             yield self._external_session
