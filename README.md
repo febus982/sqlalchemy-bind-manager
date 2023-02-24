@@ -195,7 +195,7 @@ The classes provide some common use methods:
 
 * `get`: Retrieve a model by identifier
 * `save`: Persist a model
-* `save_many`: Persist multiple models in a single get_session
+* `save_many`: Persist multiple models in a single transaction
 * `delete`: Delete a model
 * `find`: Search for a list of models (basically an adapter for SELECT queries)
 
@@ -215,11 +215,16 @@ using SQLAlchemy. It makes sense that the lifecycle of a `Session` follows the o
 This ensures the `Session` we use is isolated, and the same for all the operations we do with the
 same repository.
 
-The consequence of these choices is we can't use SQLAlchemy lazy loading, so we need to make sure
-relationship are loaded eagerly. You can do this by:
+The session is automatically closed and reopen with each Repository operation, this make sure these
+operation are independent from each other.
 
-* Setup your model/table relationships to always use always eager loading
-* Implement ad-hoc methods to deal with relationships as necessary
+These choices cause some consequences:
+* The operations that modify the database will reload the models from the DB, causing an additional
+  SELECT query to be issued.
+* We can't use SQLAlchemy lazy loading, so we'll need to make sure relationship are always loaded eagerly,
+  using either:
+  * Setup your model/table relationships to always use always eager loading
+  * Implement ad-hoc methods to deal with relationships as necessary
 
 Also `AsyncSession` has [the same limitation on lazy loading](https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html#asyncio-orm-avoid-lazyloads)
 so it makes sense that the two repository implementations behave consistently.
