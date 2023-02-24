@@ -9,7 +9,7 @@ readme = "README.md"
 packages = [{include = "sqlalchemy_bind_manager"}]
 keywords = ["sqlalchemy", "config", "manager"]
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
     "Framework :: AsyncIO",
     "Framework :: Pydantic",
     "Intended Audience :: Developers",
