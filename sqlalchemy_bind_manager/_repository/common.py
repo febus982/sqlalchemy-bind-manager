@@ -49,7 +49,7 @@ class BaseRepository(Generic[MODEL], ABC):
         :raises UnmappedProperty: When the property is not mapped.
         """
         m: Mapper = class_mapper(self._model)
-        if property_name not in m.column_attrs:  # type: ignore
+        if property_name not in m.column_attrs:
             raise UnmappedProperty(
                 f"Property `{property_name}` is not mapped in the ORM for model `{self._model}`"
             )

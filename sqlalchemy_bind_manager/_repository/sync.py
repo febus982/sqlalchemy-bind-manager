@@ -47,7 +47,7 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         :param instance: A mapped object instance to be persisted
         :return: The model instance after being persisted (e.g. with primary key populated)
         """
-        with self._get_session() as session:  # type: ignore
+        with self._get_session() as session:
             session.add(instance)
         return instance
 
@@ -58,7 +58,7 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         :type instances: Iterable
         :return: The model instances after being persisted (e.g. with primary keys populated)
         """
-        with self._get_session() as session:  # type: ignore
+        with self._get_session() as session:
             session.add_all(instances)
         return instances
 
@@ -71,7 +71,7 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         """
         # TODO: implement get_many()
         with self._get_session(commit=False) as session:
-            model = session.get(self._model, identifier)  # type: ignore
+            model = session.get(self._model, identifier)
         if model is None:
             raise ModelNotFound("No rows found for provided primary key.")
         return model
@@ -102,7 +102,7 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         :return: A collection of models
         :rtype: List
         """
-        stmt = select(self._model)  # type: ignore
+        stmt = select(self._model)
         if search_params:
             stmt = self._filter_select(stmt, search_params)
 

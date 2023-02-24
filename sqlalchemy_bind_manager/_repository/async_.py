@@ -47,7 +47,7 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         :param instance: A mapped object instance to be persisted
         :return: The model instance after being persisted (e.g. with primary key populated)
         """
-        async with self._get_session() as session:  # type: ignore
+        async with self._get_session() as session:
             session.add(instance)
         return instance
 
@@ -61,7 +61,7 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         :type instances: Iterable
         :return: The model instances after being persisted (e.g. with primary keys populated)
         """
-        async with self._get_session() as session:  # type: ignore
+        async with self._get_session() as session:
             session.add_all(instances)
         return instances
 
@@ -74,7 +74,7 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         """
         # TODO: implement get_many()
         async with self._get_session(commit=False) as session:
-            model = await session.get(self._model, identifier)  # type: ignore
+            model = await session.get(self._model, identifier)
         if model is None:
             raise ModelNotFound("No rows found for provided primary key.")
         return model
@@ -90,7 +90,7 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         """
         # TODO: delete without loading the model
         obj = entity if self._is_mapped_object(entity) else await self.get(entity)  # type: ignore
-        async with self._get_session() as session:  # type: ignore
+        async with self._get_session() as session:
             await session.delete(obj)
 
     async def find(
@@ -108,13 +108,13 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         :return: A collection of models
         :rtype: List
         """
-        stmt = select(self._model)  # type: ignore
+        stmt = select(self._model)
         if search_params:
             stmt = self._filter_select(stmt, search_params)
 
         if order_by is not None:
             stmt = self._filter_order_by(stmt, order_by)
 
-        async with self._get_session() as session:  # type: ignore
+        async with self._get_session() as session:
             result = await session.execute(stmt)
             return [x for x in result.scalars()]
