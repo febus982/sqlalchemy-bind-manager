@@ -63,3 +63,6 @@ addopts = "-n auto --cov-report=term-missing"
 testpaths = [
     "tests",
 ]
+
+[tool.mypy]
+files = "sqlalchemy_bind_manager"
