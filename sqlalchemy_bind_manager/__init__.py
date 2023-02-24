@@ -9,6 +9,6 @@ from ._repository import (
     SortDirection,
 )
 from ._unit_of_work import (
-    SQLAlchemyUnitOfWork,
-    SQLAlchemyAsyncUnitOfWork,
+    UnitOfWork,
+    AsyncUnitOfWork,
 )

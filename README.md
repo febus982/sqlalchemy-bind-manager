@@ -1,6 +1,6 @@
 # SQLAlchemy bind manager
 [![Stable Version](https://img.shields.io/pypi/v/sqlalchemy-bind-manager?color=blue)](https://pypi.org/project/sqlalchemy-bind-manager/)
-[![stability-alpha](https://img.shields.io/badge/stability-alpha-f4d03f.svg)](https://github.com/mkenney/software-guides/blob/master/STABILITY-BADGES.md#alpha)
+[![stability-beta](https://img.shields.io/badge/stability-beta-33bbff.svg)](https://github.com/mkenney/software-guides/blob/master/STABILITY-BADGES.md#beta)
 
 [![Python 3.8](https://github.com/febus982/sqlalchemy-bind-manager/actions/workflows/python-3.8.yml/badge.svg?event=push)](https://github.com/febus982/sqlalchemy-bind-manager/actions/workflows/python-3.8.yml)
 [![Python 3.9](https://github.com/febus982/sqlalchemy-bind-manager/actions/workflows/python-3.9.yml/badge.svg?event=push)](https://github.com/febus982/sqlalchemy-bind-manager/actions/workflows/python-3.9.yml)
@@ -30,7 +30,7 @@ pip install sqlalchemy-bind-manager
 
 [//]: # (https://github.com/mkenney/software-guides/blob/master/STABILITY-BADGES.md)
 * [![stability-beta](https://img.shields.io/badge/stability-beta-33bbff.svg)](https://github.com/mkenney/software-guides/blob/master/STABILITY-BADGES.md#beta) **SQLAlchemy manager:** Implementation is mostly finalised, needs testing in production.
-* [![stability-wip](https://img.shields.io/badge/stability-wip-lightgrey.svg)](https://github.com/mkenney/software-guides/blob/master/STABILITY-BADGES.md#work-in-progress) **Repository / Unit of work:** Major work is stil necessary to finalise the interface, to hide the session management implementation details from the application.
+* [![stability-beta](https://img.shields.io/badge/stability-beta-33bbff.svg)](https://github.com/mkenney/software-guides/blob/master/STABILITY-BADGES.md#beta) **Repository / Unit of work:** Implementation is mostly finalised, needs testing in production.
 
 
 ## SQLAlchemy manager 
@@ -75,11 +75,14 @@ Example:
 ```python
 bind = sa_manager.get_bind()
 
+
 class DeclarativeModel(bind.model_declarative_base):
     pass
-    
+
+
 class ImperativeModel:
     id: int
+
 
 imperative_table = Table(
     "imperative",
@@ -94,7 +97,7 @@ bind.registry_mapper.map_imperatively(ImperativeModel, imperative_table)
 sa_manager.get_mapper().map_imperatively(ImperativeModel, imperative_table)
 
 # Persist an object
-o = ImperativeModel() # also o = DeclarativeModel()
+o = ImperativeModel()  # also o = DeclarativeModel()
 o.name = "John"
 with sa_manager.get_bind().session_class()() as session:
     session.add(o)
@@ -209,47 +212,52 @@ A `Repository` represents a generic interface to persist data object to a storag
 using SQLAlchemy. It makes sense that the lifecycle of a `Session` follows the one of the Repository
 (If we create a Repository, we're going to do a DB operation, otherwise we don't need a `Session`)
 
-This ensures we the `Session` we use is isolated, and the same for all the operations we do with the
-repository.
+This ensures the `Session` we use is isolated, and the same for all the operations we do with the
+same repository.
 
-The consequence of this choice is we can't use SQLAlchemy lazy loading, so we need to make sure
-relationship are loaded eagerly. You can do this by:
+The session is automatically closed and reopen with each Repository operation, this make sure these
+operation are independent from each other.
 
-* Setup your model/table relationships to always use always eager loading
-* Implement ad-hoc methods to deal with relationships as necessary
+These choices cause some consequences:
+* The operations that modify the database will reload the models from the DB, causing an additional
+  SELECT query to be issued.
+* We can't use SQLAlchemy lazy loading, so we'll need to make sure relationship are always loaded eagerly,
+  using either:
+  * Setup your model/table relationships to always use always eager loading
+  * Implement ad-hoc methods to deal with relationships as necessary
 
 Also `AsyncSession` has [the same limitation on lazy loading](https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html#asyncio-orm-avoid-lazyloads)
 so it makes sense that the two repository implementations behave consistently.
 
-### Use the Unit Of Work to share a session among multiple repositories [alpha]
+### Use the Unit Of Work to share a session among multiple repositories
 
-It is possible we need to run several operations in a single database transaction. While a single
+It is possible we need to run several operations in a single database get_session. While a single
 repository provide by itself an isolated session for single operations, we have to use a different
 approach for multiple operations.
 
-We can use the `SQLAlchemyUnitOfWork` or the `SQLAlchemyUnitOfWork` class to provide a shared session to
+We can use the `UnitOfWork` or the `AsyncUnitOfWork` class to provide a shared session to
 be used for repository operations, **assumed the same bind is used for all the repositories**.
 (Two phase transactions are not currently supported).
 
-All repositories operation methods accept the `session` parameter for this purpose. This makes the
-operations to bypass the internal repository-managed session.
-
 ```python
-bind = sa_manager.get_bind()
-repo1 = MyRepo(bind)
-repo2 = MyOtherRepo(bind)
-uow = SQLAlchemyUnitOfWork(bind)
+class MyRepo(SQLAlchemyRepository):
+    _model = MyModel
+class MyOtherRepo(SQLAlchemyRepository):
+    _model = MyOtherModel
 
-with uow.get_session() as _session:
-    repo1.save(some_model, session=_session)
-    repo2.save(some_model, session=_session)
+bind = sa_manager.get_bind()
+uow = UnitOfWork(bind, (MyRepo, MyOtherRepo))
+
+with uow.transaction():
+    uow.MyRepo.save(some_model)
+    uow.MyOtherRepo.save(some_other_model)
 
 # Optionally disable the commit/rollback handling
-with uow.get_session(commit=False) as _session:
-    model1 = repo1.get(1, session=_session)
-    model2 = repo1.get(1, session=_session)
+with uow.transaction(read_only=True):
+    model1 = uow.MyRepo.get(1)
+    model2 = uow.MyOtherRepo.get(2)
 ```
 
 Both the UnitOfWork classes create an internal `scoped_session` or `async_scoped_session`, behaving
 in the same way at the repositories do. This provides the freedom to tune the session lifecycle based
-on our application requirements (e.g. one session per http request, per domain, etc.)
+on our application requirements (e.g. one unit of work per http request, per domain, etc.)

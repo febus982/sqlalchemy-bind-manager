@@ -91,6 +91,7 @@ class SQLAlchemyBindManager:
 
         session_options: dict = config.session_options or {}
         session_options.setdefault("expire_on_commit", False)
+        session_options.setdefault("autobegin", False)
 
         if isinstance(config, SQLAlchemyAsyncConfig):
             self.__binds[name] = self.__build_async_bind(
