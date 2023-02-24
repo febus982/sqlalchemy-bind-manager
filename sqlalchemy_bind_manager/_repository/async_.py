@@ -12,7 +12,7 @@ from .common import MODEL, PRIMARY_KEY, SortDirection, BaseRepository
 
 
 class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
-    _UOW: AsyncSessionHandler
+    _session_handler: AsyncSessionHandler
     _external_session: Union[AsyncSession, None]
 
     def __init__(
@@ -31,12 +31,12 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
             raise InvalidConfig("Either `bind` or `session` have to be used, not both")
         self._external_session = session
         if bind:
-            self._UOW = AsyncSessionHandler(bind)
+            self._session_handler = AsyncSessionHandler(bind)
 
     @asynccontextmanager
     async def _get_session(self, commit: bool = True) -> AsyncIterator[AsyncSession]:
         if not self._external_session:
-            async with self._UOW.get_session(not commit) as _session:
+            async with self._session_handler.get_session(not commit) as _session:
                 yield _session
         else:
             yield self._external_session
