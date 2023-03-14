@@ -1,8 +1,7 @@
 from abc import ABC
 from contextlib import asynccontextmanager
-from typing import Union, Generic, Tuple, Iterable, List, AsyncIterator, Any, Mapping
+from typing import Union, Generic, Tuple, Iterable, List, AsyncIterator, Any, Mapping, Protocol
 
-from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from .._bind_manager import SQLAlchemyAsyncBind
@@ -108,12 +107,7 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         :return: A collection of models
         :rtype: List
         """
-        stmt = select(self._model)
-        if search_params:
-            stmt = self._filter_select(stmt, search_params)
-
-        if order_by is not None:
-            stmt = self._filter_order_by(stmt, order_by)
+        stmt = self._find_query(search_params, order_by)
 
         async with self._get_session() as session:
             result = await session.execute(stmt)

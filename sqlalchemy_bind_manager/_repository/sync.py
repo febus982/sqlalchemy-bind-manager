@@ -2,7 +2,6 @@ from abc import ABC
 from contextlib import contextmanager
 from typing import Union, Generic, Iterable, Tuple, List, Iterator, Any, Mapping
 
-from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from .._bind_manager import SQLAlchemyBind
@@ -97,17 +96,12 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         E.g.
         find(name="John") finds all models with name = John
 
-        :param order_by:
         :param search_params: A dictionary containing equality filters
+        :param order_by:
         :return: A collection of models
         :rtype: List
         """
-        stmt = select(self._model)
-        if search_params:
-            stmt = self._filter_select(stmt, search_params)
-
-        if order_by is not None:
-            stmt = self._filter_order_by(stmt, order_by)
+        stmt = self._find_query(search_params, order_by)
 
         with self._get_session() as session:
             result = session.execute(stmt)

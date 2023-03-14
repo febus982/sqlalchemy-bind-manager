@@ -3,7 +3,7 @@ from enum import Enum
 from functools import partial
 from typing import TypeVar, Union, Generic, Type, Tuple, Iterable, Any, Mapping
 
-from sqlalchemy import asc, desc
+from sqlalchemy import asc, desc, select
 from sqlalchemy.orm import object_mapper, class_mapper, Mapper
 from sqlalchemy.orm.exc import UnmappedInstanceError
 from sqlalchemy.sql import Select
@@ -98,5 +98,19 @@ class BaseRepository(Generic[MODEL], ABC):
             else:
                 self._validate_mapped_property(value[0])
                 stmt = stmt.order_by(value[1].value(getattr(self._model, value[0])))
+
+        return stmt
+
+    def _find_query(
+        self,
+        search_params: Union[None, Mapping[str, Any]] = None,
+        order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
+    ) -> Select:
+        stmt = select(self._model)
+
+        if search_params:
+            stmt = self._filter_select(stmt, search_params)
+        if order_by is not None:
+            stmt = self._filter_order_by(stmt, order_by)
 
         return stmt
