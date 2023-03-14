@@ -1,4 +1,4 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 from enum import Enum
 from functools import partial
 from typing import TypeVar, Union, Generic, Type, Tuple, Iterable, Any, Mapping
@@ -20,7 +20,10 @@ class SortDirection(Enum):
 
 
 class BaseRepository(Generic[MODEL], ABC):
-    _model: Type[MODEL]
+    @property
+    @abstractmethod
+    def _model(self) -> Type[MODEL]:
+        ...
 
     def _is_mapped_object(self, obj: object) -> bool:
         """Checks if the object is handled by the repository and is mapped in SQLAlchemy.

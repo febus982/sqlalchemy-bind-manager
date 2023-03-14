@@ -8,7 +8,11 @@ from sqlalchemy_bind_manager.exceptions import UnsupportedBind, InvalidConfig
 
 
 def test_repository_fails_if_not_async_bind(sync_async_sa_manager):
+    class SomeModel:
+        pass
+
     class AsyncRepo(SQLAlchemyAsyncRepository):
+        _model = SomeModel
         Session = None
 
     with pytest.raises(UnsupportedBind):
@@ -16,8 +20,11 @@ def test_repository_fails_if_not_async_bind(sync_async_sa_manager):
 
 
 def test_repository_fails_if_both_bind_and_session():
-    class AsyncRepo(SQLAlchemyAsyncRepository):
+    class SomeModel:
         pass
+
+    class AsyncRepo(SQLAlchemyAsyncRepository):
+        _model = SomeModel
 
     bind = MagicMock()
     session = MagicMock()
