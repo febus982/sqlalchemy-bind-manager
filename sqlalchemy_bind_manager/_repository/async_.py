@@ -9,7 +9,6 @@ from typing import (
     AsyncIterator,
     Any,
     Mapping,
-    Protocol,
 )
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -18,29 +17,6 @@ from .._bind_manager import SQLAlchemyAsyncBind
 from .._transaction_handler import AsyncSessionHandler
 from ..exceptions import ModelNotFound, InvalidConfig
 from .common import MODEL, PRIMARY_KEY, SortDirection, BaseRepository
-
-
-class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
-    async def save(self, instance: MODEL) -> MODEL:
-        ...
-
-    async def save_many(self, instances: Iterable[MODEL]) -> Iterable[MODEL]:
-        ...
-
-    async def get(self, identifier: PRIMARY_KEY) -> MODEL:
-        ...
-
-    async def delete(self, entity: Union[MODEL, PRIMARY_KEY]) -> None:
-        ...
-
-    async def find(
-        self,
-        search_params: Union[None, Mapping[str, Any]] = None,
-        order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
-        limit: Union[None, int] = None,
-        offset: Union[None, int] = None,
-    ) -> List[MODEL]:
-        ...
 
 
 class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
@@ -129,8 +105,8 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         self,
         search_params: Union[None, Mapping[str, Any]] = None,
         order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
-        offset: Union[None, int] = None,
         limit: Union[None, int] = None,
+        offset: Union[None, int] = None,
     ) -> List[MODEL]:
         """Find models using filters
 
