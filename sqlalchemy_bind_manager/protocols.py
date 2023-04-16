@@ -1,4 +1,13 @@
-from typing import Union, Mapping, Any, Iterable, Tuple, List, Protocol, runtime_checkable
+from typing import (
+    Union,
+    Mapping,
+    Any,
+    Iterable,
+    Tuple,
+    List,
+    Protocol,
+    runtime_checkable,
+)
 
 from sqlalchemy_bind_manager._repository.common import PRIMARY_KEY, MODEL, SortDirection
 
@@ -18,11 +27,11 @@ class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
         ...
 
     async def find(
-            self,
-            search_params: Union[None, Mapping[str, Any]] = None,
-            order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
-            limit: Union[None, int] = None,
-            offset: Union[None, int] = None,
+        self,
+        search_params: Union[None, Mapping[str, Any]] = None,
+        order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
+        limit: Union[None, int] = None,
+        offset: Union[None, int] = None,
     ) -> List[MODEL]:
         ...
 
@@ -42,10 +51,10 @@ class SQLAlchemyRepositoryInterface(Protocol[MODEL]):
         ...
 
     def find(
-            self,
-            search_params: Union[None, Mapping[str, Any]] = None,
-            order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
-            limit: Union[None, int] = None,
-            offset: Union[None, int] = None,
+        self,
+        search_params: Union[None, Mapping[str, Any]] = None,
+        order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
+        limit: Union[None, int] = None,
+        offset: Union[None, int] = None,
     ) -> List[MODEL]:
         ...
