@@ -20,6 +20,8 @@ class SortDirection(Enum):
 
 
 class BaseRepository(Generic[MODEL], ABC):
+    _max_query_limit: int = 50
+
     @property
     @abstractmethod
     def _model(self) -> Type[MODEL]:
@@ -68,7 +70,6 @@ class BaseRepository(Generic[MODEL], ABC):
         :param search_params: Any keyword argument to be used as equality filter
         :return: The filtered query
         """
-        # TODO: Add support for offset/limit
         # TODO: Add support for relationship eager load
         for k, v in search_params.items():
             """
@@ -115,5 +116,30 @@ class BaseRepository(Generic[MODEL], ABC):
             stmt = self._filter_select(stmt, search_params)
         if order_by is not None:
             stmt = self._filter_order_by(stmt, order_by)
+
+        return stmt
+
+    def _paginate(
+        self,
+        stmt: Select,
+        offset: Union[int, None] = None,
+        limit: Union[int, None] = None,
+    ) -> Select:
+        """Build the query offset and limit clauses from submitted parameters.
+
+        :param stmt: a Select statement
+        :type stmt: Select
+        :param offset: Number of models to skip
+        :type offset: int
+        :param limit: Number of models to retrieve
+        :type limit: int
+        :return: The filtered query
+        """
+        if offset:
+            stmt = stmt.offset(offset)
+
+        if limit:
+            _limit: int = max(min(limit, self._max_query_limit), 0)
+            stmt = stmt.limit(_limit)
 
         return stmt

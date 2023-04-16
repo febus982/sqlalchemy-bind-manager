@@ -1,6 +1,16 @@
 from abc import ABC
 from contextlib import contextmanager
-from typing import Union, Generic, Iterable, Tuple, List, Iterator, Any, Mapping
+from typing import (
+    Union,
+    Generic,
+    Iterable,
+    Tuple,
+    List,
+    Iterator,
+    Any,
+    Mapping,
+    Protocol,
+)
 
 from sqlalchemy.orm import Session
 
@@ -8,6 +18,29 @@ from .._bind_manager import SQLAlchemyBind
 from .._transaction_handler import SessionHandler
 from ..exceptions import ModelNotFound, InvalidConfig
 from .common import MODEL, PRIMARY_KEY, SortDirection, BaseRepository
+
+
+class SQLAlchemyRepositoryInterface(Protocol[MODEL]):
+    def save(self, instance: MODEL) -> MODEL:
+        ...
+
+    def save_many(self, instances: Iterable[MODEL]) -> Iterable[MODEL]:
+        ...
+
+    def get(self, identifier: PRIMARY_KEY) -> MODEL:
+        ...
+
+    def delete(self, entity: Union[MODEL, PRIMARY_KEY]) -> None:
+        ...
+
+    def find(
+        self,
+        search_params: Union[None, Mapping[str, Any]] = None,
+        order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
+        limit: Union[None, int] = None,
+        offset: Union[None, int] = None,
+    ) -> List[MODEL]:
+        ...
 
 
 class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
@@ -90,6 +123,8 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         self,
         search_params: Union[None, Mapping[str, Any]] = None,
         order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
+        limit: Union[None, int] = None,
+        offset: Union[None, int] = None,
     ) -> List[MODEL]:
         """Find models using filters
 
@@ -98,10 +133,15 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
 
         :param search_params: A dictionary containing equality filters
         :param order_by:
+        :param limit: Number of models to retrieve
+        :type limit: int
+        :param offset: Number of models to skip
+        :type offset: int
         :return: A collection of models
         :rtype: List
         """
         stmt = self._find_query(search_params, order_by)
+        stmt = self._paginate(stmt, offset=offset, limit=limit)
 
         with self._get_session() as session:
             result = session.execute(stmt)

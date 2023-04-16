@@ -1,6 +1,16 @@
 from abc import ABC
 from contextlib import asynccontextmanager
-from typing import Union, Generic, Tuple, Iterable, List, AsyncIterator, Any, Mapping, Protocol
+from typing import (
+    Union,
+    Generic,
+    Tuple,
+    Iterable,
+    List,
+    AsyncIterator,
+    Any,
+    Mapping,
+    Protocol,
+)
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -8,6 +18,29 @@ from .._bind_manager import SQLAlchemyAsyncBind
 from .._transaction_handler import AsyncSessionHandler
 from ..exceptions import ModelNotFound, InvalidConfig
 from .common import MODEL, PRIMARY_KEY, SortDirection, BaseRepository
+
+
+class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
+    async def save(self, instance: MODEL) -> MODEL:
+        ...
+
+    async def save_many(self, instances: Iterable[MODEL]) -> Iterable[MODEL]:
+        ...
+
+    async def get(self, identifier: PRIMARY_KEY) -> MODEL:
+        ...
+
+    async def delete(self, entity: Union[MODEL, PRIMARY_KEY]) -> None:
+        ...
+
+    async def find(
+        self,
+        search_params: Union[None, Mapping[str, Any]] = None,
+        order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
+        limit: Union[None, int] = None,
+        offset: Union[None, int] = None,
+    ) -> List[MODEL]:
+        ...
 
 
 class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
@@ -96,6 +129,8 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         self,
         search_params: Union[None, Mapping[str, Any]] = None,
         order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
+        offset: Union[None, int] = None,
+        limit: Union[None, int] = None,
     ) -> List[MODEL]:
         """Find models using filters
 
@@ -104,10 +139,15 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
 
         :param order_by:
         :param search_params: A dictionary containing equality filters
+        :param limit: Number of models to retrieve
+        :type limit: int
+        :param offset: Number of models to skip
+        :type offset: int
         :return: A collection of models
         :rtype: List
         """
         stmt = self._find_query(search_params, order_by)
+        stmt = self._paginate(stmt, offset=offset, limit=limit)
 
         async with self._get_session() as session:
             result = await session.execute(stmt)
