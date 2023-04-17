@@ -9,6 +9,7 @@ from typing import (
     Iterator,
     Any,
     Mapping,
+    Type,
 )
 
 from sqlalchemy.orm import Session
@@ -27,14 +28,17 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         self,
         bind: Union[SQLAlchemyBind, None] = None,
         session: Union[Session, None] = None,
+        model_class: Union[Type[MODEL], None] = None,
     ) -> None:
         """
         :param bind: A configured instance of SQLAlchemyBind
-        :type bind: SQLAlchemyBind
+        :type bind: Union[SQLAlchemyBind, None]
         :param session: An externally managed session
-        :type session: Session
+        :type session: Union[Session, None]
+        :param model_class: A mapped SQLAlchemy model
+        :type model_class: Union[Type[MODEL], None]
         """
-        super().__init__()
+        super().__init__(model_class=model_class)
         if not (bool(bind) ^ bool(session)):
             raise InvalidConfig("Either `bind` or `session` have to be used, not both")
         self._external_session = session

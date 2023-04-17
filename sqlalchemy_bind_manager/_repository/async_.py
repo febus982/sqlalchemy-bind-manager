@@ -9,6 +9,7 @@ from typing import (
     AsyncIterator,
     Any,
     Mapping,
+    Type,
 )
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -27,14 +28,17 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         self,
         bind: Union[SQLAlchemyAsyncBind, None] = None,
         session: Union[AsyncSession, None] = None,
+        model_class: Union[Type[MODEL], None] = None,
     ) -> None:
         """
         :param bind: A configured instance of SQLAlchemyAsyncBind
-        :type bind: SQLAlchemyAsyncBind
+        :type bind: Union[SQLAlchemyAsyncBind, None]
         :param session: An externally managed session
-        :type session: AsyncSession
+        :type session: Union[AsyncSession, None]
+        :param model_class: A mapped SQLAlchemy model
+        :type model_class: Union[Type[MODEL], None]
         """
-        super().__init__()
+        super().__init__(model_class=model_class)
         if not (bool(bind) ^ bool(session)):
             raise InvalidConfig("Either `bind` or `session` have to be used, not both")
         self._external_session = session

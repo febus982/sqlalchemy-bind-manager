@@ -21,11 +21,19 @@ class SortDirection(Enum):
 
 class BaseRepository(Generic[MODEL], ABC):
     _max_query_limit: int = 50
+    _model: Type[MODEL]
 
-    @property
-    @abstractmethod
-    def _model(self) -> Type[MODEL]:
-        ...
+    def __init__(self, model_class: Union[Type[MODEL], None] = None) -> None:
+        if getattr(self, "_model", None) is None and model_class is not None:
+            self._model = model_class
+
+        if getattr(self, "_model", None) is None or not self._is_mapped_object(
+            self._model()
+        ):
+            raise InvalidModel(
+                "You need to supply a valid model class either in the `model_class` parameter"
+                " or in the `_model` class property."
+            )
 
     def _is_mapped_object(self, obj: object) -> bool:
         """Checks if the object is handled by the repository and is mapped in SQLAlchemy.
