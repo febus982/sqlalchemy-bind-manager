@@ -9,7 +9,12 @@ from typing import (
     runtime_checkable,
 )
 
-from sqlalchemy_bind_manager._repository.common import PRIMARY_KEY, MODEL, SortDirection
+from sqlalchemy_bind_manager._repository.common import (
+    PRIMARY_KEY,
+    MODEL,
+    SortDirection,
+    PaginatedResult,
+)
 
 
 @runtime_checkable
@@ -30,9 +35,16 @@ class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
         self,
         search_params: Union[None, Mapping[str, Any]] = None,
         order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
-        limit: Union[None, int] = None,
-        offset: Union[None, int] = None,
     ) -> List[MODEL]:
+        ...
+
+    async def paginated_find(
+        self,
+        per_page: int,
+        page: int,
+        search_params: Union[None, Mapping[str, Any]] = None,
+        order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
+    ) -> PaginatedResult[MODEL]:
         ...
 
 
@@ -54,7 +66,14 @@ class SQLAlchemyRepositoryInterface(Protocol[MODEL]):
         self,
         search_params: Union[None, Mapping[str, Any]] = None,
         order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
-        limit: Union[None, int] = None,
-        offset: Union[None, int] = None,
     ) -> List[MODEL]:
+        ...
+
+    def paginated_find(
+        self,
+        per_page: int,
+        page: int,
+        search_params: Union[None, Mapping[str, Any]] = None,
+        order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
+    ) -> PaginatedResult[MODEL]:
         ...

@@ -17,7 +17,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from .._bind_manager import SQLAlchemyAsyncBind
 from .._transaction_handler import AsyncSessionHandler
 from ..exceptions import ModelNotFound, InvalidConfig
-from .common import MODEL, PRIMARY_KEY, SortDirection, BaseRepository
+from .common import MODEL, PRIMARY_KEY, SortDirection, BaseRepository, PaginatedResult
 
 
 class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
@@ -109,8 +109,6 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         self,
         search_params: Union[None, Mapping[str, Any]] = None,
         order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
-        limit: Union[None, int] = None,
-        offset: Union[None, int] = None,
     ) -> List[MODEL]:
         """Find models using filters
 
@@ -127,8 +125,47 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         :rtype: List
         """
         stmt = self._find_query(search_params, order_by)
-        stmt = self._paginate(stmt, offset=offset, limit=limit)
 
         async with self._get_session() as session:
             result = await session.execute(stmt)
             return [x for x in result.scalars()]
+
+    async def paginated_find(
+        self,
+        per_page: int,
+        page: int,
+        search_params: Union[None, Mapping[str, Any]] = None,
+        order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
+    ) -> PaginatedResult[MODEL]:
+        """Find models using filters and pagination
+
+        E.g.
+        find(name="John") finds all models with name = John
+
+        :param per_page: Number of models to retrieve
+        :type per_page: int
+        :param page: Page to retrieve
+        :type page: int
+        :param search_params: A dictionary containing equality filters
+        :param order_by:
+        :return: A collection of models
+        :rtype: List
+        """
+
+        find_stmt = self._find_query(search_params, order_by)
+        paginated_stmt = self._paginate_query(find_stmt, page, per_page)
+
+        async with self._get_session() as session:
+            total_items_count = (
+                await session.execute(self._count_query(find_stmt))
+            ).scalar() or 0
+            result_items = [
+                x for x in (await session.execute(paginated_stmt)).scalars()
+            ]
+
+            return self._build_paginated_result(
+                result_items=result_items,
+                total_items_count=total_items_count,
+                page=page,
+                per_page=per_page,
+            )

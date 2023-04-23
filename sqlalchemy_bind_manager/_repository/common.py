@@ -1,10 +1,23 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 from enum import Enum
 from functools import partial
-from typing import TypeVar, Union, Generic, Type, Tuple, Iterable, Any, Mapping
+from math import ceil
+from typing import (
+    TypeVar,
+    Union,
+    Generic,
+    Type,
+    Tuple,
+    Iterable,
+    Any,
+    Mapping,
+    List,
+    Collection,
+)
 
-from sqlalchemy import asc, desc, select
-from sqlalchemy.orm import object_mapper, class_mapper, Mapper
+from pydantic.generics import GenericModel
+from sqlalchemy import asc, desc, select, func
+from sqlalchemy.orm import object_mapper, class_mapper, Mapper, lazyload
 from sqlalchemy.orm.exc import UnmappedInstanceError
 from sqlalchemy.sql import Select
 
@@ -17,6 +30,14 @@ PRIMARY_KEY = Union[str, int, tuple, dict]
 class SortDirection(Enum):
     ASC = partial(asc)
     DESC = partial(desc)
+
+
+class PaginatedResult(GenericModel, Generic[MODEL]):
+    items: List[MODEL]
+    page: int
+    per_page: int
+    total_pages: int
+    total_items: int
 
 
 class BaseRepository(Generic[MODEL], ABC):
@@ -127,27 +148,64 @@ class BaseRepository(Generic[MODEL], ABC):
 
         return stmt
 
-    def _paginate(
+    def _count_query(
+        self,
+        query: Select,
+    ) -> Select:
+        return select(func.count()).select_from(
+            query.options(lazyload("*")).order_by(None).subquery()  # type: ignore
+        )
+
+    def _paginate_query(
         self,
         stmt: Select,
-        offset: Union[int, None] = None,
-        limit: Union[int, None] = None,
+        page: Union[int, None] = None,
+        per_page: Union[int, None] = None,
     ) -> Select:
         """Build the query offset and limit clauses from submitted parameters.
 
         :param stmt: a Select statement
         :type stmt: Select
-        :param offset: Number of models to skip
-        :type offset: int
-        :param limit: Number of models to retrieve
-        :type limit: int
+        :param page: Number of models to skip
+        :type page: int
+        :param per_page: Number of models to retrieve
+        :type per_page: int
         :return: The filtered query
         """
-        if offset:
-            stmt = stmt.offset(offset)
 
-        if limit:
-            _limit: int = max(min(limit, self._max_query_limit), 0)
+        if page and per_page:
+            _offset = max((page - 1) * per_page, 0)
+            if _offset > 0:
+                stmt = stmt.offset(_offset)
+
+        if per_page:
+            _limit = max(min(per_page, self._max_query_limit), 0)
             stmt = stmt.limit(_limit)
+        else:
+            stmt = stmt.limit(self._max_query_limit)
 
         return stmt
+
+    def _build_paginated_result(
+        self,
+        result_items: Collection[MODEL],
+        total_items_count: int,
+        page: int,
+        per_page: int,
+    ) -> PaginatedResult:
+
+        _per_page = max(min(per_page, self._max_query_limit), 0)
+        total_pages = (
+            0
+            if total_items_count == 0 or total_items_count is None
+            else ceil(total_items_count / _per_page)
+        )
+        _page = 0 if len(result_items) == 0 else min(page, total_pages)
+
+        return PaginatedResult(
+            items=result_items,
+            page=_page,
+            per_page=_per_page,
+            total_items=total_items_count,
+            total_pages=total_pages,
+        )
