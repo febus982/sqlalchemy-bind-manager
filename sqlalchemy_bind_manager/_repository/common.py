@@ -159,8 +159,8 @@ class BaseRepository(Generic[MODEL], ABC):
     def _paginate_query(
         self,
         stmt: Select,
-        page: Union[int, None] = None,
-        per_page: Union[int, None] = None,
+        page: int,
+        per_page: int,
     ) -> Select:
         """Build the query offset and limit clauses from submitted parameters.
 
@@ -173,16 +173,12 @@ class BaseRepository(Generic[MODEL], ABC):
         :return: The filtered query
         """
 
-        if page and per_page:
-            _offset = max((page - 1) * per_page, 0)
-            if _offset > 0:
-                stmt = stmt.offset(_offset)
+        _offset = max((page - 1) * per_page, 0)
+        if _offset > 0:
+            stmt = stmt.offset(_offset)
 
-        if per_page:
-            _limit = max(min(per_page, self._max_query_limit), 0)
-            stmt = stmt.limit(_limit)
-        else:
-            stmt = stmt.limit(self._max_query_limit)
+        _limit = max(min(per_page, self._max_query_limit), 0)
+        stmt = stmt.limit(_limit)
 
         return stmt
 
