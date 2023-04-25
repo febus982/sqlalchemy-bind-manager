@@ -96,7 +96,7 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         :type entity: Union[MODEL, PRIMARY_KEY]
         """
         # TODO: delete without loading the model
-        obj = entity if self._is_mapped_object(entity) else self.get(entity)  # type: ignore
+        obj = entity if isinstance(entity, self._model) else self.get(entity)  # type: ignore
         with self._get_session() as session:
             session.delete(obj)
 
