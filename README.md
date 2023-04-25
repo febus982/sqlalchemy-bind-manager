@@ -198,6 +198,7 @@ The classes provide some common use methods:
 * `save_many`: Persist multiple models in a single transaction
 * `delete`: Delete a model
 * `find`: Search for a list of models (basically an adapter for SELECT queries)
+* `paginated_find`: Search for a list of models, with pagination support
 
 ### Session lifecycle in repositories
 
