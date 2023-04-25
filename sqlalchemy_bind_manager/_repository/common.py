@@ -17,8 +17,8 @@ from typing import (
 
 from pydantic.generics import GenericModel
 from sqlalchemy import asc, desc, select, func
-from sqlalchemy.orm import object_mapper, class_mapper, Mapper, lazyload
-from sqlalchemy.orm.exc import UnmappedInstanceError
+from sqlalchemy.orm import class_mapper, Mapper, lazyload
+from sqlalchemy.orm.exc import UnmappedClassError
 from sqlalchemy.sql import Select
 
 from sqlalchemy_bind_manager.exceptions import InvalidModel, UnmappedProperty
@@ -48,31 +48,25 @@ class BaseRepository(Generic[MODEL], ABC):
         if getattr(self, "_model", None) is None and model_class is not None:
             self._model = model_class
 
-        if getattr(self, "_model", None) is None or not self._is_mapped_object(
-            self._model()
+        if getattr(self, "_model", None) is None or not self._is_mapped_class(
+            self._model
         ):
             raise InvalidModel(
                 "You need to supply a valid model class either in the `model_class` parameter"
                 " or in the `_model` class property."
             )
 
-    def _is_mapped_object(self, obj: object) -> bool:
-        """Checks if the object is handled by the repository and is mapped in SQLAlchemy.
+    def _is_mapped_class(self, class_: Type[MODEL]) -> bool:
+        """Checks if the class is mapped in SQLAlchemy.
 
-        :param obj: a mapped object instance
-        :return: True if the object is mapped and matches self._model type, False if it's not a mapped object
+        :param class_: the model class
+        :return: True if the Type is mapped, False otherwise
         :rtype: bool
-        :raises InvalidModel: when the object is mapped but doesn't match self._model type
         """
-        # TODO: This is probably redundant, we could do these checks once in __init__
         try:
-            object_mapper(obj)
-            if isinstance(obj, self._model):
-                return True
-            raise InvalidModel(
-                f"This repository can handle only `{self._model}` models. `{type(obj)}` has been passed."
-            )
-        except UnmappedInstanceError:
+            class_mapper(class_)
+            return True
+        except UnmappedClassError:
             return False
 
     def _validate_mapped_property(self, property_name: str) -> None:

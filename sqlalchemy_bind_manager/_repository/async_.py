@@ -101,7 +101,7 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         :type entity: Union[MODEL, PRIMARY_KEY]
         """
         # TODO: delete without loading the model
-        obj = entity if self._is_mapped_object(entity) else await self.get(entity)  # type: ignore
+        obj = entity if isinstance(entity, self._model) else await self.get(entity)  # type: ignore
         async with self._get_session() as session:
             await session.delete(obj)
 
