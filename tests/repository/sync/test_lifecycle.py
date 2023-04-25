@@ -3,20 +3,24 @@ from unittest.mock import MagicMock
 import pytest
 
 from sqlalchemy_bind_manager import SQLAlchemyRepository
-from sqlalchemy_bind_manager.exceptions import UnsupportedBind, InvalidConfig
+from sqlalchemy_bind_manager.exceptions import (
+    UnsupportedBind,
+    InvalidConfig,
+    InvalidModel,
+)
 
 
-def test_repository_fails_if_not_sync_bind(sync_async_sa_manager):
+def test_repository_fails_if_not_sync_bind(sync_async_sa_manager, model_class):
     class SyncRepo(SQLAlchemyRepository):
-        pass
+        _model = model_class
 
     with pytest.raises(UnsupportedBind):
         SyncRepo(sync_async_sa_manager.get_bind("async"))
 
 
-def test_repository_fails_if_both_bind_and_session():
+def test_repository_fails_if_both_bind_and_session(model_class):
     class SyncRepo(SQLAlchemyRepository):
-        pass
+        _model = model_class
 
     bind = MagicMock()
     session = MagicMock()
@@ -24,44 +28,26 @@ def test_repository_fails_if_both_bind_and_session():
         SyncRepo(bind, session)
 
 
-# @patch.object(SessionHandler, "commit", return_value=None)
-# def test_commit_triggers_only_once_with_external_uow(
-#     mocked_uow_commit: MagicMock, repository_class, model_class, sa_manager
-# ):
-#     uow = SessionHandler(sa_manager.get_bind())
-#     repo1 = repository_class(sa_manager.get_bind())
-#     repo2 = repository_class(sa_manager.get_bind())
-#
-#     # Populate a database entry to be used for tests
-#     model1 = model_class(
-#         name="Someone",
-#     )
-#     model2 = model_class(
-#         name="SomeoneElse",
-#     )
-#     with uow.get_session() as session:
-#         repo1.save(model1, session=session)
-#         repo2.save(model2, session=session)
-#     assert mocked_uow_commit.call_count == 1
-#
-#
-# def test_models_are_persisted_using_external_uow(
-#     repository_class, model_class, sa_manager
-# ):
-#     uow = SessionHandler(sa_manager.get_bind())
-#     repo1 = repository_class(sa_manager.get_bind())
-#     repo2 = repository_class(sa_manager.get_bind())
-#
-#     # Populate a database entry to be used for tests
-#     model1 = model_class(
-#         name="Someone",
-#     )
-#     model2 = model_class(
-#         name="SomeoneElse",
-#     )
-#     with uow.get_session() as session:
-#         repo1.save(model1, session=session)
-#         repo2.save(model2, session=session)
-#
-#     assert model1.model_id is not None
-#     assert model2.model_id is not None
+def test_repository_fails_if_no_model_or_wrong_model():
+    class AsyncRepo(SQLAlchemyRepository):
+        ...
+
+    class SomeObject:
+        ...
+
+    with pytest.raises(InvalidModel):
+        AsyncRepo()
+
+    with pytest.raises(InvalidModel):
+        SQLAlchemyRepository()
+
+    with pytest.raises(InvalidModel):
+        SQLAlchemyRepository(model_class=SomeObject)
+
+
+def test_repository_initialise_with_valid_model(model_class, sa_manager):
+    class AsyncRepo(SQLAlchemyRepository):
+        _model = model_class
+
+    r = AsyncRepo(bind=sa_manager.get_bind())
+    r2 = SQLAlchemyRepository(bind=sa_manager.get_bind(), model_class=model_class)
