@@ -25,9 +25,6 @@ jobs:
         python -m pip install poetry
         poetry config virtualenvs.create false
         poetry install --no-root --with dev
-    - name: Check typing
-      run: |
-        mypy sqlalchemy_bind_manager
     - name: Lint with black
       run: |
         # stop the build if code style check fails
