@@ -6,3 +6,6 @@ mypy:
 
 format:
 	poetry run black sqlalchemy_bind_manager tests
+
+lint:
+	poetry run ruff . --fix

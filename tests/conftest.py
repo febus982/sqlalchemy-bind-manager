@@ -2,7 +2,7 @@ from uuid import uuid4
 
 import pytest
 
-from sqlalchemy_bind_manager import SQLAlchemyConfig, SQLAlchemyAsyncConfig
+from sqlalchemy_bind_manager import SQLAlchemyAsyncConfig, SQLAlchemyConfig
 
 
 @pytest.fixture

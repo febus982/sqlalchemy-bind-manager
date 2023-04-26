@@ -1,14 +1,14 @@
-from contextlib import contextmanager, asynccontextmanager
-from typing import Iterable, Type, Iterator, AsyncIterator
+from contextlib import asynccontextmanager, contextmanager
+from typing import AsyncIterator, Iterable, Iterator, Type
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 
-from sqlalchemy_bind_manager import SQLAlchemyRepository, SQLAlchemyAsyncRepository
-from sqlalchemy_bind_manager._bind_manager import SQLAlchemyBind, SQLAlchemyAsyncBind
+from sqlalchemy_bind_manager import SQLAlchemyAsyncRepository, SQLAlchemyRepository
+from sqlalchemy_bind_manager._bind_manager import SQLAlchemyAsyncBind, SQLAlchemyBind
 from sqlalchemy_bind_manager._transaction_handler import (
-    SessionHandler,
     AsyncSessionHandler,
+    SessionHandler,
 )
 
 

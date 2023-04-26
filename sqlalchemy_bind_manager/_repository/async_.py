@@ -1,23 +1,23 @@
 from abc import ABC
 from contextlib import asynccontextmanager
 from typing import (
-    Union,
+    Any,
+    AsyncIterator,
     Generic,
-    Tuple,
     Iterable,
     List,
-    AsyncIterator,
-    Any,
     Mapping,
+    Tuple,
     Type,
+    Union,
 )
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from .._bind_manager import SQLAlchemyAsyncBind
 from .._transaction_handler import AsyncSessionHandler
-from ..exceptions import ModelNotFound, InvalidConfig
-from .common import MODEL, PRIMARY_KEY, SortDirection, BaseRepository, PaginatedResult
+from ..exceptions import InvalidConfig, ModelNotFound
+from .common import MODEL, PRIMARY_KEY, BaseRepository, PaginatedResult, SortDirection
 
 
 class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
@@ -57,7 +57,7 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         """Persist a model.
 
         :param instance: A mapped object instance to be persisted
-        :return: The model instance after being persisted (e.g. with primary key populated)
+        :return: The model instance after being persisted
         """
         async with self._get_session() as session:
             session.add(instance)
@@ -71,7 +71,7 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
 
         :param instances: A list of mapped objects to be persisted
         :type instances: Iterable
-        :return: The model instances after being persisted (e.g. with primary keys populated)
+        :return: The model instances after being persisted
         """
         async with self._get_session() as session:
             session.add_all(instances)
@@ -101,7 +101,10 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         :type entity: Union[MODEL, PRIMARY_KEY]
         """
         # TODO: delete without loading the model
-        obj = entity if isinstance(entity, self._model) else await self.get(entity)  # type: ignore
+        if isinstance(entity, self._model):
+            obj = entity
+        else:
+            obj = await self.get(entity)  # type: ignore
         async with self._get_session() as session:
             await session.delete(obj)
 

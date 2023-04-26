@@ -41,7 +41,7 @@ async def test_find_filtered(repository_class, model_class, sa_manager):
 async def test_find_filtered_fails_if_invalid_filter(repository_class, sa_manager):
     repo = repository_class(sa_manager.get_bind())
     with pytest.raises(UnmappedProperty):
-        results = [m for m in await repo.find(search_params={"somename": "Someone"})]
+        [m for m in await repo.find(search_params={"somename": "Someone"})]
 
 
 async def test_find_ordered(repository_class, model_class, sa_manager):
@@ -70,8 +70,6 @@ async def test_find_ordered(repository_class, model_class, sa_manager):
 async def test_find_ordered_fails_if_invalid_column(repository_class, sa_manager):
     repo = repository_class(sa_manager.get_bind())
     with pytest.raises(UnmappedProperty):
-        results = [m for m in await repo.find(order_by=("unexisting",))]
+        [m for m in await repo.find(order_by=("unexisting",))]
     with pytest.raises(UnmappedProperty):
-        results = [
-            m for m in await repo.find(order_by=(("unexisting", SortDirection.DESC),))
-        ]
+        [m for m in await repo.find(order_by=(("unexisting", SortDirection.DESC),))]

@@ -1,24 +1,23 @@
 from abc import ABC
 from contextlib import contextmanager
-from math import ceil
 from typing import (
-    Union,
+    Any,
     Generic,
     Iterable,
-    Tuple,
-    List,
     Iterator,
-    Any,
+    List,
     Mapping,
+    Tuple,
     Type,
+    Union,
 )
 
 from sqlalchemy.orm import Session
 
 from .._bind_manager import SQLAlchemyBind
 from .._transaction_handler import SessionHandler
-from ..exceptions import ModelNotFound, InvalidConfig
-from .common import MODEL, PRIMARY_KEY, SortDirection, BaseRepository, PaginatedResult
+from ..exceptions import InvalidConfig, ModelNotFound
+from .common import MODEL, PRIMARY_KEY, BaseRepository, PaginatedResult, SortDirection
 
 
 class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
@@ -58,7 +57,7 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         """Persist a model.
 
         :param instance: A mapped object instance to be persisted
-        :return: The model instance after being persisted (e.g. with primary key populated)
+        :return: The model instance after being persisted
         """
         with self._get_session() as session:
             session.add(instance)
@@ -69,7 +68,7 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
 
         :param instances: A list of mapped objects to be persisted
         :type instances: Iterable
-        :return: The model instances after being persisted (e.g. with primary keys populated)
+        :return: The model instances after being persisted
         """
         with self._get_session() as session:
             session.add_all(instances)
@@ -96,7 +95,10 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         :type entity: Union[MODEL, PRIMARY_KEY]
         """
         # TODO: delete without loading the model
-        obj = entity if isinstance(entity, self._model) else self.get(entity)  # type: ignore
+        if isinstance(entity, self._model):
+            obj = entity
+        else:
+            obj = self.get(entity)  # type: ignore
         with self._get_session() as session:
             session.delete(obj)
 
