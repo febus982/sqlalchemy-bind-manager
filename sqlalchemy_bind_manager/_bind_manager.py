@@ -1,20 +1,20 @@
-from typing import Union, Mapping, MutableMapping
+from typing import Mapping, MutableMapping, Union
 
 from pydantic import BaseModel
-from sqlalchemy import create_engine, MetaData
+from sqlalchemy import MetaData, create_engine
 from sqlalchemy.engine import Engine
 from sqlalchemy.ext.asyncio import (
-    AsyncSession,
-    create_async_engine,
     AsyncEngine,
+    AsyncSession,
     async_sessionmaker,
+    create_async_engine,
 )
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.orm.decl_api import registry
 
 from sqlalchemy_bind_manager.exceptions import (
-    NotInitializedBind,
     InvalidConfig,
+    NotInitializedBind,
 )
 
 
@@ -82,7 +82,8 @@ class SQLAlchemyBindManager:
             ]
         ):
             raise InvalidConfig(
-                f"Config for bind `{name}` is not a SQLAlchemyConfig or SQLAlchemyAsyncConfig object"
+                f"Config for bind `{name}` is not a SQLAlchemyConfig"
+                f" or SQLAlchemyAsyncConfig object"
             )
 
         engine_options: dict = config.engine_options or {}

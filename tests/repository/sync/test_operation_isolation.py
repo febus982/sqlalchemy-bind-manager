@@ -1,4 +1,4 @@
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
 from sqlalchemy_bind_manager._transaction_handler import SessionHandler
 

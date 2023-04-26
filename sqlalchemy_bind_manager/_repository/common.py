@@ -3,21 +3,21 @@ from enum import Enum
 from functools import partial
 from math import ceil
 from typing import (
+    Any,
+    Collection,
+    Generic,
+    Iterable,
+    List,
+    Mapping,
+    Tuple,
+    Type,
     TypeVar,
     Union,
-    Generic,
-    Type,
-    Tuple,
-    Iterable,
-    Any,
-    Mapping,
-    List,
-    Collection,
 )
 
 from pydantic.generics import GenericModel
-from sqlalchemy import asc, desc, select, func
-from sqlalchemy.orm import class_mapper, Mapper, lazyload
+from sqlalchemy import asc, desc, func, select
+from sqlalchemy.orm import Mapper, class_mapper, lazyload
 from sqlalchemy.orm.exc import UnmappedClassError
 from sqlalchemy.sql import Select
 
@@ -52,7 +52,8 @@ class BaseRepository(Generic[MODEL], ABC):
             self._model
         ):
             raise InvalidModel(
-                "You need to supply a valid model class either in the `model_class` parameter"
+                "You need to supply a valid model class"
+                " either in the `model_class` parameter"
                 " or in the `_model` class property."
             )
 
@@ -79,7 +80,8 @@ class BaseRepository(Generic[MODEL], ABC):
         m: Mapper = class_mapper(self._model)
         if property_name not in m.column_attrs:
             raise UnmappedProperty(
-                f"Property `{property_name}` is not mapped in the ORM for model `{self._model}`"
+                f"Property `{property_name}` is not mapped"
+                f" in the ORM for model `{self._model}`"
             )
 
     def _filter_select(self, stmt: Select, search_params: Mapping[str, Any]) -> Select:
@@ -110,8 +112,11 @@ class BaseRepository(Generic[MODEL], ABC):
         """Build the query ordering clauses from submitted parameters.
 
         E.g.
-        _filter_order_by(stmt, ['name']) adds a `ORDER BY name` statement
-        _filter_order_by(stmt, [('name', SortDirection.ASC)]) adds a `ORDER BY name ASC` statement
+        `_filter_order_by(stmt, ['name'])`
+            adds a `ORDER BY name` statement
+
+        `_filter_order_by(stmt, [('name', SortDirection.ASC)])`
+            adds a `ORDER BY name ASC` statement
 
         :param stmt: a Select statement
         :type stmt: Select

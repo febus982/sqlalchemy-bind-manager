@@ -6,9 +6,9 @@ import pytest
 from sqlalchemy.orm import clear_mappers
 
 from sqlalchemy_bind_manager import (
-    SQLAlchemyConfig,
-    SQLAlchemyBindManager,
     SQLAlchemyAsyncConfig,
+    SQLAlchemyBindManager,
+    SQLAlchemyConfig,
 )
 
 

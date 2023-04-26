@@ -1,19 +1,19 @@
 from typing import (
-    Union,
-    Mapping,
     Any,
     Iterable,
-    Tuple,
     List,
+    Mapping,
     Protocol,
+    Tuple,
+    Union,
     runtime_checkable,
 )
 
 from sqlalchemy_bind_manager._repository.common import (
-    PRIMARY_KEY,
     MODEL,
-    SortDirection,
+    PRIMARY_KEY,
     PaginatedResult,
+    SortDirection,
 )
 
 

@@ -3,11 +3,11 @@ from uuid import uuid4
 import pytest
 from sqlalchemy import MetaData
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import registry, Session
+from sqlalchemy.orm import Session, registry
 
 from sqlalchemy_bind_manager import (
-    SQLAlchemyConfig,
     SQLAlchemyBindManager,
+    SQLAlchemyConfig,
 )
 from sqlalchemy_bind_manager.exceptions import (
     InvalidConfig,
@@ -33,7 +33,7 @@ from sqlalchemy_bind_manager.exceptions import (
 def test_invalid_config_raises_exception(supplied_config):
     # We consciously ignore the type to supply an invalid config
     with pytest.raises(InvalidConfig):
-        sa_manager = SQLAlchemyBindManager(supplied_config)  # type: ignore
+        SQLAlchemyBindManager(supplied_config)  # type: ignore
 
 
 def test_initialised_bind_raises_error(single_config):

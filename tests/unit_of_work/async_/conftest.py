@@ -1,5 +1,5 @@
 import os
-from typing import Type, Tuple
+from typing import Tuple, Type
 from uuid import uuid4
 
 import pytest
@@ -7,9 +7,9 @@ from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import clear_mappers
 
 from sqlalchemy_bind_manager import (
-    SQLAlchemyBindManager,
-    SQLAlchemyAsyncRepository,
     SQLAlchemyAsyncConfig,
+    SQLAlchemyAsyncRepository,
+    SQLAlchemyBindManager,
 )
 
 

@@ -7,9 +7,9 @@ from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import clear_mappers
 
 from sqlalchemy_bind_manager import (
-    SQLAlchemyBindManager,
     SQLAlchemyAsyncConfig,
     SQLAlchemyAsyncRepository,
+    SQLAlchemyBindManager,
 )
 
 

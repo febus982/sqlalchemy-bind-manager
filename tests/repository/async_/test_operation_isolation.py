@@ -1,4 +1,4 @@
-from unittest.mock import patch, AsyncMock
+from unittest.mock import AsyncMock, patch
 
 from sqlalchemy_bind_manager._transaction_handler import AsyncSessionHandler
 

@@ -1,17 +1,17 @@
 from asyncio import get_event_loop
-from typing import Iterator, AsyncIterator
-from contextlib import contextmanager, asynccontextmanager
+from contextlib import asynccontextmanager, contextmanager
+from typing import AsyncIterator, Iterator
 from uuid import uuid4
 
 from sqlalchemy.ext.asyncio import (
-    async_scoped_session,
     AsyncSession,
+    async_scoped_session,
 )
-from sqlalchemy.orm import scoped_session, Session
+from sqlalchemy.orm import Session, scoped_session
 
 from sqlalchemy_bind_manager._bind_manager import (
-    SQLAlchemyBind,
     SQLAlchemyAsyncBind,
+    SQLAlchemyBind,
 )
 from sqlalchemy_bind_manager.exceptions import UnsupportedBind
 

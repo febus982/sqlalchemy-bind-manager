@@ -4,9 +4,9 @@ import pytest
 
 from sqlalchemy_bind_manager import SQLAlchemyRepository
 from sqlalchemy_bind_manager.exceptions import (
-    UnsupportedBind,
     InvalidConfig,
     InvalidModel,
+    UnsupportedBind,
 )
 
 
@@ -49,5 +49,5 @@ def test_repository_initialise_with_valid_model(model_class, sa_manager):
     class AsyncRepo(SQLAlchemyRepository):
         _model = model_class
 
-    r = AsyncRepo(bind=sa_manager.get_bind())
-    r2 = SQLAlchemyRepository(bind=sa_manager.get_bind(), model_class=model_class)
+    AsyncRepo(bind=sa_manager.get_bind())
+    SQLAlchemyRepository(bind=sa_manager.get_bind(), model_class=model_class)
