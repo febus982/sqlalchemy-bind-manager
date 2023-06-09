@@ -155,7 +155,7 @@ class BaseRepository(Generic[MODEL], ABC):
             query.options(lazyload("*")).order_by(None).subquery()  # type: ignore
         )
 
-    def _paginate_query(
+    def _paginate_query_by_page(
         self,
         stmt: Select,
         page: int,
@@ -181,7 +181,7 @@ class BaseRepository(Generic[MODEL], ABC):
 
         return stmt
 
-    def _build_paginated_result(
+    def _build_paginated_by_page_result(
         self,
         result_items: Collection[MODEL],
         total_items_count: int,

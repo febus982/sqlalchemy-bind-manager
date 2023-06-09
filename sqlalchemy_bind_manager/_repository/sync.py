@@ -146,7 +146,7 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         """
 
         find_stmt = self._find_query(search_params, order_by)
-        paginated_stmt = self._paginate_query(find_stmt, page, per_page)
+        paginated_stmt = self._paginate_query_by_page(find_stmt, page, per_page)
 
         with self._get_session() as session:
             total_items_count = (
@@ -154,7 +154,7 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
             )
             result_items = [x for x in session.execute(paginated_stmt).scalars()]
 
-            return self._build_paginated_result(
+            return self._build_paginated_by_page_result(
                 result_items=result_items,
                 total_items_count=total_items_count,
                 page=page,
