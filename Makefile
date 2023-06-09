@@ -9,3 +9,6 @@ format:
 
 lint:
 	poetry run ruff . --fix
+
+dev-dependencies:
+	poetry update --with dev
