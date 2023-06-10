@@ -40,10 +40,19 @@ class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
 
     async def paginated_find(
         self,
-        per_page: int,
+        items_per_page: int,
         page: int,
         search_params: Union[None, Mapping[str, Any]] = None,
         order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
+    ) -> PaginatedResult[MODEL]:
+        ...
+
+    async def cursor_paginated_find(
+        self,
+        items_per_page: int,
+        after: Tuple[str, Union[int, str]],
+        search_params: Union[None, Mapping[str, Any]] = None,
+        direction: SortDirection = SortDirection.ASC,
     ) -> PaginatedResult[MODEL]:
         ...
 
@@ -71,9 +80,18 @@ class SQLAlchemyRepositoryInterface(Protocol[MODEL]):
 
     def paginated_find(
         self,
-        per_page: int,
+        items_per_page: int,
         page: int,
         search_params: Union[None, Mapping[str, Any]] = None,
         order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
+    ) -> PaginatedResult[MODEL]:
+        ...
+
+    def cursor_paginated_find(
+        self,
+        items_per_page: int,
+        after: Tuple[str, Union[int, str]],
+        search_params: Union[None, Mapping[str, Any]] = None,
+        direction: SortDirection = SortDirection.ASC,
     ) -> PaginatedResult[MODEL]:
         ...
