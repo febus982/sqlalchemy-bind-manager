@@ -34,8 +34,8 @@ class SortDirection(Enum):
 
 class PaginatedResult(GenericModel, Generic[MODEL]):
     items: List[MODEL]
-    page: int
-    per_page: int
+    page: Union[int, None]
+    items_per_page: int
     total_pages: int
     total_items: int
 
@@ -181,26 +181,59 @@ class BaseRepository(Generic[MODEL], ABC):
 
         return stmt
 
-    def _build_paginated_by_page_result(
+    def _paginate_query_by_cursor(
+        self,
+        stmt: Select,
+        after: Tuple[str, Union[int, str]],
+        per_page: int,
+        direction: SortDirection,
+    ) -> Select:
+        """Build the query offset and limit clauses from submitted parameters.
+
+        :param stmt: a Select statement
+        :type stmt: Select
+        :param after: Identifier of the last node to skip, ("column_name", "value")
+        :type after: Tuple[str, Union[int, str]]
+        :param per_page: Number of models to retrieve
+        :type per_page: int
+        :return: The filtered query
+        """
+        stmt = self._filter_order_by(stmt, [(after[0], direction)])
+
+        if direction == SortDirection.ASC:
+            stmt = stmt.where(getattr(self._model, after[0]) > after[1])
+        else:
+            stmt = stmt.where(getattr(self._model, after[0]) < after[1])
+
+        _limit = max(min(per_page, self._max_query_limit), 0)
+        stmt = stmt.limit(_limit)
+
+        return stmt
+
+    def _build_paginated_result(
         self,
         result_items: Collection[MODEL],
         total_items_count: int,
-        page: int,
-        per_page: int,
+        page: Union[int, None],
+        items_per_page: int,
     ) -> PaginatedResult:
 
-        _per_page = max(min(per_page, self._max_query_limit), 0)
+        _per_page = max(min(items_per_page, self._max_query_limit), 0)
         total_pages = (
             0
             if total_items_count == 0 or total_items_count is None
             else ceil(total_items_count / _per_page)
         )
-        _page = 0 if len(result_items) == 0 else min(page, total_pages)
+
+        if page:
+            _page = 0 if len(result_items) == 0 else min(page, total_pages)
+        else:
+            _page = None
 
         return PaginatedResult(
             items=result_items,
             page=_page,
-            per_page=_per_page,
+            items_per_page=_per_page,
             total_items=total_items_count,
             total_pages=total_pages,
         )

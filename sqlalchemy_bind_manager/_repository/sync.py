@@ -125,18 +125,18 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
 
     def paginated_find(
         self,
-        per_page: int,
+        items_per_page: int,
         page: int,
         search_params: Union[None, Mapping[str, Any]] = None,
         order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
     ) -> PaginatedResult[MODEL]:
-        """Find models using filters and pagination
+        """Find models using filters and page based pagination
 
         E.g.
         find(name="John") finds all models with name = John
 
-        :param per_page: Number of models to retrieve
-        :type per_page: int
+        :param items_per_page: Number of models to retrieve
+        :type items_per_page: int
         :param page: Page to retrieve
         :type page: int
         :param search_params: A dictionary containing equality filters
@@ -146,7 +146,7 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         """
 
         find_stmt = self._find_query(search_params, order_by)
-        paginated_stmt = self._paginate_query_by_page(find_stmt, page, per_page)
+        paginated_stmt = self._paginate_query_by_page(find_stmt, page, items_per_page)
 
         with self._get_session() as session:
             total_items_count = (
@@ -154,9 +154,47 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
             )
             result_items = [x for x in session.execute(paginated_stmt).scalars()]
 
-            return self._build_paginated_by_page_result(
+            return self._build_paginated_result(
                 result_items=result_items,
                 total_items_count=total_items_count,
                 page=page,
-                per_page=per_page,
+                items_per_page=items_per_page,
+            )
+
+    def cursor_paginated_find(
+        self,
+        items_per_page: int,
+        after: Tuple[str, Union[int, str]],
+        search_params: Union[None, Mapping[str, Any]] = None,
+        direction: SortDirection = SortDirection.ASC,
+    ) -> PaginatedResult[MODEL]:
+        """Find models using filters and cursor based pagination
+
+        E.g.
+        find(name="John") finds all models with name = John
+
+        :param items_per_page: Number of models to retrieve
+        :type items_per_page: int
+        :param after: Identifier of the last node to skip, ("column_name", "value")
+        :type after: Tuple[str, Union[int, str]]
+        :param search_params: A dictionary containing equality filters
+        :param direction:
+        :return: A collection of models
+        :rtype: List
+        """
+
+        find_stmt = self._find_query(search_params)
+        paginated_stmt = self._paginate_query_by_cursor(find_stmt, after, items_per_page, direction)
+
+        with self._get_session() as session:
+            total_items_count = (
+                session.execute(self._count_query(find_stmt)).scalar() or 0
+            )
+            result_items = [x for x in session.execute(paginated_stmt).scalars()]
+
+            return self._build_paginated_result(
+                result_items=result_items,
+                total_items_count=total_items_count,
+                page=None,
+                items_per_page=items_per_page,
             )
