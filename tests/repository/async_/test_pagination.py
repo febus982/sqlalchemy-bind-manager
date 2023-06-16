@@ -21,6 +21,8 @@ async def test_paginated_find_page_length(repository_class, model_class, sa_mana
     assert results.items_per_page == 2
     assert results.total_items == 3
     assert results.total_pages == 2
+    assert results.has_next_page is True
+    assert results.has_previous_page is False
 
 
 async def test_paginated_find_max_page_length_is_respected(
@@ -49,6 +51,8 @@ async def test_paginated_find_max_page_length_is_respected(
     assert results.items_per_page == 2
     assert results.total_pages == 2
     assert results.total_items == 3
+    assert results.has_next_page is True
+    assert results.has_previous_page is False
 
 
 async def test_paginated_find_last_page(repository_class, model_class, sa_manager):
@@ -73,6 +77,8 @@ async def test_paginated_find_last_page(repository_class, model_class, sa_manage
     assert results.items_per_page == 2
     assert results.total_pages == 2
     assert results.total_items == 3
+    assert results.has_next_page is False
+    assert results.has_previous_page is True
 
 
 async def test_paginated_find_after_last_page(
@@ -98,6 +104,7 @@ async def test_paginated_find_after_last_page(
     assert results.items_per_page == 2
     assert results.total_pages == 2
     assert results.total_items == 3
+    assert results.has_next_page is False
 
 
 async def test_paginated_find_no_result_filters(
@@ -125,3 +132,5 @@ async def test_paginated_find_no_result_filters(
     assert results.items_per_page == 2
     assert results.total_pages == 0
     assert results.total_items == 0
+    assert results.has_next_page is False
+    assert results.has_previous_page is False

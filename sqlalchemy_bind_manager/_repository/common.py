@@ -34,10 +34,20 @@ class SortDirection(Enum):
 
 class PaginatedResult(GenericModel, Generic[MODEL]):
     items: List[MODEL]
-    page: Union[int, None]
+    page: int
     items_per_page: int
     total_pages: int
     total_items: int
+    has_next_page: bool
+    has_previous_page: bool
+
+
+class CursorPaginatedResult(GenericModel, Generic[MODEL]):
+    items: List[MODEL]
+    items_per_page: int
+    total_items: int
+    has_next_page: bool
+    has_previous_page: bool
 
 
 class BaseRepository(Generic[MODEL], ABC):
@@ -152,7 +162,7 @@ class BaseRepository(Generic[MODEL], ABC):
         query: Select,
     ) -> Select:
         return select(func.count()).select_from(
-            query.options(lazyload("*")).order_by(None).subquery()  # type: ignore
+            query.options(lazyload("*")).subquery()  # type: ignore
         )
 
     def _paginate_query_by_page(
@@ -176,59 +186,71 @@ class BaseRepository(Generic[MODEL], ABC):
         if _offset > 0:
             stmt = stmt.offset(_offset)
 
-        _limit = max(min(per_page, self._max_query_limit), 0)
+        _limit = self._calculate_sanitised_query_limit(per_page)
         stmt = stmt.limit(_limit)
 
         return stmt
 
-    def _paginate_query_by_cursor(
+    def _cursor_paginated_query(
         self,
         stmt: Select,
-        after: Tuple[str, Union[int, str]],
-        per_page: int,
-        direction: SortDirection,
+        order_column: str,
+        before: Union[int, str, None] = None,
+        after: Union[int, str, None] = None,
+        per_page: int = _max_query_limit,
     ) -> Select:
         """Build the query offset and limit clauses from submitted parameters.
 
         :param stmt: a Select statement
         :type stmt: Select
-        :param after: Identifier of the last node to skip, ("column_name", "value")
-        :type after: Tuple[str, Union[int, str]]
+        :param before: Identifier of the last node to skip
+        :type before: Union[int, str]
+        :param after: Identifier of the last node to skip
+        :type after: Union[int, str]
         :param per_page: Number of models to retrieve
         :type per_page: int
         :return: The filtered query
         """
-        stmt = self._filter_order_by(stmt, [(after[0], direction)])
+        if not bool(before) ^ bool(after):
+            raise ValueError("You need to specify either `after` or `before`, not both")
 
-        if direction == SortDirection.ASC:
-            stmt = stmt.where(getattr(self._model, after[0]) > after[1])
+        forward_limit = self._calculate_sanitised_query_limit(per_page) + 1
+
+        if after:
+            query = stmt.where(getattr(self._model, order_column) > after)
+            query = self._filter_order_by(
+                query, [(order_column, SortDirection.ASC)]
+            ).limit(forward_limit)
+
         else:
-            stmt = stmt.where(getattr(self._model, after[0]) < after[1])
+            query = stmt.where(getattr(self._model, order_column) < before)
+            query = self._filter_order_by(
+                query, [(order_column, SortDirection.DESC)]
+            ).limit(forward_limit)
 
-        _limit = max(min(per_page, self._max_query_limit), 0)
-        stmt = stmt.limit(_limit)
+        return query
 
-        return stmt
+    def _calculate_sanitised_query_limit(self, limit):
+        return max(min(limit, self._max_query_limit), 0)
 
-    def _build_paginated_result(
+    def _build_page_based_paginated_result(
         self,
         result_items: Collection[MODEL],
         total_items_count: int,
-        page: Union[int, None],
+        page: int,
         items_per_page: int,
     ) -> PaginatedResult:
 
-        _per_page = max(min(items_per_page, self._max_query_limit), 0)
+        _per_page = self._calculate_sanitised_query_limit(items_per_page)
         total_pages = (
             0
             if total_items_count == 0 or total_items_count is None
             else ceil(total_items_count / _per_page)
         )
 
-        if page:
-            _page = 0 if len(result_items) == 0 else min(page, total_pages)
-        else:
-            _page = None
+        _page = 0 if len(result_items) == 0 else min(page, total_pages)
+        has_next_page = _page and _page < total_pages
+        has_previous_page = _page and _page > 1
 
         return PaginatedResult(
             items=result_items,
@@ -236,4 +258,6 @@ class BaseRepository(Generic[MODEL], ABC):
             items_per_page=_per_page,
             total_items=total_items_count,
             total_pages=total_pages,
+            has_next_page=has_next_page,
+            has_previous_page=has_previous_page,
         )

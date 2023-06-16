@@ -17,7 +17,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from .._bind_manager import SQLAlchemyAsyncBind
 from .._transaction_handler import AsyncSessionHandler
 from ..exceptions import InvalidConfig, ModelNotFound
-from .common import MODEL, PRIMARY_KEY, BaseRepository, PaginatedResult, SortDirection
+from .common import (
+    MODEL,
+    PRIMARY_KEY,
+    BaseRepository,
+    CursorPaginatedResult,
+    PaginatedResult,
+    SortDirection,
+)
 
 
 class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
@@ -166,7 +173,7 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
                 x for x in (await session.execute(paginated_stmt)).scalars()
             ]
 
-            return self._build_paginated_result(
+            return self._build_page_based_paginated_result(
                 result_items=result_items,
                 total_items_count=total_items_count,
                 page=page,
@@ -176,10 +183,11 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
     async def cursor_paginated_find(
         self,
         items_per_page: int,
-        after: Tuple[str, Union[int, str]],
+        order_by: str,
+        before: Union[int, str, None] = None,
+        after: Union[int, str, None] = None,
         search_params: Union[None, Mapping[str, Any]] = None,
-        direction: SortDirection = SortDirection.ASC,
-    ) -> PaginatedResult[MODEL]:
+    ) -> CursorPaginatedResult[MODEL]:
         """Find models using filters and cursor based pagination
 
         E.g.
@@ -187,26 +195,66 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
 
         :param items_per_page: Number of models to retrieve
         :type items_per_page: int
-        :param after: Identifier of the last node to skip, ("column_name", "value")
-        :type after: Tuple[str, Union[int, str]]
+        :param order_by: Model property to use for ordering and before/after evaluation
+        :type order_by: str
+        :param before: Identifier of the last node to skip
+        :type before: Union[int, str]
+        :param after: Identifier of the last node to skip
+        :type after: Union[int, str]
         :param search_params: A dictionary containing equality filters
-        :param direction:
         :return: A collection of models
         :rtype: List
         """
 
         find_stmt = self._find_query(search_params)
-        paginated_stmt = self._paginate_query_by_cursor(find_stmt, after, items_per_page, direction)
+        paginated_stmt = self._cursor_paginated_query(
+            find_stmt,
+            order_column=order_by,
+            before=before,
+            after=after,
+            per_page=items_per_page,
+        )
 
         async with self._get_session() as session:
             total_items_count = (
-                    (await session.execute(self._count_query(find_stmt))).scalar() or 0
+                await session.execute(self._count_query(find_stmt))
+            ).scalar() or 0
+            result_items = [
+                x for x in (await session.execute(paginated_stmt)).scalars()
+            ] or []
+            sanitised_query_limit = self._calculate_sanitised_query_limit(
+                items_per_page
             )
-            result_items = [x for x in (await session.execute(paginated_stmt)).scalars()]
 
-            return self._build_paginated_result(
-                result_items=result_items,
-                total_items_count=total_items_count,
-                page=None,
-                items_per_page=items_per_page,
+            if len(result_items) > sanitised_query_limit:
+                has_next_page = True
+                result_items = result_items[0:sanitised_query_limit]
+            else:
+                has_next_page = False
+
+            previous_page_cursor_reference = (
+                getattr(result_items[0], order_by) if result_items else after or before
+            )
+            previous_page_stmt = self._cursor_paginated_query(
+                find_stmt,
+                order_column=order_by,
+                before=previous_page_cursor_reference if before is None else None,
+                after=previous_page_cursor_reference if after is None else None,
+                per_page=1,
+            )
+
+            has_previous_page = bool(
+                (await session.execute(self._count_query(previous_page_stmt))).scalar()
+                or 0
+            )
+
+            if before is not None:
+                result_items.reverse()
+
+            return CursorPaginatedResult(
+                items=result_items,
+                items_per_page=sanitised_query_limit,
+                total_items=total_items_count,
+                has_next_page=has_next_page,
+                has_previous_page=has_previous_page,
             )
