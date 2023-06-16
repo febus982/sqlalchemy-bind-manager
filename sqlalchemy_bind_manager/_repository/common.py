@@ -17,7 +17,7 @@ from typing import (
 
 from pydantic.generics import GenericModel
 from sqlalchemy import asc, desc, func, select
-from sqlalchemy.orm import Mapper, class_mapper, lazyload
+from sqlalchemy.orm import Mapper, aliased, class_mapper, lazyload
 from sqlalchemy.orm.exc import UnmappedClassError
 from sqlalchemy.sql import Select
 
@@ -216,17 +216,49 @@ class BaseRepository(Generic[MODEL], ABC):
 
         forward_limit = self._calculate_sanitised_query_limit(per_page) + 1
 
+        # TODO: Use window functions
         if after:
-            query = stmt.where(getattr(self._model, order_column) > after)
-            query = self._filter_order_by(
-                query, [(order_column, SortDirection.ASC)]
-            ).limit(forward_limit)
+            previous_query = stmt.where(getattr(self._model, order_column) <= after)
+            previous_query = (
+                self._filter_order_by(
+                    previous_query, [(order_column, SortDirection.DESC)]
+                )
+                .limit(1)
+                .subquery("previous")
+            )  # type: ignore
 
+            page_query = stmt.where(getattr(self._model, order_column) > after)
+            page_query = (
+                self._filter_order_by(page_query, [(order_column, SortDirection.ASC)])
+                .limit(forward_limit)
+                .subquery("page")
+            )  # type: ignore
         else:
-            query = stmt.where(getattr(self._model, order_column) < before)
-            query = self._filter_order_by(
-                query, [(order_column, SortDirection.DESC)]
-            ).limit(forward_limit)
+            previous_query = stmt.where(getattr(self._model, order_column) >= before)
+            previous_query = (
+                self._filter_order_by(
+                    previous_query, [(order_column, SortDirection.ASC)]
+                )
+                .limit(1)
+                .subquery("previous")
+            )  # type: ignore
+
+            page_query = stmt.where(getattr(self._model, order_column) < before)
+            page_query = (
+                self._filter_order_by(page_query, [(order_column, SortDirection.DESC)])
+                .limit(forward_limit)
+                .subquery("page")
+            )  # type: ignore
+
+        query = select(
+            aliased(
+                self._model,
+                select(previous_query)
+                .union(select(page_query))
+                .order_by(order_column)
+                .subquery(),
+            )
+        )
 
         return query
 

@@ -208,33 +208,30 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
                 session.execute(self._count_query(find_stmt)).scalar() or 0
             )
             result_items = [x for x in session.execute(paginated_stmt).scalars()]
+
             sanitised_query_limit = self._calculate_sanitised_query_limit(
                 items_per_page
             )
+            reference_cursor = before or after
+            index = 0 if after else len(result_items) - 1
+            if (
+                result_items
+                and getattr(result_items[index], order_by) <= reference_cursor
+            ):
+                has_previous_page = True
+                result_items.pop(index)
+            else:
+                has_previous_page = False
 
             if len(result_items) > sanitised_query_limit:
                 has_next_page = True
-                result_items = result_items[0:sanitised_query_limit]
+                result_items = (
+                    result_items[0:sanitised_query_limit]
+                    if after
+                    else result_items[1 : sanitised_query_limit + 1]
+                )
             else:
                 has_next_page = False
-
-            previous_page_cursor_reference = (
-                getattr(result_items[0], order_by) if result_items else after or before
-            )
-            previous_page_stmt = self._cursor_paginated_query(
-                find_stmt,
-                order_column=order_by,
-                before=previous_page_cursor_reference if before is None else None,
-                after=previous_page_cursor_reference if after is None else None,
-                per_page=1,
-            )
-
-            has_previous_page = bool(
-                session.execute(self._count_query(previous_page_stmt)).scalar() or 0
-            )
-
-            if before is not None:
-                result_items.reverse()
 
             return CursorPaginatedResult(
                 items=result_items,
