@@ -346,10 +346,14 @@ class BaseRepository(Generic[MODEL], ABC):
         if not result_items:
             return CursorPaginatedResult(
                 items=result_items,
-                items_per_page=sanitised_query_limit,
-                total_items=total_items_count,
-                has_next_page=False,
-                has_previous_page=False,
+                page_info=CursorPageInfo(
+                    items_per_page=sanitised_query_limit,
+                    total_items=total_items_count,
+                    has_next_page=False,
+                    has_previous_page=False,
+                    start_cursor=None,
+                    end_cursor=None,
+                ),
             )
 
         if is_end_cursor:
