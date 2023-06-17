@@ -21,6 +21,7 @@ from .common import (
     MODEL,
     PRIMARY_KEY,
     BaseRepository,
+    Cursor,
     CursorPaginatedResult,
     PaginatedResult,
     SortDirection,
@@ -161,7 +162,7 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
             )
             result_items = [x for x in session.execute(paginated_stmt).scalars()]
 
-            return self._build_page_based_paginated_result(
+            return self._build_page_paginated_result(
                 result_items=result_items,
                 total_items_count=total_items_count,
                 page=page,
@@ -171,9 +172,8 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
     def cursor_paginated_find(
         self,
         items_per_page: int,
-        order_by: str,
-        before: Union[int, str, None] = None,
-        after: Union[int, str, None] = None,
+        reference_cursor: Cursor,
+        is_end_cursor: bool = False,
         search_params: Union[None, Mapping[str, Any]] = None,
     ) -> CursorPaginatedResult[MODEL]:
         """Find models using filters and cursor based pagination
@@ -193,13 +193,12 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         :return: A collection of models
         :rtype: List
         """
-
         find_stmt = self._find_query(search_params)
+
         paginated_stmt = self._cursor_paginated_query(
             find_stmt,
-            order_column=order_by,
-            before=before,
-            after=after,
+            reference_cursor=reference_cursor,
+            is_end_cursor=is_end_cursor,
             per_page=items_per_page,
         )
 
@@ -209,11 +208,10 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
             )
             result_items = [x for x in session.execute(paginated_stmt).scalars()]
 
-            return self._build_cursor_based_paginated_result(
+            return self._build_cursor_paginated_result(
                 result_items=result_items,
                 total_items_count=total_items_count,
                 items_per_page=items_per_page,
-                reference_cursor=before or after,
-                cursor_attribute=order_by,
-                is_end_cursor=before is not None,
+                reference_cursor=reference_cursor,
+                is_end_cursor=is_end_cursor,
             )
