@@ -52,6 +52,23 @@ def test_paginated_find_without_cursor(
     )
 
 
+def test_paginated_find_accepts_encoded_cursors(repository_class, model_class, sa_manager):
+    repo = repository_class(sa_manager.get_bind())
+    repo.save_many(_test_models(model_class))
+    results = repo.cursor_paginated_find(
+        reference_cursor=repo.encode_cursor(Cursor(
+            column="model_id",
+            value=80,
+        )),
+        items_per_page=2,
+    )
+    assert len(results.items) == 2
+    assert results.items[0].name == "SomeoneElse"
+    assert results.items[1].name == "StillSomeoneElse"
+    assert results.page_info.items_per_page == 2
+    assert results.page_info.total_items == 4
+
+
 def test_paginated_find_page_length_after(repository_class, model_class, sa_manager):
     repo = repository_class(sa_manager.get_bind())
     repo.save_many(_test_models(model_class))

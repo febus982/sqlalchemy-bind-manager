@@ -172,7 +172,7 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
     def cursor_paginated_find(
         self,
         items_per_page: int,
-        reference_cursor: Union[Cursor, None] = None,
+        reference_cursor: Union[Cursor, str, None] = None,
         is_end_cursor: bool = False,
         search_params: Union[None, Mapping[str, Any]] = None,
     ) -> CursorPaginatedResult[MODEL]:
@@ -193,6 +193,9 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         :return: A collection of models
         :rtype: List
         """
+        if isinstance(reference_cursor, str):
+            reference_cursor = self.decode_cursor(reference_cursor)
+
         find_stmt = self._find_query(search_params)
 
         paginated_stmt = self._cursor_paginated_query(
