@@ -1,78 +1,57 @@
 import pytest
 
 
-def test_paginated_find_page_length(repository_class, model_class, sa_manager):
-    repo = repository_class(sa_manager.get_bind())
-    model = model_class(
-        model_id=1,
-        name="Someone",
-    )
-    repo.save(model)
-    model2 = model_class(
-        model_id=2,
-        name="SomeoneElse",
-    )
-    repo.save(model2)
-    model3 = model_class(
-        model_id=3,
-        name="StillSomeoneElse",
-    )
-    repo.save(model3)
-    model4 = model_class(
-        model_id=4,
-        name="NoOne",
-    )
-    repo.save(model4)
+def _test_models(model_class):
+    return [
+        model_class(
+            model_id=10,
+            name="Someone",
+        ),
+        model_class(
+            model_id=20,
+            name="SomeoneElse",
+        ),
+        model_class(
+            model_id=30,
+            name="StillSomeoneElse",
+        ),
+        model_class(
+            model_id=40,
+            name="NoOne",
+        )
+    ]
 
+
+
+def test_paginated_find_page_length_after(repository_class, model_class, sa_manager):
+    repo = repository_class(sa_manager.get_bind())
+    repo.save_many(_test_models(model_class))
     results = repo.cursor_paginated_find(
         order_by="model_id",
-        after=1,
+        after=10,
         items_per_page=2,
     )
     assert len(results.items) == 2
     assert results.items[0].name == "SomeoneElse"
     assert results.items[1].name == "StillSomeoneElse"
-    assert results.items_per_page == 2
-    assert results.total_items == 4
-    assert results.has_next_page is True
-    assert results.has_previous_page is True
+    assert results.page_info.items_per_page == 2
+    assert results.page_info.total_items == 4
 
 
-def test_paginated_find_reverse_page_length(repository_class, model_class, sa_manager):
+def test_paginated_find_page_length_before(repository_class, model_class, sa_manager):
     repo = repository_class(sa_manager.get_bind())
-    model = model_class(
-        model_id=1,
-        name="Someone",
-    )
-    repo.save(model)
-    model2 = model_class(
-        model_id=2,
-        name="SomeoneElse",
-    )
-    repo.save(model2)
-    model3 = model_class(
-        model_id=3,
-        name="StillSomeoneElse",
-    )
-    repo.save(model3)
-    model4 = model_class(
-        model_id=4,
-        name="NoOne",
-    )
-    repo.save(model4)
+    repo.save_many(_test_models(model_class))
 
     results = repo.cursor_paginated_find(
         order_by="model_id",
-        before=4,
+        before=40,
         items_per_page=2,
     )
     assert len(results.items) == 2
     assert results.items[0].name == "SomeoneElse"
     assert results.items[1].name == "StillSomeoneElse"
-    assert results.items_per_page == 2
-    assert results.total_items == 4
-    assert results.has_next_page is True
-    assert results.has_previous_page is True
+    assert results.page_info.items_per_page == 2
+    assert results.page_info.total_items == 4
 
 
 def test_paginated_find_must_use_either_after_or_before(
@@ -98,56 +77,75 @@ def test_paginated_find_max_page_length_is_respected(
 ):
     repo = repository_class(sa_manager.get_bind())
     repo._max_query_limit = 2
-    model = model_class(
-        name="Someone",
-    )
-    repo.save(model)
-    model2 = model_class(
-        name="SomeoneElse",
-    )
-    repo.save(model2)
-    model3 = model_class(
-        name="StillSomeoneElse",
-    )
-    repo.save(model3)
+    repo.save_many(_test_models(model_class))
 
     results = repo.cursor_paginated_find(
         order_by="model_id",
-        after=1,
+        after=10,
         items_per_page=50,
     )
     assert len(results.items) == 2
     assert results.items[0].name == "SomeoneElse"
     assert results.items[1].name == "StillSomeoneElse"
-    assert results.items_per_page == 2
-    assert results.total_items == 3
-    assert results.has_next_page is False
-    assert results.has_previous_page is True
+    assert results.page_info.items_per_page == 2
+    assert results.page_info.total_items == 4
 
 
 def test_paginated_find_after_last_item(repository_class, model_class, sa_manager):
     repo = repository_class(sa_manager.get_bind())
-    model = model_class(
-        name="Someone",
-    )
-    repo.save(model)
-    model2 = model_class(
-        name="SomeoneElse",
-    )
-    repo.save(model2)
-    model3 = model_class(
-        name="StillSomeoneElse",
-    )
-    repo.save(model3)
+    repo.save_many(_test_models(model_class))
 
     results = repo.cursor_paginated_find(
         order_by="model_id",
-        after=3,
+        after=40,
         items_per_page=2,
     )
 
     assert len(results.items) == 0
-    assert results.items_per_page == 2
-    assert results.total_items == 3
-    assert results.has_next_page is False
-    assert results.has_previous_page is True
+    assert results.page_info.items_per_page == 2
+    assert results.page_info.total_items == 4
+
+
+
+
+@pytest.mark.parametrize(["before", "after", "has_next_page", "has_previous_page", "returned_ids"], [
+    (None, 5, True, False, [10, 20]),
+    (None, 10, True, True, [20, 30]),
+    (None, 15, True, True, [20, 30]),
+    (None, 20, False, True, [30, 40]),
+    (None, 25, False, True, [30, 40]),
+    (None, 30, False, True, [40]),
+    (None, 35, False, True, [40]),
+    (None, 40, False, True, []),
+    (None, 45, False, True, []),
+    (45, None, False, True, [30, 40]),
+    (40, None, True, True, [20, 30]),
+    (35, None, True, True, [20, 30]),
+    (30, None, True, False, [10, 20]),
+    (25, None, True, False, [10, 20]),
+    (20, None, True, False, [10]),
+    (15, None, True, False, [10]),
+    (10, None, True, False, []),
+    (5, None, True, False, []),
+])
+def test_paginated_find_previous_next_page(
+    repository_class, model_class, sa_manager, before, after, has_next_page, has_previous_page, returned_ids
+):
+    repo = repository_class(sa_manager.get_bind())
+    repo.save_many(_test_models(model_class))
+
+    result = repo.cursor_paginated_find(
+        order_by="model_id",
+        before=before,
+        after=after,
+        items_per_page=2,
+    )
+
+    assert len(returned_ids) == len(result.items)
+    if len(returned_ids):
+        assert result.page_info.start_cursor == str(result.items[0].model_id)
+        assert result.page_info.end_cursor == str(result.items[-1].model_id)
+    for k, v in enumerate(returned_ids):
+        assert result.items[k].model_id == v
+    assert result.page_info.has_next_page == has_next_page
+    assert result.page_info.has_previous_page == has_previous_page

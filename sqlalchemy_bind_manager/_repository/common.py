@@ -15,6 +15,7 @@ from typing import (
     Union,
 )
 
+from pydantic import BaseModel
 from pydantic.generics import GenericModel
 from sqlalchemy import asc, desc, func, select
 from sqlalchemy.orm import Mapper, aliased, class_mapper, lazyload
@@ -42,12 +43,18 @@ class PaginatedResult(GenericModel, Generic[MODEL]):
     has_previous_page: bool
 
 
-class CursorPaginatedResult(GenericModel, Generic[MODEL]):
-    items: List[MODEL]
-    items_per_page: int
-    total_items: int
+class CursorPageInfo(BaseModel):
     has_next_page: bool
     has_previous_page: bool
+    start_cursor: Union[str, None]
+    end_cursor: Union[str, None]
+    items_per_page: int
+    total_items: int
+
+
+class CursorPaginatedResult(GenericModel, Generic[MODEL]):
+    items: List[MODEL]
+    page_info: CursorPageInfo
 
 
 class BaseRepository(Generic[MODEL], ABC):
@@ -303,38 +310,55 @@ class BaseRepository(Generic[MODEL], ABC):
         cursor_attribute: str,
         is_end_cursor: bool,
     ) -> CursorPaginatedResult:
+        """
+        Produces a structured paginated result identifying previous/next pages
+        and slicing results accordingly.
+
+        :param result_items:
+        :param total_items_count:
+        :param items_per_page:
+        :param reference_cursor:
+        :param cursor_attribute:
+        :param is_end_cursor:
+        :return:
+        """
         sanitised_query_limit = self._calculate_sanitised_query_limit(
             items_per_page
         )
+        if not result_items:
+            return CursorPaginatedResult(
+                items=result_items,
+                items_per_page=sanitised_query_limit,
+                total_items=total_items_count,
+                has_next_page=False,
+                has_previous_page=False,
+            )
 
         if is_end_cursor:
-            index = len(result_items) - 1
+            index = -1
+            has_next_page = getattr(result_items[index], cursor_attribute) >= reference_cursor
+            if has_next_page:
+                result_items.pop(index)
+            has_previous_page = len(result_items) > sanitised_query_limit
+            if has_previous_page:
+                result_items = result_items[-sanitised_query_limit:]
         else:
             index = 0
-
-        if (
-            result_items
-            and getattr(result_items[index], cursor_attribute) <= reference_cursor
-        ):
-            has_previous_page = True
-            result_items.pop(index)
-        else:
-            has_previous_page = False
-
-        if len(result_items) > sanitised_query_limit:
-            has_next_page = True
-            result_items = (
-                result_items[0:sanitised_query_limit]
-                if not is_end_cursor
-                else result_items[1: sanitised_query_limit + 1]
-            )
-        else:
-            has_next_page = False
+            has_previous_page = getattr(result_items[index], cursor_attribute) <= reference_cursor
+            if has_previous_page:
+                result_items.pop(index)
+            has_next_page = len(result_items) > sanitised_query_limit
+            if has_next_page:
+                result_items = result_items[0:sanitised_query_limit]
 
         return CursorPaginatedResult(
             items=result_items,
-            items_per_page=sanitised_query_limit,
-            total_items=total_items_count,
-            has_next_page=has_next_page,
-            has_previous_page=has_previous_page,
+            page_info=CursorPageInfo(
+                items_per_page=sanitised_query_limit,
+                total_items=total_items_count,
+                has_next_page=has_next_page,
+                has_previous_page=has_previous_page,
+                start_cursor=getattr(result_items[0], cursor_attribute) if result_items else None,
+                end_cursor=getattr(result_items[-1], cursor_attribute) if result_items else None,
+            ),
         )
