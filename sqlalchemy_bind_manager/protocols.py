@@ -52,7 +52,7 @@ class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
     async def cursor_paginated_find(
         self,
         items_per_page: int,
-        reference_cursor: Cursor,
+        reference_cursor: Union[Cursor, None] = None,
         is_end_cursor: bool = False,
         search_params: Union[None, Mapping[str, Any]] = None,
     ) -> CursorPaginatedResult[MODEL]:
@@ -92,7 +92,7 @@ class SQLAlchemyRepositoryInterface(Protocol[MODEL]):
     def cursor_paginated_find(
         self,
         items_per_page: int,
-        reference_cursor: Cursor,
+        reference_cursor: Union[Cursor, None] = None,
         is_end_cursor: bool = False,
         search_params: Union[None, Mapping[str, Any]] = None,
     ) -> CursorPaginatedResult[MODEL]:

@@ -18,7 +18,7 @@ from typing import (
 
 from pydantic import BaseModel
 from pydantic.generics import GenericModel
-from sqlalchemy import asc, desc, func, select
+from sqlalchemy import asc, desc, func, select, inspect
 from sqlalchemy.orm import Mapper, aliased, class_mapper, lazyload
 from sqlalchemy.orm.exc import UnmappedClassError
 from sqlalchemy.sql import Select
@@ -211,8 +211,8 @@ class BaseRepository(Generic[MODEL], ABC):
     def _cursor_paginated_query(
         self,
         stmt: Select,
-        reference_cursor: Cursor,
-        is_end_cursor: bool,
+        reference_cursor: Union[Cursor, None],
+        is_end_cursor: bool = False,
         per_page: int = _max_query_limit,
     ) -> Select:
         """Build the query offset and limit clauses from submitted parameters.
@@ -229,6 +229,9 @@ class BaseRepository(Generic[MODEL], ABC):
         """
 
         forward_limit = self._sanitised_query_limit(per_page) + 1
+
+        if not reference_cursor:
+            return stmt.limit(forward_limit).order_by(asc(self._model_pk()))
 
         # TODO: Use window functions
         if not is_end_cursor:
@@ -327,7 +330,7 @@ class BaseRepository(Generic[MODEL], ABC):
         result_items: List[MODEL],
         total_items_count: int,
         items_per_page: int,
-        reference_cursor: Cursor,
+        reference_cursor: Union[Cursor, None],
         is_end_cursor: bool,
     ) -> CursorPaginatedResult:
         """
@@ -356,7 +359,40 @@ class BaseRepository(Generic[MODEL], ABC):
                 ),
             )
 
-        if is_end_cursor:
+        if not reference_cursor:
+            has_previous_page = False
+            has_next_page = len(result_items) > sanitised_query_limit
+            if has_next_page:
+                result_items = result_items[0:sanitised_query_limit]
+            pk = self._model_pk()
+            # TODO: Infer default cursor format from model
+            return CursorPaginatedResult(
+                items=result_items,
+                page_info=CursorPageInfo(
+                    items_per_page=sanitised_query_limit,
+                    total_items=total_items_count,
+                    has_next_page=has_next_page,
+                    has_previous_page=has_previous_page,
+                    start_cursor=self.encode_cursor(
+                        Cursor(
+                            column=pk,
+                            value=getattr(result_items[0], pk),
+                        )
+                    )
+                    if result_items
+                    else None,
+                    end_cursor=self.encode_cursor(
+                        Cursor(
+                            column=pk,
+                            value=getattr(result_items[-1], pk),
+                        )
+                    )
+                    if result_items
+                    else None,
+                ),
+            )
+
+        elif is_end_cursor:
             index = -1
             last_cursor = getattr(result_items[index], reference_cursor.column)
             if isinstance(last_cursor, str):
@@ -412,3 +448,10 @@ class BaseRepository(Generic[MODEL], ABC):
 
     def decode_cursor(self, cursor: str) -> Cursor:
         return Cursor.parse_raw(b64decode(cursor))
+
+    def _model_pk(self) -> str:
+        primary_keys = inspect(self._model).primary_key
+        if len(primary_keys) > 1:
+            raise NotImplementedError("Composite primary keys are not supported.")
+
+        return primary_keys[0].name

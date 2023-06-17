@@ -24,6 +24,34 @@ def _test_models(model_class):
     ]
 
 
+@pytest.mark.parametrize(["items_per_page", "expected_next_page"], [
+    [2, True],
+    [4, False],
+])
+async def test_paginated_find_without_cursor(
+    repository_class, model_class, sa_manager, items_per_page, expected_next_page
+):
+    repo = repository_class(sa_manager.get_bind())
+    await repo.save_many(_test_models(model_class))
+
+    results = await repo.cursor_paginated_find(
+        items_per_page=items_per_page,
+    )
+    assert len(results.items) == items_per_page
+    assert results.items[0].name == "Someone"
+    assert results.items[1].name == "SomeoneElse"
+    assert results.page_info.items_per_page == items_per_page
+    assert results.page_info.total_items == 4
+    assert results.page_info.has_next_page is expected_next_page
+    assert results.page_info.has_previous_page is False
+    assert results.page_info.start_cursor == repo.encode_cursor(
+        Cursor(value=results.items[0].model_id, column="model_id")
+    )
+    assert results.page_info.end_cursor == repo.encode_cursor(
+        Cursor(value=results.items[-1].model_id, column="model_id")
+    )
+
+
 async def test_paginated_find_page_length_after(
     repository_class, model_class, sa_manager
 ):
