@@ -6,19 +6,19 @@ from sqlalchemy_bind_manager._repository.common import Cursor
 def _test_models(model_class):
     return [
         model_class(
-            model_id=10,
+            model_id=80,
             name="Someone",
         ),
         model_class(
-            model_id=20,
+            model_id=90,
             name="SomeoneElse",
         ),
         model_class(
-            model_id=30,
+            model_id=100,
             name="StillSomeoneElse",
         ),
         model_class(
-            model_id=40,
+            model_id=110,
             name="NoOne",
         ),
     ]
@@ -52,6 +52,25 @@ async def test_paginated_find_without_cursor(
     )
 
 
+async def test_paginated_find_without_query_result(
+    repository_class, model_class, sa_manager
+):
+    repo = repository_class(sa_manager.get_bind())
+    await repo.save_many(_test_models(model_class))
+
+    results = await repo.cursor_paginated_find(
+        items_per_page=2,
+        search_params=dict(name="Unknown")
+    )
+    assert len(results.items) == 0
+    assert results.page_info.items_per_page == 2
+    assert results.page_info.total_items == 0
+    assert results.page_info.has_next_page is False
+    assert results.page_info.has_previous_page is False
+    assert results.page_info.start_cursor is None
+    assert results.page_info.end_cursor is None
+
+
 async def test_paginated_find_page_length_after(
     repository_class, model_class, sa_manager
 ):
@@ -61,7 +80,7 @@ async def test_paginated_find_page_length_after(
     results = await repo.cursor_paginated_find(
         reference_cursor=Cursor(
             column="model_id",
-            value=10,
+            value=80,
         ),
         items_per_page=2,
     )
@@ -81,7 +100,7 @@ async def test_paginated_find_page_length_before(
     results = await repo.cursor_paginated_find(
         reference_cursor=Cursor(
             column="model_id",
-            value=40,
+            value=110,
         ),
         is_end_cursor=True,
         items_per_page=2,
@@ -103,7 +122,7 @@ async def test_paginated_find_max_page_length_is_respected(
     results = await repo.cursor_paginated_find(
         reference_cursor=Cursor(
             column="model_id",
-            value=10,
+            value=80,
         ),
         items_per_page=50,
     )
@@ -121,7 +140,7 @@ async def test_paginated_find_empty_result(repository_class, model_class, sa_man
     results = await repo.cursor_paginated_find(
         reference_cursor=Cursor(
             column="model_id",
-            value=40,
+            value=110,
         ),
         items_per_page=2,
     )
@@ -133,24 +152,24 @@ async def test_paginated_find_empty_result(repository_class, model_class, sa_man
 @pytest.mark.parametrize(
     ["before", "after", "has_next_page", "has_previous_page", "returned_ids"],
     [
-        (None, 5, True, False, [10, 20]),
-        (None, 10, True, True, [20, 30]),
-        (None, 15, True, True, [20, 30]),
-        (None, 20, False, True, [30, 40]),
-        (None, 25, False, True, [30, 40]),
-        (None, 30, False, True, [40]),
-        (None, 35, False, True, [40]),
-        (None, 40, False, True, []),
-        (None, 45, False, True, []),
-        (45, None, False, True, [30, 40]),
-        (40, None, True, True, [20, 30]),
-        (35, None, True, True, [20, 30]),
-        (30, None, True, False, [10, 20]),
-        (25, None, True, False, [10, 20]),
-        (20, None, True, False, [10]),
-        (15, None, True, False, [10]),
-        (10, None, True, False, []),
-        (5, None, True, False, []),
+        (None, 75, True, False, [80, 90]),
+        (None, 80, True, True, [90, 100]),
+        (None, 85, True, True, [90, 100]),
+        (None, 90, False, True, [100, 110]),
+        (None, 95, False, True, [100, 110]),
+        (None, 100, False, True, [110]),
+        (None, 105, False, True, [110]),
+        (None, 110, False, True, []),
+        (None, 115, False, True, []),
+        (115, None, False, True, [100, 110]),
+        (110, None, True, True, [90, 100]),
+        (105, None, True, True, [90, 100]),
+        (100, None, True, False, [80, 90]),
+        (95, None, True, False, [80, 90]),
+        (90, None, True, False, [80]),
+        (85, None, True, False, [80]),
+        (80, None, True, False, []),
+        (75, None, True, False, []),
     ],
 )
 async def test_paginated_find_previous_next_page(
