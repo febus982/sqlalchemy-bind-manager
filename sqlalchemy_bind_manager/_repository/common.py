@@ -34,14 +34,18 @@ class SortDirection(Enum):
     DESC = partial(desc)
 
 
-class PaginatedResult(GenericModel, Generic[MODEL]):
-    items: List[MODEL]
+class PageInfo(BaseModel):
     page: int
     items_per_page: int
     total_pages: int
     total_items: int
     has_next_page: bool
     has_previous_page: bool
+
+
+class PaginatedResult(GenericModel, Generic[MODEL]):
+    items: List[MODEL]
+    page_info: PageInfo
 
 
 class CursorPageInfo(BaseModel):
@@ -308,12 +312,14 @@ class BaseRepository(Generic[MODEL], ABC):
 
         return PaginatedResult(
             items=result_items,
-            page=_page,
-            items_per_page=_per_page,
-            total_items=total_items_count,
-            total_pages=total_pages,
-            has_next_page=has_next_page,
-            has_previous_page=has_previous_page,
+            page_info=PageInfo(
+                page=_page,
+                items_per_page=_per_page,
+                total_items=total_items_count,
+                total_pages=total_pages,
+                has_next_page=has_next_page,
+                has_previous_page=has_previous_page,
+            ),
         )
 
     def _build_cursor_paginated_result(
