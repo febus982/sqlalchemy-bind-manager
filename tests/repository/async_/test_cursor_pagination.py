@@ -206,3 +206,65 @@ async def test_paginated_find_previous_next_page(
         assert result.items[k].model_id == v
     assert result.page_info.has_next_page == has_next_page
     assert result.page_info.has_previous_page == has_previous_page
+
+
+# Lexigraphic order here is 100,110,80,90
+@pytest.mark.parametrize(
+    ["before", "after", "has_next_page", "has_previous_page", "returned_ids"],
+    [
+        (None, '000', True, False, ['100', '110']),
+        (None, '100', True, True, ['110', '80']),
+        (None, '105', True, True, ['110', '80']),
+        (None, '110', False, True, ['80', '90']),
+        (None, '115', False, True, ['80', '90']),
+        (None, '75', False, True, ['80', '90']),
+        (None, '80', False, True, ['90']),
+        (None, '85', False, True, ['90']),
+        (None, '90', False, True, []),
+        (None, '95', False, True, []),
+        ('95', None, False, True, ['80', '90']),
+        ('90', None, True, True, ['110', '80']),
+        ('85', None, True, True, ['110', '80']),
+        ('80', None, True, False, ['100', '110']),
+        ('75', None, True, False, ['100', '110']),
+        ('115', None, True, False, ['100', '110']),
+        ('110', None, True, False, ['100']),
+        ('105', None, True, False, ['100']),
+        ('100', None, True, False, []),
+        ('000', None, True, False, []),
+    ],
+)
+async def test_paginated_find_string_pk(
+    repository_class_string_pk,
+    model_class_string_pk,
+    sa_manager,
+    before,
+    after,
+    has_next_page,
+    has_previous_page,
+    returned_ids,
+):
+    repo = repository_class_string_pk(sa_manager.get_bind())
+    await repo.save_many(_test_models(model_class_string_pk))
+
+    result = await repo.cursor_paginated_find(
+        reference_cursor=Cursor(
+            column="model_id",
+            value=after or before,
+        ),
+        is_end_cursor=bool(before),
+        items_per_page=2,
+    )
+
+    assert len(returned_ids) == len(result.items)
+    if len(returned_ids):
+        assert result.page_info.start_cursor == repo.encode_cursor(
+            Cursor(value=result.items[0].model_id, column="model_id")
+        )
+        assert result.page_info.end_cursor == repo.encode_cursor(
+            Cursor(value=result.items[-1].model_id, column="model_id")
+        )
+    for k, v in enumerate(returned_ids):
+        assert result.items[k].model_id == v
+    assert result.page_info.has_next_page == has_next_page
+    assert result.page_info.has_previous_page == has_previous_page
