@@ -293,3 +293,48 @@ class BaseRepository(Generic[MODEL], ABC):
             has_next_page=has_next_page,
             has_previous_page=has_previous_page,
         )
+
+    def _build_cursor_based_paginated_result(
+        self,
+        result_items: List[MODEL],
+        total_items_count: int,
+        items_per_page: int,
+        reference_cursor: Union[int, str],
+        cursor_attribute: str,
+        is_end_cursor: bool,
+    ) -> CursorPaginatedResult:
+        sanitised_query_limit = self._calculate_sanitised_query_limit(
+            items_per_page
+        )
+
+        if is_end_cursor:
+            index = len(result_items) - 1
+        else:
+            index = 0
+
+        if (
+            result_items
+            and getattr(result_items[index], cursor_attribute) <= reference_cursor
+        ):
+            has_previous_page = True
+            result_items.pop(index)
+        else:
+            has_previous_page = False
+
+        if len(result_items) > sanitised_query_limit:
+            has_next_page = True
+            result_items = (
+                result_items[0:sanitised_query_limit]
+                if not is_end_cursor
+                else result_items[1: sanitised_query_limit + 1]
+            )
+        else:
+            has_next_page = False
+
+        return CursorPaginatedResult(
+            items=result_items,
+            items_per_page=sanitised_query_limit,
+            total_items=total_items_count,
+            has_next_page=has_next_page,
+            has_previous_page=has_previous_page,
+        )

@@ -209,34 +209,11 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
             )
             result_items = [x for x in session.execute(paginated_stmt).scalars()]
 
-            sanitised_query_limit = self._calculate_sanitised_query_limit(
-                items_per_page
-            )
-            reference_cursor = before or after
-            index = 0 if after else len(result_items) - 1
-            if (
-                result_items
-                and getattr(result_items[index], order_by) <= reference_cursor
-            ):
-                has_previous_page = True
-                result_items.pop(index)
-            else:
-                has_previous_page = False
-
-            if len(result_items) > sanitised_query_limit:
-                has_next_page = True
-                result_items = (
-                    result_items[0:sanitised_query_limit]
-                    if after
-                    else result_items[1 : sanitised_query_limit + 1]
-                )
-            else:
-                has_next_page = False
-
-            return CursorPaginatedResult(
-                items=result_items,
-                items_per_page=sanitised_query_limit,
-                total_items=total_items_count,
-                has_next_page=has_next_page,
-                has_previous_page=has_previous_page,
+            return self._build_cursor_based_paginated_result(
+                result_items=result_items,
+                total_items_count=total_items_count,
+                items_per_page=items_per_page,
+                reference_cursor=before or after,
+                cursor_attribute=order_by,
+                is_end_cursor=before is not None,
             )
