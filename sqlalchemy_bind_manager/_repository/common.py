@@ -231,7 +231,7 @@ class BaseRepository(Generic[MODEL], ABC):
         forward_limit = self._sanitised_query_limit(per_page) + 1
 
         if not reference_cursor:
-            return stmt.limit(forward_limit).order_by(asc(self._model_pk()))
+            return stmt.limit(forward_limit).order_by(asc(self._model_pk()))  # type: ignore
 
         # TODO: Use window functions
         if not is_end_cursor:
@@ -395,6 +395,14 @@ class BaseRepository(Generic[MODEL], ABC):
         elif is_end_cursor:
             index = -1
             last_cursor = getattr(result_items[index], reference_cursor.column)
+            """
+            Currently we support only numeric or string model values for cursors,
+            but pydantic models (cursor) coerce always the value as string.
+            This mean if the value is not actually string we need to cast to
+            ensure correct ordering is evaluated.
+            e.g.
+            9 < 10 but '9' > '10' 
+            """
             if isinstance(last_cursor, str):
                 has_next_page = last_cursor >= reference_cursor.value
             else:
@@ -407,6 +415,14 @@ class BaseRepository(Generic[MODEL], ABC):
         else:
             index = 0
             last_cursor = getattr(result_items[index], reference_cursor.column)
+            """
+            Currently we support only numeric or string model values for cursors,
+            but pydantic models (cursor) coerce always the value as string.
+            This mean if the value is not actually string we need to cast to
+            ensure correct ordering is evaluated.
+            e.g.
+            9 < 10 but '9' > '10' 
+            """
             if isinstance(last_cursor, str):
                 has_previous_page = last_cursor <= reference_cursor.value
             else:
@@ -450,7 +466,7 @@ class BaseRepository(Generic[MODEL], ABC):
         return Cursor.parse_raw(b64decode(cursor))
 
     def _model_pk(self) -> str:
-        primary_keys = inspect(self._model).primary_key
+        primary_keys = inspect(self._model).primary_key  # type: ignore
         if len(primary_keys) > 1:
             raise NotImplementedError("Composite primary keys are not supported.")
 
