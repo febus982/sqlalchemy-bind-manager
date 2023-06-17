@@ -9,7 +9,7 @@ from typing import (
     runtime_checkable,
 )
 
-from sqlalchemy_bind_manager._repository.common import (
+from sqlalchemy_bind_manager._repository.base_repository import (
     MODEL,
     PRIMARY_KEY,
     Cursor,

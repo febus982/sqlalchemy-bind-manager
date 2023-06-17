@@ -49,12 +49,12 @@ class PaginatedResult(GenericModel, Generic[MODEL]):
 
 
 class CursorPageInfo(BaseModel):
-    has_next_page: bool
-    has_previous_page: bool
-    start_cursor: Union[str, None]
-    end_cursor: Union[str, None]
     items_per_page: int
     total_items: int
+    has_next_page: bool = False
+    has_previous_page: bool = False
+    start_cursor: Union[str, None] = None
+    end_cursor: Union[str, None] = None
 
 
 class CursorPaginatedResult(GenericModel, Generic[MODEL]):
@@ -348,55 +348,31 @@ class BaseRepository(Generic[MODEL], ABC):
         """
 
         sanitised_query_limit = self._sanitised_query_limit(items_per_page)
+
+        result_structure: CursorPaginatedResult = CursorPaginatedResult(
+            items=result_items,
+            page_info=CursorPageInfo(
+                items_per_page=sanitised_query_limit,
+                total_items=total_items_count,
+            ),
+        )
         if not result_items:
-            return CursorPaginatedResult(
-                items=result_items,
-                page_info=CursorPageInfo(
-                    items_per_page=sanitised_query_limit,
-                    total_items=total_items_count,
-                    has_next_page=False,
-                    has_previous_page=False,
-                    start_cursor=None,
-                    end_cursor=None,
-                ),
-            )
+            return result_structure
 
         if not reference_cursor:
             has_previous_page = False
             has_next_page = len(result_items) > sanitised_query_limit
             if has_next_page:
                 result_items = result_items[0:sanitised_query_limit]
-            pk = self._model_pk()
             # TODO: Infer default cursor format from model
-            return CursorPaginatedResult(
-                items=result_items,
-                page_info=CursorPageInfo(
-                    items_per_page=sanitised_query_limit,
-                    total_items=total_items_count,
-                    has_next_page=has_next_page,
-                    has_previous_page=has_previous_page,
-                    start_cursor=self.encode_cursor(
-                        Cursor(
-                            column=pk,
-                            value=getattr(result_items[0], pk),
-                        )
-                    )
-                    if result_items
-                    else None,
-                    end_cursor=self.encode_cursor(
-                        Cursor(
-                            column=pk,
-                            value=getattr(result_items[-1], pk),
-                        )
-                    )
-                    if result_items
-                    else None,
-                ),
-            )
+            result_structure.page_info.has_next_page = has_next_page
+            result_structure.page_info.has_previous_page = has_previous_page
+            reference_column = self._model_pk()
 
         elif is_end_cursor:
             index = -1
-            last_cursor = getattr(result_items[index], reference_cursor.column)
+            reference_column = reference_cursor.column
+            last_found_cursor_value = getattr(result_items[index], reference_column)
             """
             Currently we support only numeric or string model values for cursors,
             but pydantic models (cursor) coerce always the value as string.
@@ -405,10 +381,10 @@ class BaseRepository(Generic[MODEL], ABC):
             e.g.
             9 < 10 but '9' > '10' 
             """
-            if isinstance(last_cursor, str):
-                has_next_page = last_cursor >= reference_cursor.value
+            if isinstance(last_found_cursor_value, str):
+                has_next_page = last_found_cursor_value >= reference_cursor.value
             else:
-                has_next_page = last_cursor >= float(reference_cursor.value)
+                has_next_page = last_found_cursor_value >= float(reference_cursor.value)
             if has_next_page:
                 result_items.pop(index)
             has_previous_page = len(result_items) > sanitised_query_limit
@@ -416,7 +392,8 @@ class BaseRepository(Generic[MODEL], ABC):
                 result_items = result_items[-sanitised_query_limit:]
         else:
             index = 0
-            last_cursor = getattr(result_items[index], reference_cursor.column)
+            reference_column = reference_cursor.column
+            first_found_cursor_value = getattr(result_items[index], reference_column)
             """
             Currently we support only numeric or string model values for cursors,
             but pydantic models (cursor) coerce always the value as string.
@@ -425,41 +402,37 @@ class BaseRepository(Generic[MODEL], ABC):
             e.g.
             9 < 10 but '9' > '10' 
             """
-            if isinstance(last_cursor, str):
-                has_previous_page = last_cursor <= reference_cursor.value
+            if isinstance(first_found_cursor_value, str):
+                has_previous_page = first_found_cursor_value <= reference_cursor.value
             else:
-                has_previous_page = last_cursor <= float(reference_cursor.value)
+                has_previous_page = first_found_cursor_value <= float(
+                    reference_cursor.value
+                )
             if has_previous_page:
                 result_items.pop(index)
             has_next_page = len(result_items) > sanitised_query_limit
             if has_next_page:
                 result_items = result_items[0:sanitised_query_limit]
 
-        return CursorPaginatedResult(
-            items=result_items,
-            page_info=CursorPageInfo(
-                items_per_page=sanitised_query_limit,
-                total_items=total_items_count,
-                has_next_page=has_next_page,
-                has_previous_page=has_previous_page,
-                start_cursor=self.encode_cursor(
-                    Cursor(
-                        column=reference_cursor.column,
-                        value=getattr(result_items[0], reference_cursor.column),
-                    )
+        result_structure.items = result_items
+        result_structure.page_info.has_next_page = has_next_page
+        result_structure.page_info.has_previous_page = has_previous_page
+
+        if result_items:
+            result_structure.page_info.start_cursor = self.encode_cursor(
+                Cursor(
+                    column=reference_column,
+                    value=getattr(result_items[0], reference_column),
                 )
-                if result_items
-                else None,
-                end_cursor=self.encode_cursor(
-                    Cursor(
-                        column=reference_cursor.column,
-                        value=getattr(result_items[-1], reference_cursor.column),
-                    )
+            )
+            result_structure.page_info.end_cursor = self.encode_cursor(
+                Cursor(
+                    column=reference_column,
+                    value=getattr(result_items[-1], reference_column),
                 )
-                if result_items
-                else None,
-            ),
-        )
+            )
+
+        return result_structure
 
     def encode_cursor(self, cursor: Cursor) -> str:
         return b64encode(cursor.json().encode()).decode()

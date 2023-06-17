@@ -1,6 +1,6 @@
 import pytest
 
-from sqlalchemy_bind_manager._repository.common import Cursor
+from sqlalchemy_bind_manager._repository.base_repository import Cursor
 
 
 def _test_models(model_class):
