@@ -39,7 +39,9 @@ def repository_class(model_class) -> Type[SQLAlchemyAsyncRepository]:
 
 
 @pytest.fixture
-def repository_class_string_pk(model_class_string_pk) -> Type[SQLAlchemyAsyncRepository]:
+def repository_class_string_pk(
+    model_class_string_pk,
+) -> Type[SQLAlchemyAsyncRepository]:
     class MyRepository(SQLAlchemyAsyncRepository[model_class]):
         _model = model_class_string_pk
 

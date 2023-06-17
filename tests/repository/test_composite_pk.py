@@ -3,10 +3,14 @@ from typing import Type
 from uuid import uuid4
 
 import pytest
-from sqlalchemy import Column, String, Integer
+from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import clear_mappers
 
-from sqlalchemy_bind_manager import SQLAlchemyRepository, SQLAlchemyBindManager, SQLAlchemyConfig
+from sqlalchemy_bind_manager import (
+    SQLAlchemyBindManager,
+    SQLAlchemyConfig,
+    SQLAlchemyRepository,
+)
 
 
 @pytest.fixture

@@ -24,10 +24,13 @@ def _test_models(model_class):
     ]
 
 
-@pytest.mark.parametrize(["items_per_page", "expected_next_page"], [
-    [2, True],
-    [4, False],
-])
+@pytest.mark.parametrize(
+    ["items_per_page", "expected_next_page"],
+    [
+        [2, True],
+        [4, False],
+    ],
+)
 async def test_paginated_find_without_cursor(
     repository_class, model_class, sa_manager, items_per_page, expected_next_page
 ):
@@ -59,8 +62,7 @@ async def test_paginated_find_without_query_result(
     await repo.save_many(_test_models(model_class))
 
     results = await repo.cursor_paginated_find(
-        items_per_page=2,
-        search_params=dict(name="Unknown")
+        items_per_page=2, search_params=dict(name="Unknown")
     )
     assert len(results.items) == 0
     assert results.page_info.items_per_page == 2
@@ -71,14 +73,18 @@ async def test_paginated_find_without_query_result(
     assert results.page_info.end_cursor is None
 
 
-async def test_paginated_find_accepts_encoded_cursors(repository_class, model_class, sa_manager):
+async def test_paginated_find_accepts_encoded_cursors(
+    repository_class, model_class, sa_manager
+):
     repo = repository_class(sa_manager.get_bind())
     await repo.save_many(_test_models(model_class))
     results = await repo.cursor_paginated_find(
-        reference_cursor=repo.encode_cursor(Cursor(
-            column="model_id",
-            value=80,
-        )),
+        reference_cursor=repo.encode_cursor(
+            Cursor(
+                column="model_id",
+                value=80,
+            )
+        ),
         items_per_page=2,
     )
     assert len(results.items) == 2
@@ -229,26 +235,26 @@ async def test_paginated_find_previous_next_page(
 @pytest.mark.parametrize(
     ["before", "after", "has_next_page", "has_previous_page", "returned_ids"],
     [
-        (None, '000', True, False, ['100', '110']),
-        (None, '100', True, True, ['110', '80']),
-        (None, '105', True, True, ['110', '80']),
-        (None, '110', False, True, ['80', '90']),
-        (None, '115', False, True, ['80', '90']),
-        (None, '75', False, True, ['80', '90']),
-        (None, '80', False, True, ['90']),
-        (None, '85', False, True, ['90']),
-        (None, '90', False, True, []),
-        (None, '95', False, True, []),
-        ('95', None, False, True, ['80', '90']),
-        ('90', None, True, True, ['110', '80']),
-        ('85', None, True, True, ['110', '80']),
-        ('80', None, True, False, ['100', '110']),
-        ('75', None, True, False, ['100', '110']),
-        ('115', None, True, False, ['100', '110']),
-        ('110', None, True, False, ['100']),
-        ('105', None, True, False, ['100']),
-        ('100', None, True, False, []),
-        ('000', None, True, False, []),
+        (None, "000", True, False, ["100", "110"]),
+        (None, "100", True, True, ["110", "80"]),
+        (None, "105", True, True, ["110", "80"]),
+        (None, "110", False, True, ["80", "90"]),
+        (None, "115", False, True, ["80", "90"]),
+        (None, "75", False, True, ["80", "90"]),
+        (None, "80", False, True, ["90"]),
+        (None, "85", False, True, ["90"]),
+        (None, "90", False, True, []),
+        (None, "95", False, True, []),
+        ("95", None, False, True, ["80", "90"]),
+        ("90", None, True, True, ["110", "80"]),
+        ("85", None, True, True, ["110", "80"]),
+        ("80", None, True, False, ["100", "110"]),
+        ("75", None, True, False, ["100", "110"]),
+        ("115", None, True, False, ["100", "110"]),
+        ("110", None, True, False, ["100"]),
+        ("105", None, True, False, ["100"]),
+        ("100", None, True, False, []),
+        ("000", None, True, False, []),
     ],
 )
 async def test_paginated_find_string_pk(

@@ -18,7 +18,7 @@ from typing import (
 
 from pydantic import BaseModel
 from pydantic.generics import GenericModel
-from sqlalchemy import asc, desc, func, select, inspect
+from sqlalchemy import asc, desc, func, inspect, select
 from sqlalchemy.orm import Mapper, aliased, class_mapper, lazyload
 from sqlalchemy.orm.exc import UnmappedClassError
 from sqlalchemy.sql import Select
@@ -231,7 +231,9 @@ class BaseRepository(Generic[MODEL], ABC):
         forward_limit = self._sanitised_query_limit(per_page) + 1
 
         if not reference_cursor:
-            return stmt.limit(forward_limit).order_by(asc(self._model_pk()))  # type: ignore
+            return stmt.limit(forward_limit).order_by(  # type: ignore
+                asc(self._model_pk())
+            )
 
         # TODO: Use window functions
         if not is_end_cursor:
