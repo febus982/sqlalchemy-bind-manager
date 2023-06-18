@@ -26,12 +26,11 @@ def sa_manager() -> SQLAlchemyBindManager:
         os.unlink(test_db_path)
     except FileNotFoundError:
         pass
-
     clear_mappers()
 
 
 @pytest.fixture
-def model_class(sa_manager) -> Type:
+def model_class_composite_pk(sa_manager) -> Type:
     default_bind = sa_manager.get_bind()
 
     class MyModel(default_bind.model_declarative_base):
@@ -41,7 +40,8 @@ def model_class(sa_manager) -> Type:
         # triggering an expired load
         __mapper_args__ = {"eager_defaults": True}
 
-        model_id = Column(Integer, primary_key=True, autoincrement=True)
+        model_id = Column(Integer, primary_key=True)
+        model_other_id = Column(Integer, primary_key=True)
         name = Column(String)
 
     default_bind.registry_mapper.metadata.create_all(default_bind.engine)
@@ -50,8 +50,14 @@ def model_class(sa_manager) -> Type:
 
 
 @pytest.fixture
-def repository_class(model_class) -> Type[SQLAlchemyRepository]:
-    class MyRepository(SQLAlchemyRepository[model_class]):
-        _model = model_class
+def repository_class(model_class_composite_pk) -> Type[SQLAlchemyRepository]:
+    class MyRepository(SQLAlchemyRepository[model_class_composite_pk]):
+        _model = model_class_composite_pk
 
     return MyRepository
+
+
+def test_cannot_use_models_with_composite_pk(repository_class, sa_manager):
+    repo = repository_class(sa_manager.get_bind())
+    with pytest.raises(NotImplementedError):
+        repo._model_pk()

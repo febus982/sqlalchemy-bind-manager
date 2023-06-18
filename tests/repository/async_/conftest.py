@@ -8,9 +8,9 @@ from sqlalchemy.orm import clear_mappers, relationship
 
 from sqlalchemy_bind_manager import (
     SQLAlchemyAsyncConfig,
-    SQLAlchemyAsyncRepository,
     SQLAlchemyBindManager,
 )
+from sqlalchemy_bind_manager.repository import SQLAlchemyAsyncRepository
 
 
 @pytest.fixture
@@ -39,6 +39,16 @@ def repository_class(model_class) -> Type[SQLAlchemyAsyncRepository]:
 
 
 @pytest.fixture
+def repository_class_string_pk(
+    model_class_string_pk,
+) -> Type[SQLAlchemyAsyncRepository]:
+    class MyRepository(SQLAlchemyAsyncRepository[model_class]):
+        _model = model_class_string_pk
+
+    return MyRepository
+
+
+@pytest.fixture
 def related_repository_class(related_model_classes) -> Type[SQLAlchemyAsyncRepository]:
     class ParentRepository(SQLAlchemyAsyncRepository[related_model_classes[0]]):
         _model = related_model_classes[0]
@@ -54,6 +64,22 @@ async def model_class(sa_manager):
         __tablename__ = "mymodel"
 
         model_id = Column(Integer, primary_key=True, autoincrement=True)
+        name = Column(String)
+
+    async with default_bind.engine.begin() as conn:
+        await conn.run_sync(default_bind.registry_mapper.metadata.create_all)
+
+    yield MyModel
+
+
+@pytest.fixture
+async def model_class_string_pk(sa_manager):
+    default_bind = sa_manager.get_bind()
+
+    class MyModel(default_bind.model_declarative_base):
+        __tablename__ = "mymodel_string_pk"
+
+        model_id = Column(String, primary_key=True)
         name = Column(String)
 
     async with default_bind.engine.begin() as conn:

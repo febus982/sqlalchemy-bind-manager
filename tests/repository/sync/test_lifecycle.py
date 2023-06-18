@@ -2,12 +2,12 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from sqlalchemy_bind_manager import SQLAlchemyRepository
 from sqlalchemy_bind_manager.exceptions import (
     InvalidConfig,
     InvalidModel,
     UnsupportedBind,
 )
+from sqlalchemy_bind_manager.repository import SQLAlchemyRepository
 
 
 def test_repository_fails_if_not_sync_bind(sync_async_sa_manager, model_class):

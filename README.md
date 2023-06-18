@@ -178,7 +178,7 @@ to check [SQLAlchemy asyncio documentation](https://docs.sqlalchemy.org/en/20/or
 The `SQLAlchemyRepository` and `SQLAlchemyAsyncRepository` class can be used simply by extending them.
 
 ```python
-from sqlalchemy_bind_manager import SQLAlchemyRepository
+from sqlalchemy_bind_manager.repository import SQLAlchemyRepository
 
 
 class MyModel(model_declarative_base):
@@ -200,6 +200,7 @@ The classes provide some common use methods:
 * `delete`: Delete a model
 * `find`: Search for a list of models (basically an adapter for SELECT queries)
 * `paginated_find`: Search for a list of models, with pagination support
+* `cursor_paginated_find`: Search for a list of models, with cursor based pagination support
 
 ### Session lifecycle in repositories
 

@@ -1,9 +1,12 @@
 from inspect import signature
 
-from sqlalchemy_bind_manager import SQLAlchemyAsyncRepository, SQLAlchemyRepository
 from sqlalchemy_bind_manager.protocols import (
     SQLAlchemyAsyncRepositoryInterface,
     SQLAlchemyRepositoryInterface,
+)
+from sqlalchemy_bind_manager.repository import (
+    SQLAlchemyAsyncRepository,
+    SQLAlchemyRepository,
 )
 
 

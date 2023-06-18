@@ -1,7 +1,7 @@
 import pytest
 
-from sqlalchemy_bind_manager import SortDirection
 from sqlalchemy_bind_manager.exceptions import UnmappedProperty
+from sqlalchemy_bind_manager.repository import SortDirection
 
 
 def test_find(repository_class, model_class, sa_manager):
