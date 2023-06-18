@@ -6,3 +6,7 @@ from ._repository import (
     SQLAlchemyAsyncRepository,
     SQLAlchemyRepository,
 )
+from ._unit_of_work import (
+    AsyncUnitOfWork,
+    UnitOfWork,
+)
