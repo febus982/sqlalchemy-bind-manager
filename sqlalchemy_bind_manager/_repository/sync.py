@@ -41,14 +41,6 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         session: Union[Session, None] = None,
         model_class: Union[Type[MODEL], None] = None,
     ) -> None:
-        """
-        :param bind: A configured instance of SQLAlchemyBind
-        :type bind: Union[SQLAlchemyBind, None]
-        :param session: An externally managed session
-        :type session: Union[Session, None]
-        :param model_class: A mapped SQLAlchemy model
-        :type model_class: Union[Type[MODEL], None]
-        """
         super().__init__(model_class=model_class)
         if not (bool(bind) ^ bool(session)):
             raise InvalidConfig("Either `bind` or `session` have to be used, not both")
@@ -65,34 +57,16 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
             yield self._external_session
 
     def save(self, instance: MODEL) -> MODEL:
-        """Persist a model.
-
-        :param instance: A mapped object instance to be persisted
-        :return: The model instance after being persisted
-        """
         with self._get_session() as session:
             session.add(instance)
         return instance
 
     def save_many(self, instances: Iterable[MODEL]) -> Iterable[MODEL]:
-        """Persist many models in a single database get_session.
-
-        :param instances: A list of mapped objects to be persisted
-        :type instances: Iterable
-        :return: The model instances after being persisted
-        """
         with self._get_session() as session:
             session.add_all(instances)
         return instances
 
     def get(self, identifier: PRIMARY_KEY) -> MODEL:
-        """Get a model by primary key.
-
-        :param identifier: The primary key
-        :return: A model instance
-        :raises ModelNotFound: No model has been found using the primary key
-        """
-        # TODO: implement get_many()
         with self._get_session(commit=False) as session:
             model = session.get(self._model, identifier)
         if model is None:
@@ -100,11 +74,6 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         return model
 
     def delete(self, entity: Union[MODEL, PRIMARY_KEY]) -> None:
-        """Deletes a model.
-
-        :param entity: The model instance or the primary key
-        :type entity: Union[MODEL, PRIMARY_KEY]
-        """
         # TODO: delete without loading the model
         if isinstance(entity, self._model):
             obj = entity
@@ -118,16 +87,6 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         search_params: Union[None, Mapping[str, Any]] = None,
         order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
     ) -> List[MODEL]:
-        """Find models using filters
-
-        E.g.
-        find(name="John") finds all models with name = John
-
-        :param search_params: A dictionary containing equality filters
-        :param order_by:
-        :return: A collection of models
-        :rtype: List
-        """
         stmt = self._find_query(search_params, order_by)
 
         with self._get_session() as session:
@@ -137,25 +96,10 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
     def paginated_find(
         self,
         items_per_page: int,
-        page: int,
+        page: int = 1,
         search_params: Union[None, Mapping[str, Any]] = None,
         order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
     ) -> PaginatedResult[MODEL]:
-        """Find models using filters and page based pagination
-
-        E.g.
-        find(name="John") finds all models with name = John
-
-        :param items_per_page: Number of models to retrieve
-        :type items_per_page: int
-        :param page: Page to retrieve
-        :type page: int
-        :param search_params: A dictionary containing equality filters
-        :param order_by:
-        :return: A collection of models
-        :rtype: List
-        """
-
         find_stmt = self._find_query(search_params, order_by)
         paginated_stmt = self._paginate_query_by_page(find_stmt, page, items_per_page)
 

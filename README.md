@@ -200,6 +200,7 @@ The classes provide some common use methods:
 * `delete`: Delete a model
 * `find`: Search for a list of models (basically an adapter for SELECT queries)
 * `paginated_find`: Search for a list of models, with pagination support
+* `cursor_paginated_find`: Search for a list of models, with cursor based pagination support
 
 ### Session lifecycle in repositories
 
