@@ -148,7 +148,7 @@ class BaseRepository(Generic[MODEL], ABC):
         self,
         stmt: Select,
         page: int,
-        per_page: int,
+        items_per_page: int,
     ) -> Select:
         """Build the query offset and limit clauses from submitted parameters.
 
@@ -156,16 +156,16 @@ class BaseRepository(Generic[MODEL], ABC):
         :type stmt: Select
         :param page: Number of models to skip
         :type page: int
-        :param per_page: Number of models to retrieve
-        :type per_page: int
+        :param items_per_page: Number of models to retrieve
+        :type items_per_page: int
         :return: The filtered query
         """
 
-        _offset = max((page - 1) * per_page, 0)
+        _offset = max((page - 1) * items_per_page, 0)
         if _offset > 0:
             stmt = stmt.offset(_offset)
 
-        _limit = self._sanitised_query_limit(per_page)
+        _limit = self._sanitised_query_limit(items_per_page)
         stmt = stmt.limit(_limit)
 
         return stmt
@@ -175,7 +175,7 @@ class BaseRepository(Generic[MODEL], ABC):
         stmt: Select,
         cursor_reference: Union[CursorReference, None],
         is_before_cursor: bool = False,
-        per_page: int = _max_query_limit,
+        items_per_page: int = _max_query_limit,
     ) -> Select:
         """Build the query offset and limit clauses from submitted parameters.
 
@@ -185,12 +185,12 @@ class BaseRepository(Generic[MODEL], ABC):
         :type before: Union[int, str]
         :param after: Identifier of the last node to skip
         :type after: Union[int, str]
-        :param per_page: Number of models to retrieve
-        :type per_page: int
+        :param items_per_page: Number of models to retrieve
+        :type items_per_page: int
         :return: The filtered query
         """
 
-        forward_limit = self._sanitised_query_limit(per_page) + 1
+        forward_limit = self._sanitised_query_limit(items_per_page) + 1
 
         if not cursor_reference:
             return stmt.limit(forward_limit).order_by(  # type: ignore

@@ -213,7 +213,7 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
             find_stmt,
             cursor_reference=cursor_reference,
             is_before_cursor=is_before_cursor,
-            per_page=items_per_page,
+            items_per_page=items_per_page,
         )
 
         async with self._get_session() as session:
