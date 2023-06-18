@@ -25,5 +25,5 @@ lint-fix:
 dev-dependencies:
 	poetry update --with dev
 
-fix: lint-fix format-fix
-check: typing test lint format
+fix:  format-fix lint-fix
+check: typing test format lint
