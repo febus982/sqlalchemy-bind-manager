@@ -21,20 +21,20 @@ class PaginatedResult(GenericModel, Generic[MODEL]):
     page_info: PageInfo
 
 
+class CursorReference(BaseModel):
+    column: str
+    value: str
+
+
 class CursorPageInfo(BaseModel):
     items_per_page: int
     total_items: int
     has_next_page: bool = False
     has_previous_page: bool = False
-    start_cursor: Union[str, None] = None
-    end_cursor: Union[str, None] = None
+    start_cursor: Union[CursorReference, None] = None
+    end_cursor: Union[CursorReference, None] = None
 
 
 class CursorPaginatedResult(GenericModel, Generic[MODEL]):
     items: List[MODEL]
     page_info: CursorPageInfo
-
-
-class Cursor(BaseModel):
-    column: str
-    value: str

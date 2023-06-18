@@ -1,6 +1,6 @@
 import pytest
 
-from sqlalchemy_bind_manager.repository import Cursor
+from sqlalchemy_bind_manager.repository import CursorReference
 
 
 def _test_models(model_class):
@@ -47,40 +47,16 @@ def test_paginated_find_without_cursor(
     assert results.page_info.total_items == 4
     assert results.page_info.has_next_page is expected_next_page
     assert results.page_info.has_previous_page is False
-    assert results.page_info.start_cursor == repo.encode_cursor(
-        Cursor(value=results.items[0].model_id, column="model_id")
+    assert results.page_info.start_cursor == CursorReference(
+        value=results.items[0].model_id, column="model_id"
     )
-    assert results.page_info.end_cursor == repo.encode_cursor(
-        Cursor(value=results.items[-1].model_id, column="model_id")
-    )
-
-
-def test_paginated_find_accepts_encoded_cursors(
-    repository_class, model_class, sa_manager
-):
-    repo = repository_class(sa_manager.get_bind())
-    repo.save_many(_test_models(model_class))
-    results = repo.cursor_paginated_find(
-        reference_cursor=repo.encode_cursor(
-            Cursor(
-                column="model_id",
-                value=80,
-            )
-        ),
-        items_per_page=2,
-    )
-    assert len(results.items) == 2
-    assert results.items[0].name == "SomeoneElse"
-    assert results.items[1].name == "StillSomeoneElse"
-    assert results.page_info.items_per_page == 2
-    assert results.page_info.total_items == 4
 
 
 def test_paginated_find_page_length_after(repository_class, model_class, sa_manager):
     repo = repository_class(sa_manager.get_bind())
     repo.save_many(_test_models(model_class))
     results = repo.cursor_paginated_find(
-        reference_cursor=Cursor(
+        cursor_reference=CursorReference(
             column="model_id",
             value=80,
         ),
@@ -114,7 +90,7 @@ def test_paginated_find_page_length_before(repository_class, model_class, sa_man
     repo.save_many(_test_models(model_class))
 
     results = repo.cursor_paginated_find(
-        reference_cursor=Cursor(
+        cursor_reference=CursorReference(
             column="model_id",
             value=110,
         ),
@@ -136,7 +112,7 @@ def test_paginated_find_max_page_length_is_respected(
     repo.save_many(_test_models(model_class))
 
     results = repo.cursor_paginated_find(
-        reference_cursor=Cursor(
+        cursor_reference=CursorReference(
             column="model_id",
             value=80,
         ),
@@ -154,7 +130,7 @@ def test_paginated_find_after_last_item(repository_class, model_class, sa_manage
     repo.save_many(_test_models(model_class))
 
     results = repo.cursor_paginated_find(
-        reference_cursor=Cursor(
+        cursor_reference=CursorReference(
             column="model_id",
             value=110,
         ),
@@ -204,7 +180,7 @@ def test_paginated_find_previous_next_page(
     repo.save_many(_test_models(model_class))
 
     result = repo.cursor_paginated_find(
-        reference_cursor=Cursor(
+        cursor_reference=CursorReference(
             column="model_id",
             value=after or before,
         ),
@@ -214,11 +190,11 @@ def test_paginated_find_previous_next_page(
 
     assert len(returned_ids) == len(result.items)
     if len(returned_ids):
-        assert result.page_info.start_cursor == repo.encode_cursor(
-            Cursor(value=result.items[0].model_id, column="model_id")
+        assert result.page_info.start_cursor == CursorReference(
+            value=result.items[0].model_id, column="model_id"
         )
-        assert result.page_info.end_cursor == repo.encode_cursor(
-            Cursor(value=result.items[-1].model_id, column="model_id")
+        assert result.page_info.end_cursor == CursorReference(
+            value=result.items[-1].model_id, column="model_id"
         )
     for k, v in enumerate(returned_ids):
         assert result.items[k].model_id == v
@@ -266,7 +242,7 @@ def test_paginated_find_string_pk(
     repo.save_many(_test_models(model_class_string_pk))
 
     result = repo.cursor_paginated_find(
-        reference_cursor=Cursor(
+        cursor_reference=CursorReference(
             column="model_id",
             value=after or before,
         ),
@@ -276,11 +252,11 @@ def test_paginated_find_string_pk(
 
     assert len(returned_ids) == len(result.items)
     if len(returned_ids):
-        assert result.page_info.start_cursor == repo.encode_cursor(
-            Cursor(value=result.items[0].model_id, column="model_id")
+        assert result.page_info.start_cursor == CursorReference(
+            value=result.items[0].model_id, column="model_id"
         )
-        assert result.page_info.end_cursor == repo.encode_cursor(
-            Cursor(value=result.items[-1].model_id, column="model_id")
+        assert result.page_info.end_cursor == CursorReference(
+            value=result.items[-1].model_id, column="model_id"
         )
     for k, v in enumerate(returned_ids):
         assert result.items[k].model_id == v

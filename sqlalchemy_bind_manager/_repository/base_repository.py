@@ -1,5 +1,4 @@
 from abc import ABC
-from base64 import b64decode, b64encode
 from enum import Enum
 from functools import partial
 from math import ceil
@@ -24,9 +23,9 @@ from sqlalchemy_bind_manager.exceptions import InvalidModel, UnmappedProperty
 
 from .common import (
     MODEL,
-    Cursor,
     CursorPageInfo,
     CursorPaginatedResult,
+    CursorReference,
     PageInfo,
     PaginatedResult,
 )
@@ -181,7 +180,7 @@ class BaseRepository(Generic[MODEL], ABC):
     def _cursor_paginated_query(
         self,
         stmt: Select,
-        reference_cursor: Union[Cursor, None],
+        cursor_reference: Union[CursorReference, None],
         is_end_cursor: bool = False,
         per_page: int = _max_query_limit,
     ) -> Select:
@@ -200,7 +199,7 @@ class BaseRepository(Generic[MODEL], ABC):
 
         forward_limit = self._sanitised_query_limit(per_page) + 1
 
-        if not reference_cursor:
+        if not cursor_reference:
             return stmt.limit(forward_limit).order_by(  # type: ignore
                 asc(self._model_pk())
             )
@@ -208,44 +207,44 @@ class BaseRepository(Generic[MODEL], ABC):
         # TODO: Use window functions
         if not is_end_cursor:
             previous_query = stmt.where(
-                getattr(self._model, reference_cursor.column) <= reference_cursor.value
+                getattr(self._model, cursor_reference.column) <= cursor_reference.value
             )
             previous_query = (
                 self._filter_order_by(
-                    previous_query, [(reference_cursor.column, SortDirection.DESC)]
+                    previous_query, [(cursor_reference.column, SortDirection.DESC)]
                 )
                 .limit(1)
                 .subquery("previous")  # type: ignore
             )
 
             page_query = stmt.where(
-                getattr(self._model, reference_cursor.column) > reference_cursor.value
+                getattr(self._model, cursor_reference.column) > cursor_reference.value
             )
             page_query = (
                 self._filter_order_by(
-                    page_query, [(reference_cursor.column, SortDirection.ASC)]
+                    page_query, [(cursor_reference.column, SortDirection.ASC)]
                 )
                 .limit(forward_limit)
                 .subquery("page")  # type: ignore
             )
         else:
             previous_query = stmt.where(
-                getattr(self._model, reference_cursor.column) >= reference_cursor.value
+                getattr(self._model, cursor_reference.column) >= cursor_reference.value
             )
             previous_query = (
                 self._filter_order_by(
-                    previous_query, [(reference_cursor.column, SortDirection.ASC)]
+                    previous_query, [(cursor_reference.column, SortDirection.ASC)]
                 )
                 .limit(1)
                 .subquery("previous")  # type: ignore
             )
 
             page_query = stmt.where(
-                getattr(self._model, reference_cursor.column) < reference_cursor.value
+                getattr(self._model, cursor_reference.column) < cursor_reference.value
             )
             page_query = (
                 self._filter_order_by(
-                    page_query, [(reference_cursor.column, SortDirection.DESC)]
+                    page_query, [(cursor_reference.column, SortDirection.DESC)]
                 )
                 .limit(forward_limit)
                 .subquery("page")  # type: ignore
@@ -256,7 +255,7 @@ class BaseRepository(Generic[MODEL], ABC):
                 self._model,
                 select(previous_query)
                 .union(select(page_query))
-                .order_by(reference_cursor.column)
+                .order_by(cursor_reference.column)
                 .subquery(),  # type: ignore
             )
         )
@@ -302,7 +301,7 @@ class BaseRepository(Generic[MODEL], ABC):
         result_items: List[MODEL],
         total_items_count: int,
         items_per_page: int,
-        reference_cursor: Union[Cursor, None],
+        cursor_reference: Union[CursorReference, None],
         is_end_cursor: bool,
     ) -> CursorPaginatedResult:
         """
@@ -312,7 +311,7 @@ class BaseRepository(Generic[MODEL], ABC):
         :param result_items:
         :param total_items_count:
         :param items_per_page:
-        :param reference_cursor:
+        :param cursor_reference:
         :param is_end_cursor:
         :return:
         """
@@ -329,7 +328,7 @@ class BaseRepository(Generic[MODEL], ABC):
         if not result_items:
             return result_structure
 
-        if not reference_cursor:
+        if not cursor_reference:
             has_previous_page = False
             has_next_page = len(result_items) > sanitised_query_limit
             if has_next_page:
@@ -341,7 +340,7 @@ class BaseRepository(Generic[MODEL], ABC):
 
         elif is_end_cursor:
             index = -1
-            reference_column = reference_cursor.column
+            reference_column = cursor_reference.column
             last_found_cursor_value = getattr(result_items[index], reference_column)
             """
             Currently we support only numeric or string model values for cursors,
@@ -352,9 +351,9 @@ class BaseRepository(Generic[MODEL], ABC):
             9 < 10 but '9' > '10' 
             """
             if isinstance(last_found_cursor_value, str):
-                has_next_page = last_found_cursor_value >= reference_cursor.value
+                has_next_page = last_found_cursor_value >= cursor_reference.value
             else:
-                has_next_page = last_found_cursor_value >= float(reference_cursor.value)
+                has_next_page = last_found_cursor_value >= float(cursor_reference.value)
             if has_next_page:
                 result_items.pop(index)
             has_previous_page = len(result_items) > sanitised_query_limit
@@ -362,7 +361,7 @@ class BaseRepository(Generic[MODEL], ABC):
                 result_items = result_items[-sanitised_query_limit:]
         else:
             index = 0
-            reference_column = reference_cursor.column
+            reference_column = cursor_reference.column
             first_found_cursor_value = getattr(result_items[index], reference_column)
             """
             Currently we support only numeric or string model values for cursors,
@@ -373,10 +372,10 @@ class BaseRepository(Generic[MODEL], ABC):
             9 < 10 but '9' > '10' 
             """
             if isinstance(first_found_cursor_value, str):
-                has_previous_page = first_found_cursor_value <= reference_cursor.value
+                has_previous_page = first_found_cursor_value <= cursor_reference.value
             else:
                 has_previous_page = first_found_cursor_value <= float(
-                    reference_cursor.value
+                    cursor_reference.value
                 )
             if has_previous_page:
                 result_items.pop(index)
@@ -389,27 +388,16 @@ class BaseRepository(Generic[MODEL], ABC):
         result_structure.page_info.has_previous_page = has_previous_page
 
         if result_items:
-            result_structure.page_info.start_cursor = self.encode_cursor(
-                Cursor(
-                    column=reference_column,
-                    value=getattr(result_items[0], reference_column),
-                )
+            result_structure.page_info.start_cursor = CursorReference(
+                column=reference_column,
+                value=getattr(result_items[0], reference_column),
             )
-            result_structure.page_info.end_cursor = self.encode_cursor(
-                Cursor(
-                    column=reference_column,
-                    value=getattr(result_items[-1], reference_column),
-                )
+            result_structure.page_info.end_cursor = CursorReference(
+                column=reference_column,
+                value=getattr(result_items[-1], reference_column),
             )
 
         return result_structure
-
-    def encode_cursor(self, cursor: Cursor) -> str:
-        serialised_cursor = cursor.json()
-        return b64encode(serialised_cursor.encode()).decode()
-
-    def decode_cursor(self, cursor: str) -> Cursor:
-        return Cursor.parse_raw(b64decode(cursor))
 
     def _model_pk(self) -> str:
         primary_keys = inspect(self._model).primary_key  # type: ignore

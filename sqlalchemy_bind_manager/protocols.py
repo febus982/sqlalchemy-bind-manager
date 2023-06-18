@@ -14,8 +14,8 @@ from sqlalchemy_bind_manager._repository.common import (
     PRIMARY_KEY,
 )
 from sqlalchemy_bind_manager.repository import (
-    Cursor,
     CursorPaginatedResult,
+    CursorReference,
     PaginatedResult,
     SortDirection,
 )
@@ -54,7 +54,7 @@ class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
     async def cursor_paginated_find(
         self,
         items_per_page: int,
-        reference_cursor: Union[Cursor, str, None] = None,
+        cursor_reference: Union[CursorReference, None] = None,
         is_end_cursor: bool = False,
         search_params: Union[None, Mapping[str, Any]] = None,
     ) -> CursorPaginatedResult[MODEL]:
@@ -94,7 +94,7 @@ class SQLAlchemyRepositoryInterface(Protocol[MODEL]):
     def cursor_paginated_find(
         self,
         items_per_page: int,
-        reference_cursor: Union[Cursor, str, None] = None,
+        cursor_reference: Union[CursorReference, None] = None,
         is_end_cursor: bool = False,
         search_params: Union[None, Mapping[str, Any]] = None,
     ) -> CursorPaginatedResult[MODEL]:

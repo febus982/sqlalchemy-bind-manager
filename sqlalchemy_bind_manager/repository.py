@@ -1,6 +1,6 @@
 from ._repository import (
-    Cursor,
     CursorPaginatedResult,
+    CursorReference,
     PaginatedResult,
     SortDirection,
     SQLAlchemyAsyncRepository,
