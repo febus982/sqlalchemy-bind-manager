@@ -104,7 +104,7 @@ async def test_paginated_find_page_length_before(
             column="model_id",
             value=110,
         ),
-        is_end_cursor=True,
+        is_before_cursor=True,
         items_per_page=2,
     )
     assert len(results.items) == 2
@@ -192,7 +192,7 @@ async def test_paginated_find_previous_next_page(
             column="model_id",
             value=after or before,
         ),
-        is_end_cursor=bool(before),
+        is_before_cursor=bool(before),
         items_per_page=2,
     )
 
@@ -254,7 +254,7 @@ async def test_paginated_find_string_pk(
             column="model_id",
             value=after or before,
         ),
-        is_end_cursor=bool(before),
+        is_before_cursor=bool(before),
         items_per_page=2,
     )
 

@@ -55,7 +55,7 @@ class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
         self,
         items_per_page: int,
         cursor_reference: Union[CursorReference, None] = None,
-        is_end_cursor: bool = False,
+        is_before_cursor: bool = False,
         search_params: Union[None, Mapping[str, Any]] = None,
     ) -> CursorPaginatedResult[MODEL]:
         ...
@@ -95,7 +95,7 @@ class SQLAlchemyRepositoryInterface(Protocol[MODEL]):
         self,
         items_per_page: int,
         cursor_reference: Union[CursorReference, None] = None,
-        is_end_cursor: bool = False,
+        is_before_cursor: bool = False,
         search_params: Union[None, Mapping[str, Any]] = None,
     ) -> CursorPaginatedResult[MODEL]:
         ...

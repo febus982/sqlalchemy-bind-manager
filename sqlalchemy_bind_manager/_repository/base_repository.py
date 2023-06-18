@@ -174,7 +174,7 @@ class BaseRepository(Generic[MODEL], ABC):
         self,
         stmt: Select,
         cursor_reference: Union[CursorReference, None],
-        is_end_cursor: bool = False,
+        is_before_cursor: bool = False,
         per_page: int = _max_query_limit,
     ) -> Select:
         """Build the query offset and limit clauses from submitted parameters.
@@ -198,7 +198,7 @@ class BaseRepository(Generic[MODEL], ABC):
             )
 
         # TODO: Use window functions
-        if not is_end_cursor:
+        if not is_before_cursor:
             previous_query = stmt.where(
                 getattr(self._model, cursor_reference.column) <= cursor_reference.value
             )

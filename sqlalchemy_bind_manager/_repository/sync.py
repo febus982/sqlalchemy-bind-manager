@@ -176,7 +176,7 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         self,
         items_per_page: int,
         cursor_reference: Union[CursorReference, None] = None,
-        is_end_cursor: bool = False,
+        is_before_cursor: bool = False,
         search_params: Union[None, Mapping[str, Any]] = None,
     ) -> CursorPaginatedResult[MODEL]:
         """Find models using filters and cursor based pagination
@@ -201,7 +201,7 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         paginated_stmt = self._cursor_paginated_query(
             find_stmt,
             cursor_reference=cursor_reference,
-            is_end_cursor=is_end_cursor,
+            is_before_cursor=is_before_cursor,
             per_page=items_per_page,
         )
 
@@ -216,5 +216,5 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
                 total_items_count=total_items_count,
                 items_per_page=self._sanitised_query_limit(items_per_page),
                 cursor_reference=cursor_reference,
-                is_end_cursor=is_end_cursor,
+                is_before_cursor=is_before_cursor,
             )
