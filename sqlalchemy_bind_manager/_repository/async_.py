@@ -28,6 +28,7 @@ from .common import (
     CursorReference,
     PaginatedResult,
 )
+from .result_presenters import CursorPaginatedResultPresenter, PaginatedResultPresenter
 
 
 class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
@@ -176,11 +177,11 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
                 x for x in (await session.execute(paginated_stmt)).scalars()
             ]
 
-            return self._build_page_paginated_result(
+            return PaginatedResultPresenter.build_result(
                 result_items=result_items,
                 total_items_count=total_items_count,
                 page=page,
-                items_per_page=items_per_page,
+                items_per_page=self._sanitised_query_limit(items_per_page),
             )
 
     async def cursor_paginated_find(
@@ -223,10 +224,10 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
                 x for x in (await session.execute(paginated_stmt)).scalars()
             ] or []
 
-            return self._build_cursor_paginated_result(
+            return CursorPaginatedResultPresenter.build_result(
                 result_items=result_items,
                 total_items_count=total_items_count,
-                items_per_page=items_per_page,
+                items_per_page=self._sanitised_query_limit(items_per_page),
                 cursor_reference=cursor_reference,
                 is_end_cursor=is_end_cursor,
             )
