@@ -27,4 +27,4 @@ jobs:
         poetry install --no-root --with dev
     - name: Check code style with black
       run: |
-        black --check sqlalchemy_bind_manager tests
+        make format
