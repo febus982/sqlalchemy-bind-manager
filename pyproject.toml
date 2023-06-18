@@ -66,6 +66,7 @@ testpaths = [
 
 [tool.mypy]
 files = "sqlalchemy_bind_manager"
+plugins = "pydantic.mypy"
 
 [tool.ruff]
 select = ["E", "F", "I"]

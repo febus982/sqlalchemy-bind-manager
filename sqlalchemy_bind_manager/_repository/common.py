@@ -1,6 +1,6 @@
 from typing import Generic, List, TypeVar, Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, StrictInt, StrictStr
 from pydantic.generics import GenericModel
 
 MODEL = TypeVar("MODEL")
@@ -23,7 +23,7 @@ class PaginatedResult(GenericModel, Generic[MODEL]):
 
 class CursorReference(BaseModel):
     column: str
-    value: str
+    value: Union[StrictStr, StrictInt]
 
 
 class CursorPageInfo(BaseModel):

@@ -1,5 +1,5 @@
 from math import ceil
-from typing import Collection, List, Union
+from typing import List, Union
 
 from sqlalchemy import inspect
 
@@ -56,18 +56,11 @@ class CursorPaginatedResultPresenter:
             index = -1
             reference_column = cursor_reference.column
             last_found_cursor_value = getattr(result_items[index], reference_column)
-            """
-            Currently we support only numeric or string model values for cursors,
-            but pydantic models (cursor) coerce always the value as string.
-            This mean if the value is not actually string we need to cast to
-            ensure correct ordering is evaluated.
-            e.g.
-            9 < 10 but '9' > '10' 
-            """
-            if isinstance(last_found_cursor_value, str):
-                has_next_page = last_found_cursor_value >= cursor_reference.value
-            else:
-                has_next_page = last_found_cursor_value >= float(cursor_reference.value)
+            if not isinstance(last_found_cursor_value, type(cursor_reference.value)):
+                raise TypeError(
+                    "Values from CursorReference and results must be of the same type"
+                )
+            has_next_page = last_found_cursor_value >= cursor_reference.value
             if has_next_page:
                 result_items.pop(index)
             has_previous_page = len(result_items) > items_per_page
@@ -77,20 +70,11 @@ class CursorPaginatedResultPresenter:
             index = 0
             reference_column = cursor_reference.column
             first_found_cursor_value = getattr(result_items[index], reference_column)
-            """
-            Currently we support only numeric or string model values for cursors,
-            but pydantic models (cursor) coerce always the value as string.
-            This mean if the value is not actually string we need to cast to
-            ensure correct ordering is evaluated.
-            e.g.
-            9 < 10 but '9' > '10' 
-            """
-            if isinstance(first_found_cursor_value, str):
-                has_previous_page = first_found_cursor_value <= cursor_reference.value
-            else:
-                has_previous_page = first_found_cursor_value <= float(
-                    cursor_reference.value
+            if not isinstance(first_found_cursor_value, type(cursor_reference.value)):
+                raise TypeError(
+                    "Values from CursorReference and results must be of the same type"
                 )
+            has_previous_page = first_found_cursor_value <= cursor_reference.value
             if has_previous_page:
                 result_items.pop(index)
             has_next_page = len(result_items) > items_per_page
@@ -117,12 +101,11 @@ class CursorPaginatedResultPresenter:
 class PaginatedResultPresenter:
     @staticmethod
     def build_result(
-        result_items: Collection[MODEL],
+        result_items: List[MODEL],
         total_items_count: int,
         page: int,
         items_per_page: int,
     ) -> PaginatedResult:
-
         total_pages = (
             0
             if total_items_count == 0 or total_items_count is None
@@ -130,8 +113,8 @@ class PaginatedResultPresenter:
         )
 
         _page = 0 if len(result_items) == 0 else min(page, total_pages)
-        has_next_page = _page and _page < total_pages
-        has_previous_page = _page and _page > 1
+        has_next_page = bool(_page and _page < total_pages)
+        has_previous_page = bool(_page and _page > 1)
 
         return PaginatedResult(
             items=result_items,
