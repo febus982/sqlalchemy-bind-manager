@@ -9,8 +9,8 @@ from sqlalchemy.orm import clear_mappers, relationship
 from sqlalchemy_bind_manager import (
     SQLAlchemyBindManager,
     SQLAlchemyConfig,
-    SQLAlchemyRepository,
 )
+from sqlalchemy_bind_manager.repository import SQLAlchemyRepository
 
 
 @pytest.fixture

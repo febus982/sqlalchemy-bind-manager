@@ -18,14 +18,10 @@ from .._bind_manager import SQLAlchemyAsyncBind
 from .._transaction_handler import AsyncSessionHandler
 from ..exceptions import InvalidConfig, ModelNotFound
 from .base_repository import (
-    MODEL,
-    PRIMARY_KEY,
     BaseRepository,
-    Cursor,
-    CursorPaginatedResult,
-    PaginatedResult,
     SortDirection,
 )
+from .common import MODEL, PRIMARY_KEY, Cursor, CursorPaginatedResult, PaginatedResult
 
 
 class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):

@@ -9,9 +9,11 @@ from typing import (
     runtime_checkable,
 )
 
-from sqlalchemy_bind_manager._repository.base_repository import (
+from sqlalchemy_bind_manager._repository.common import (
     MODEL,
     PRIMARY_KEY,
+)
+from sqlalchemy_bind_manager.repository import (
     Cursor,
     CursorPaginatedResult,
     PaginatedResult,

@@ -178,7 +178,7 @@ to check [SQLAlchemy asyncio documentation](https://docs.sqlalchemy.org/en/20/or
 The `SQLAlchemyRepository` and `SQLAlchemyAsyncRepository` class can be used simply by extending them.
 
 ```python
-from sqlalchemy_bind_manager import SQLAlchemyRepository
+from sqlalchemy_bind_manager.repository import SQLAlchemyRepository
 
 
 class MyModel(model_declarative_base):

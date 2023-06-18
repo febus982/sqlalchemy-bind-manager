@@ -4,11 +4,14 @@ from typing import AsyncIterator, Iterable, Iterator, Type
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 
-from sqlalchemy_bind_manager import SQLAlchemyAsyncRepository, SQLAlchemyRepository
 from sqlalchemy_bind_manager._bind_manager import SQLAlchemyAsyncBind, SQLAlchemyBind
 from sqlalchemy_bind_manager._transaction_handler import (
     AsyncSessionHandler,
     SessionHandler,
+)
+from sqlalchemy_bind_manager.repository import (
+    SQLAlchemyAsyncRepository,
+    SQLAlchemyRepository,
 )
 
 

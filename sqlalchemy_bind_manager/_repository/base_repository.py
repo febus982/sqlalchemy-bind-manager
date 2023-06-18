@@ -12,12 +12,9 @@ from typing import (
     Mapping,
     Tuple,
     Type,
-    TypeVar,
     Union,
 )
 
-from pydantic import BaseModel
-from pydantic.generics import GenericModel
 from sqlalchemy import asc, desc, func, inspect, select
 from sqlalchemy.orm import Mapper, aliased, class_mapper, lazyload
 from sqlalchemy.orm.exc import UnmappedClassError
@@ -25,46 +22,19 @@ from sqlalchemy.sql import Select
 
 from sqlalchemy_bind_manager.exceptions import InvalidModel, UnmappedProperty
 
-MODEL = TypeVar("MODEL")
-PRIMARY_KEY = Union[str, int, tuple, dict]
+from .common import (
+    MODEL,
+    Cursor,
+    CursorPageInfo,
+    CursorPaginatedResult,
+    PageInfo,
+    PaginatedResult,
+)
 
 
 class SortDirection(Enum):
     ASC = partial(asc)
     DESC = partial(desc)
-
-
-class PageInfo(BaseModel):
-    page: int
-    items_per_page: int
-    total_pages: int
-    total_items: int
-    has_next_page: bool
-    has_previous_page: bool
-
-
-class PaginatedResult(GenericModel, Generic[MODEL]):
-    items: List[MODEL]
-    page_info: PageInfo
-
-
-class CursorPageInfo(BaseModel):
-    items_per_page: int
-    total_items: int
-    has_next_page: bool = False
-    has_previous_page: bool = False
-    start_cursor: Union[str, None] = None
-    end_cursor: Union[str, None] = None
-
-
-class CursorPaginatedResult(GenericModel, Generic[MODEL]):
-    items: List[MODEL]
-    page_info: CursorPageInfo
-
-
-class Cursor(BaseModel):
-    column: str
-    value: str
 
 
 class BaseRepository(Generic[MODEL], ABC):
@@ -435,7 +405,8 @@ class BaseRepository(Generic[MODEL], ABC):
         return result_structure
 
     def encode_cursor(self, cursor: Cursor) -> str:
-        return b64encode(cursor.json().encode()).decode()
+        serialised_cursor = cursor.json()
+        return b64encode(serialised_cursor.encode()).decode()
 
     def decode_cursor(self, cursor: str) -> Cursor:
         return Cursor.parse_raw(b64decode(cursor))
