@@ -1,3 +1,5 @@
+.PHONY: docs docs-build
+
 test:
 	poetry run pytest -n auto --cov
 
@@ -27,3 +29,9 @@ dev-dependencies:
 
 fix:  format-fix lint-fix
 check: typing test format lint
+
+docs:
+	poetry run mkdocs serve
+
+docs-build:
+	poetry run mkdocs build
