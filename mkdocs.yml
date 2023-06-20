@@ -6,3 +6,14 @@ theme:
 
 nav:
   - Home: index.md
+  - Bind manager:
+      - Configuration: manager/config.md
+      - Models setup: manager/models.md
+      - Session usage: manager/session.md
+  - Repository:
+      - Repository usage: repository/repository.md
+      - Unit of work: repository/uow.md
+
+markdown_extensions:
+  - pymdownx.snippets
+  - pymdownx.details

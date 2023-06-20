@@ -42,4 +42,46 @@ however this might be necessary until version `1.0` is released.
 pip install sqlalchemy-bind-manager
 ```
 
+## Quick start
 
+```python
+from sqlalchemy_bind_manager import SQLAlchemyConfig, SQLAlchemyBindManager
+from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import String
+
+config = SQLAlchemyConfig(
+    engine_url="sqlite:///./sqlite.db",
+    engine_options=dict(connect_args={"check_same_thread": False}, echo=True),
+    session_options=dict(expire_on_commit=False),
+)
+
+# Initialise the bind manager
+sa_manager = SQLAlchemyBindManager(config)
+
+# Declare a model
+class MyModel(sa_manager.get_bind().model_declarative_base):
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(30))
+
+# Initialise the tables in the db
+bind = sa_manager.get_bind()
+bind.registry_mapper.metadata.create_all(bind.engine)
+
+# Create and save a model
+o = MyModel()
+o.name = "John"
+with sa_manager.get_session() as session:
+    session.add(o)
+    session.commit()
+```
+
+??? warning "Long lived sessions and multithreading"
+    It's not recommended to create long-lived sessions like:
+
+    ```
+    session = sa_manager.get_session()
+    ```
+    
+    This can create problems because of global variables and multi-threading.
+    More details can be found in the [session page](/manager/session/#note-on-multithreaded-applications)
+    
