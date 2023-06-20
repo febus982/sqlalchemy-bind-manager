@@ -1,6 +1,12 @@
 # yaml-language-server: $schema=https://squidfunk.github.io/mkdocs-material/schema.json
 
 site_name: SQLAlchemy bind manager
+site_description: 'A framework independent SQLAlchemy helper'
+site_author: 'Federico Busetti'
+docs_dir: docs/
+repo_name: 'febus982/sqlalchemy-bind-manager'
+repo_url: 'https://github.com/febus982/sqlalchemy-bind-manager'
+
 theme:
   name: material
 
