@@ -1,6 +1,4 @@
 from abc import ABC
-from enum import Enum
-from functools import partial
 from typing import (
     Any,
     Generic,
@@ -11,7 +9,7 @@ from typing import (
     Union,
 )
 
-from sqlalchemy import asc, desc, func, inspect, select
+from sqlalchemy import asc, func, inspect, select
 from sqlalchemy.orm import Mapper, aliased, class_mapper, lazyload
 from sqlalchemy.orm.exc import UnmappedClassError
 from sqlalchemy.sql import Select
@@ -21,12 +19,8 @@ from sqlalchemy_bind_manager.exceptions import InvalidModel, UnmappedProperty
 from .common import (
     MODEL,
     CursorReference,
+    SortDirection,
 )
-
-
-class SortDirection(Enum):
-    ASC = partial(asc)
-    DESC = partial(desc)
 
 
 class BaseRepository(Generic[MODEL], ABC):
@@ -82,6 +76,7 @@ class BaseRepository(Generic[MODEL], ABC):
         :param stmt: a Select statement
         :type stmt: Select
         :param search_params: Any keyword argument to be used as equality filter
+        :type search_params: Mapping[str, Any]
         :return: The filtered query
         """
         # TODO: Add support for relationship eager load
@@ -110,6 +105,7 @@ class BaseRepository(Generic[MODEL], ABC):
         :param stmt: a Select statement
         :type stmt: Select
         :param order_by: a list of columns, or tuples (column, direction)
+        :type order_by: Iterable[Union[str, Tuple[str, SortDirection]]]
         :return: The filtered query
         """
         for value in order_by:
@@ -127,6 +123,24 @@ class BaseRepository(Generic[MODEL], ABC):
         search_params: Union[None, Mapping[str, Any]] = None,
         order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
     ) -> Select:
+        """Build a query with column filters and orders.
+
+        E.g.
+        q = _find_query(search_params={"name":"John"})
+            finds all models with name = John
+
+        q = _find_query(order_by=["name"])
+            finds all models ordered by `name` column
+
+        q = _find_query(order_by=[("name", SortDirection.DESC)])
+            finds all models with reversed order by `name` column
+
+        :param search_params: Any keyword argument to be used as equality filter
+        :type search_params: Mapping[str, Any]
+        :param order_by: a list of columns, or tuples (column, direction)
+        :type order_by: Iterable[Union[str, Tuple[str, SortDirection]]]
+        :return: The filtered query
+        """
         stmt = select(self._model)
 
         if search_params:
@@ -177,19 +191,22 @@ class BaseRepository(Generic[MODEL], ABC):
         is_before_cursor: bool = False,
         items_per_page: int = _max_query_limit,
     ) -> Select:
-        """Build the query offset and limit clauses from submitted parameters.
+        """Adds the clauses to retrieve the requested slice of models, after
+        or before the cursor value, plus a model before the slice and one after
+        the slice, to identify if previous or next results are available.
 
         :param stmt: a Select statement
         :type stmt: Select
-        :param before: Identifier of the last node to skip
-        :type before: Union[int, str]
-        :param after: Identifier of the last node to skip
-        :type after: Union[int, str]
+        :param cursor_reference: A cursor reference containing ordering column
+            and threshold value
+        :type cursor_reference: Union[CursorReference, None]
+        :param is_before_cursor: If True it will return items before the cursor,
+            otherwise items after
+        :type is_before_cursor: bool
         :param items_per_page: Number of models to retrieve
         :type items_per_page: int
         :return: The filtered query
         """
-
         forward_limit = self._sanitised_query_limit(items_per_page) + 1
 
         if not cursor_reference:
@@ -197,68 +214,105 @@ class BaseRepository(Generic[MODEL], ABC):
                 asc(self._model_pk())
             )
 
-        # TODO: Use window functions
-        if not is_before_cursor:
-            previous_query = stmt.where(
-                getattr(self._model, cursor_reference.column) <= cursor_reference.value
-            )
-            previous_query = (
-                self._filter_order_by(
-                    previous_query, [(cursor_reference.column, SortDirection.DESC)]
-                )
-                .limit(1)
-                .subquery("previous")  # type: ignore
-            )
+        previous_query = self._cursor_pagination_previous_item_query(
+            stmt, cursor_reference, is_before_cursor
+        ).subquery("previous")
 
-            page_query = stmt.where(
-                getattr(self._model, cursor_reference.column) > cursor_reference.value
-            )
-            page_query = (
-                self._filter_order_by(
-                    page_query, [(cursor_reference.column, SortDirection.ASC)]
-                )
-                .limit(forward_limit)
-                .subquery("page")  # type: ignore
-            )
-        else:
-            previous_query = stmt.where(
-                getattr(self._model, cursor_reference.column) >= cursor_reference.value
-            )
-            previous_query = (
-                self._filter_order_by(
-                    previous_query, [(cursor_reference.column, SortDirection.ASC)]
-                )
-                .limit(1)
-                .subquery("previous")  # type: ignore
-            )
-
-            page_query = stmt.where(
-                getattr(self._model, cursor_reference.column) < cursor_reference.value
-            )
-            page_query = (
-                self._filter_order_by(
-                    page_query, [(cursor_reference.column, SortDirection.DESC)]
-                )
-                .limit(forward_limit)
-                .subquery("page")  # type: ignore
-            )
+        page_query = self._cursor_pagination_slice_query(
+            stmt, cursor_reference, forward_limit, is_before_cursor
+        ).subquery("slice")
 
         query = select(
             aliased(
                 self._model,
                 select(previous_query)
-                .union(select(page_query))
+                .union_all(select(page_query))
                 .order_by(cursor_reference.column)
-                .subquery(),  # type: ignore
+                .subquery("cursor_pagination"),  # type: ignore
             )
         )
-
         return query
+
+    def _cursor_pagination_slice_query(
+        self,
+        stmt: Select,
+        cursor_reference: CursorReference,
+        limit: int,
+        is_before_cursor: bool,
+    ):
+        """Adds the clauses to retrieve a requested slice of models,
+        after or before the cursor value (excluding the cursor itself)
+
+        :param stmt: a Select statement
+        :type stmt: Select
+        :param cursor_reference: A cursor reference containing ordering column
+            and threshold value
+        :type cursor_reference: Union[CursorReference, None]
+        :param is_before_cursor: If True it will return items before the cursor,
+            otherwise items after
+        :type is_before_cursor: bool
+        :param limit: Number of models to retrieve
+        :type limit: int
+        :return: The filtered query
+        """
+        if not is_before_cursor:
+            page_query = stmt.where(
+                getattr(self._model, cursor_reference.column) > cursor_reference.value
+            )
+            page_query = self._filter_order_by(
+                page_query, [(cursor_reference.column, SortDirection.ASC)]
+            )
+        else:
+            page_query = stmt.where(
+                getattr(self._model, cursor_reference.column) < cursor_reference.value
+            )
+            page_query = self._filter_order_by(
+                page_query, [(cursor_reference.column, SortDirection.DESC)]
+            )
+        return page_query.limit(limit)
+
+    def _cursor_pagination_previous_item_query(
+        self, stmt: Select, cursor_reference: CursorReference, is_before_cursor: bool
+    ) -> Select:
+        """Adds the clauses to retrieve a single model, after or before
+        the cursor value (including the cursor itself).
+
+        :param stmt: a Select statement
+        :type stmt: Select
+        :param cursor_reference: A cursor reference containing ordering column
+            and threshold value
+        :type cursor_reference: Union[CursorReference, None]
+        :param is_before_cursor: If True it will return items before the cursor,
+            otherwise items after
+        :type is_before_cursor: bool
+        :return: The filtered query
+        """
+        if not is_before_cursor:
+            previous_query = stmt.where(
+                getattr(self._model, cursor_reference.column) <= cursor_reference.value
+            )
+            previous_query = self._filter_order_by(
+                previous_query, [(cursor_reference.column, SortDirection.DESC)]
+            )
+        else:
+            previous_query = stmt.where(
+                getattr(self._model, cursor_reference.column) >= cursor_reference.value
+            )
+            previous_query = self._filter_order_by(
+                previous_query, [(cursor_reference.column, SortDirection.ASC)]
+            )
+
+        return previous_query.limit(1)
 
     def _sanitised_query_limit(self, limit):
         return max(min(limit, self._max_query_limit), 0)
 
     def _model_pk(self) -> str:
+        """
+        Retrieves the primary key name from the repository model class.
+
+        :return:
+        """
         primary_keys = inspect(self._model).primary_key  # type: ignore
         if len(primary_keys) > 1:
             raise NotImplementedError("Composite primary keys are not supported.")

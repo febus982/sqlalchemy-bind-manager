@@ -189,7 +189,7 @@ to check [SQLAlchemy asyncio documentation](https://docs.sqlalchemy.org/en/20/or
 
 ## Repository / Unit of work
 
-The `SQLAlchemyRepository` and `SQLAlchemyAsyncRepository` class can be used simply by extending them.
+The `SQLAlchemyRepository` and `SQLAlchemyAsyncRepository` class can be used directly or by extending them.
 
 ```python
 from sqlalchemy_bind_manager.repository import SQLAlchemyRepository
@@ -198,12 +198,17 @@ from sqlalchemy_bind_manager.repository import SQLAlchemyRepository
 class MyModel(model_declarative_base):
     pass
 
+# Direct usage
+repo_instance = SQLAlchemyRepository(sqlalchemy_bind_manager.get_bind(), model_class=MyModel)
 
 class ModelRepository(SQLAlchemyRepository[MyModel]):
     _model = MyModel
+    
+    def _some_custom_method_implemented(self):
+        ...
 
-
-repo_instance = ModelRepository(sqlalchemy_bind_manager.get_bind())
+# Extended class usage
+extended_repo_instance = ModelRepository(sqlalchemy_bind_manager.get_bind())
 ```
 
 The classes provide some common use methods:
@@ -253,7 +258,6 @@ approach for multiple operations.
 
 We can use the `UnitOfWork` or the `AsyncUnitOfWork` class to provide a shared session to
 be used for repository operations, **assumed the same bind is used for all the repositories**.
-(Two phase transactions are not currently supported).
 
 ```python
 class MyRepo(SQLAlchemyRepository):

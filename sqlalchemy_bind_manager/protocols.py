@@ -9,6 +9,7 @@ from typing import (
     runtime_checkable,
 )
 
+from sqlalchemy_bind_manager._repository import SortDirection
 from sqlalchemy_bind_manager._repository.common import (
     MODEL,
     PRIMARY_KEY,
@@ -17,7 +18,6 @@ from sqlalchemy_bind_manager.repository import (
     CursorPaginatedResult,
     CursorReference,
     PaginatedResult,
-    SortDirection,
 )
 
 

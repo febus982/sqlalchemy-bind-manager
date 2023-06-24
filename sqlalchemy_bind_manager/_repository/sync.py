@@ -19,7 +19,6 @@ from .._transaction_handler import SessionHandler
 from ..exceptions import InvalidConfig, ModelNotFound
 from .base_repository import (
     BaseRepository,
-    SortDirection,
 )
 from .common import (
     MODEL,
@@ -27,6 +26,7 @@ from .common import (
     CursorPaginatedResult,
     CursorReference,
     PaginatedResult,
+    SortDirection,
 )
 from .result_presenters import CursorPaginatedResultPresenter, PaginatedResultPresenter
 
@@ -123,23 +123,6 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         is_before_cursor: bool = False,
         search_params: Union[None, Mapping[str, Any]] = None,
     ) -> CursorPaginatedResult[MODEL]:
-        """Find models using filters and cursor based pagination
-
-        E.g.
-        find(name="John") finds all models with name = John
-
-        :param items_per_page: Number of models to retrieve
-        :type items_per_page: int
-        :param order_by: Model property to use for ordering and before/after evaluation
-        :type order_by: str
-        :param before: Identifier of the last node to skip
-        :type before: Union[int, str]
-        :param after: Identifier of the last node to skip
-        :type after: Union[int, str]
-        :param search_params: A dictionary containing equality filters
-        :return: A collection of models
-        :rtype: List
-        """
         find_stmt = self._find_query(search_params)
 
         paginated_stmt = self._cursor_paginated_query(
