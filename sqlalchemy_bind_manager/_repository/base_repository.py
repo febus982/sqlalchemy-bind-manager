@@ -197,63 +197,67 @@ class BaseRepository(Generic[MODEL], ABC):
                 asc(self._model_pk())
             )
 
-        # TODO: Use window functions
-        if not is_before_cursor:
-            previous_query = stmt.where(
-                getattr(self._model, cursor_reference.column) <= cursor_reference.value
-            )
-            previous_query = (
-                self._filter_order_by(
-                    previous_query, [(cursor_reference.column, SortDirection.DESC)]
-                )
-                .limit(1)
-                .subquery("previous")  # type: ignore
-            )
+        previous_query = self._cursor_pagination_previous_item_query(
+            stmt, cursor_reference, is_before_cursor
+        ).subquery("previous")
 
-            page_query = stmt.where(
-                getattr(self._model, cursor_reference.column) > cursor_reference.value
-            )
-            page_query = (
-                self._filter_order_by(
-                    page_query, [(cursor_reference.column, SortDirection.ASC)]
-                )
-                .limit(forward_limit)
-                .subquery("page")  # type: ignore
-            )
-        else:
-            previous_query = stmt.where(
-                getattr(self._model, cursor_reference.column) >= cursor_reference.value
-            )
-            previous_query = (
-                self._filter_order_by(
-                    previous_query, [(cursor_reference.column, SortDirection.ASC)]
-                )
-                .limit(1)
-                .subquery("previous")  # type: ignore
-            )
-
-            page_query = stmt.where(
-                getattr(self._model, cursor_reference.column) < cursor_reference.value
-            )
-            page_query = (
-                self._filter_order_by(
-                    page_query, [(cursor_reference.column, SortDirection.DESC)]
-                )
-                .limit(forward_limit)
-                .subquery("page")  # type: ignore
-            )
+        page_query = self._cursor_pagination_slice_query(
+            stmt, cursor_reference, forward_limit, is_before_cursor
+        ).subquery("slice")
 
         query = select(
             aliased(
                 self._model,
                 select(previous_query)
-                .union(select(page_query))
+                .union_all(select(page_query))
                 .order_by(cursor_reference.column)
-                .subquery(),  # type: ignore
+                .subquery("cursor_pagination"),  # type: ignore
             )
         )
-
         return query
+
+    def _cursor_pagination_slice_query(
+        self,
+        stmt: Select,
+        cursor_reference: CursorReference,
+        forward_limit: int,
+        is_before_cursor: bool,
+    ):
+        if not is_before_cursor:
+            page_query = stmt.where(
+                getattr(self._model, cursor_reference.column) > cursor_reference.value
+            )
+            page_query = self._filter_order_by(
+                page_query, [(cursor_reference.column, SortDirection.ASC)]
+            )
+        else:
+            page_query = stmt.where(
+                getattr(self._model, cursor_reference.column) < cursor_reference.value
+            )
+            page_query = self._filter_order_by(
+                page_query, [(cursor_reference.column, SortDirection.DESC)]
+            )
+        return page_query.limit(forward_limit)
+
+    def _cursor_pagination_previous_item_query(
+        self, stmt: Select, cursor_reference: CursorReference, is_before_cursor: bool
+    ) -> Select:
+        if not is_before_cursor:
+            previous_query = stmt.where(
+                getattr(self._model, cursor_reference.column) <= cursor_reference.value
+            )
+            previous_query = self._filter_order_by(
+                previous_query, [(cursor_reference.column, SortDirection.DESC)]
+            )
+        else:
+            previous_query = stmt.where(
+                getattr(self._model, cursor_reference.column) >= cursor_reference.value
+            )
+            previous_query = self._filter_order_by(
+                previous_query, [(cursor_reference.column, SortDirection.ASC)]
+            )
+
+        return previous_query.limit(1)
 
     def _sanitised_query_limit(self, limit):
         return max(min(limit, self._max_query_limit), 0)
