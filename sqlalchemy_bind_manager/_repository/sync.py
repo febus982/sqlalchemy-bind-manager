@@ -19,7 +19,6 @@ from .._transaction_handler import SessionHandler
 from ..exceptions import InvalidConfig, ModelNotFound
 from .base_repository import (
     BaseRepository,
-    SortDirection,
 )
 from .common import (
     MODEL,
@@ -27,6 +26,7 @@ from .common import (
     CursorPaginatedResult,
     CursorReference,
     PaginatedResult,
+    SortDirection,
 )
 from .result_presenters import CursorPaginatedResultPresenter, PaginatedResultPresenter
 

@@ -1,6 +1,4 @@
 from abc import ABC
-from enum import Enum
-from functools import partial
 from typing import (
     Any,
     Generic,
@@ -11,7 +9,7 @@ from typing import (
     Union,
 )
 
-from sqlalchemy import asc, desc, func, inspect, select
+from sqlalchemy import asc, func, inspect, select
 from sqlalchemy.orm import Mapper, aliased, class_mapper, lazyload
 from sqlalchemy.orm.exc import UnmappedClassError
 from sqlalchemy.sql import Select
@@ -21,12 +19,8 @@ from sqlalchemy_bind_manager.exceptions import InvalidModel, UnmappedProperty
 from .common import (
     MODEL,
     CursorReference,
+    SortDirection,
 )
-
-
-class SortDirection(Enum):
-    ASC = partial(asc)
-    DESC = partial(desc)
 
 
 class BaseRepository(Generic[MODEL], ABC):
