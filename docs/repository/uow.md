@@ -5,8 +5,11 @@ repository provide by itself an isolated session for single operations, we have 
 approach for multiple operations.
 
 We can use the `UnitOfWork` or the `AsyncUnitOfWork` class to provide a shared session to
-be used for repository operations, **assumed the same bind is used for all the repositories**.
-(Two phase transactions are not currently supported).
+be used for repository operations, **assuming the same bind is used for all the repositories**.
+
+/// admonition | The direct use of `SQLAlchemyRepository` and `SQLAlchemyAsyncRepository` classes is not yet supported
+    type: warning
+///
 
 ```python
 class MyRepo(SQLAlchemyRepository):

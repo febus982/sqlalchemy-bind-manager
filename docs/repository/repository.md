@@ -1,20 +1,22 @@
 ## Repository / Unit of work
 
-The `SQLAlchemyRepository` and `SQLAlchemyAsyncRepository` class can be used simply by extending them.
+The `SQLAlchemyRepository` and `SQLAlchemyAsyncRepository` class can be used directly or by extending them.
 
 ```python
 from sqlalchemy_bind_manager.repository import SQLAlchemyRepository
 
 
-class MyModel(model_declarative_base_from_sa_manager_bind):
+class MyModel(model_declarative_base):
     pass
 
+# Direct usage
+repo_instance = SQLAlchemyRepository(sqlalchemy_bind_manager.get_bind(), model_class=MyModel)
 
 class ModelRepository(SQLAlchemyRepository[MyModel]):
     _model = MyModel
-
-
-repo_instance = ModelRepository(sqlalchemy_bind_manager.get_bind())
+    
+    def _some_custom_method_implemented(self):
+        ...
 ```
 
 The classes provide some common use methods:

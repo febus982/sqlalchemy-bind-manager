@@ -75,13 +75,15 @@ with sa_manager.get_session() as session:
     session.commit()
 ```
 
-??? warning "Long lived sessions and multithreading"
-    It's not recommended to create long-lived sessions like:
+/// details | Long lived sessions and multithreading
+    type: warning
 
-    ```
-    session = sa_manager.get_session()
-    ```
-    
-    This can create problems because of global variables and multi-threading.
-    More details can be found in the [session page](/manager/session/#note-on-multithreaded-applications)
-    
+It's not recommended to create long-lived sessions like:
+
+```
+session = sa_manager.get_session()
+```
+
+This can create unexpected because of global variables and multi-threading.
+More details can be found in the [session page](/manager/session/#note-on-multithreaded-applications)
+///

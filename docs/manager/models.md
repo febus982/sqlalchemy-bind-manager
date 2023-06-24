@@ -20,6 +20,7 @@ Or using the imperative approach:
 ```python
 from dataclasses import dataclass
 from sqlalchemy import Integer, String, Table, Column
+
 @dataclass
 class MyModel:
     id: int
