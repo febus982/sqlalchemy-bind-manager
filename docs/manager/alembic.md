@@ -1,4 +1,4 @@
-## Alembic support in `SQLAlchemyBindManager`
+## Using Alembic with SQLAlchemy bind manager
 
 [Alembic](https://alembic.sqlalchemy.org/en/latest/)
 is a database migration tool widely used with SQLAlchemy.
