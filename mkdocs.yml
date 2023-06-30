@@ -9,6 +9,32 @@ repo_url: 'https://github.com/febus982/sqlalchemy-bind-manager'
 
 theme:
   name: material
+  features:
+    - navigation.expand
+    - navigation.top
+
+  palette:
+
+    # Palette toggle for light mode
+    - scheme: default
+      primary: teal
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - scheme: slate
+      primary: teal
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/febus982/sqlalchemy-bind-manager
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/federico-b-a0b78232
 
 nav:
   - Home: index.md
