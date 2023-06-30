@@ -5,6 +5,7 @@ from asyncio import get_event_loop
 from alembic import context
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.asyncio import AsyncEngine
+
 from sqlalchemy_bind_manager import SQLAlchemyAsyncConfig, SQLAlchemyBindManager
 
 ################################################################
