@@ -9,6 +9,33 @@ repo_url: 'https://github.com/febus982/sqlalchemy-bind-manager'
 
 theme:
   name: material
+  features:
+    - navigation.expand
+    - navigation.top
+    - content.code.copy
+
+  palette:
+
+    # Palette toggle for light mode
+    - scheme: default
+      primary: teal
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - scheme: slate
+      primary: teal
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/febus982/sqlalchemy-bind-manager
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com/in/federico-b-a0b78232
 
 nav:
   - Home: index.md
@@ -16,6 +43,7 @@ nav:
       - Configuration: manager/config.md
       - Models setup: manager/models.md
       - Session usage: manager/session.md
+      - Alembic integration: manager/alembic.md
   - Repository:
       - Repository usage: repository/repository.md
       - Unit of work: repository/uow.md
@@ -24,3 +52,5 @@ markdown_extensions:
   - pymdownx.details
   - pymdownx.blocks.admonition
   - pymdownx.blocks.details
+  - pymdownx.snippets
+  - pymdownx.superfences

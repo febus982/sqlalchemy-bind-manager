@@ -29,6 +29,29 @@ The classes provide some common use methods:
 * `paginated_find`: Search for a list of models, with pagination support
 * `cursor_paginated_find`: Search for a list of models, with cursor based pagination support
 
+/// details | Typing and Protocols
+    type: tip
+
+The repository classes are fully typed (as the rest of this package), but
+protocols classes are provided as addition to allow more decoupled type checking
+and inversion of control patterns such as
+[dependency injection](https://en.wikipedia.org/wiki/Dependency_injection).
+
+```python
+from sqlalchemy_bind_manager.protocols import SQLAlchemyRepositoryInterface, SQLAlchemyAsyncRepositoryInterface
+
+def some_function(repository: SQLAlchemyRepositoryInterface[MyModel]):
+    model = repository.get(123)
+    ...
+
+async def some_async_function(repository: SQLAlchemyAsyncRepositoryInterface[MyModel]):
+    model = await repository.get(123)
+    ...
+```
+
+Both repository and related protocols are Generic, accepting the model class as argument.
+///
+
 ### Maximum query limit
 
 Repositories have a maximum limit for paginated queries defaulting to 50 to
