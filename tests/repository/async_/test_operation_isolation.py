@@ -58,6 +58,35 @@ async def test_update_model_doesnt_update_other_models_from_same_repo(
     assert updated_model2.name == "SomeoneElse"
 
 
+async def test_update_model_updates_models_retrieved_by_other_repos(
+    repository_class, model_class, sa_manager
+):
+    repo = repository_class(sa_manager.get_bind())
+    repo2 = repository_class(sa_manager.get_bind())
+
+    # Populate a database entry to be used for tests
+    model1 = model_class(
+        name="Someone",
+    )
+    await repo.save(model1)
+    assert model1.model_id is not None
+
+    # Retrieve the models
+    new_model1 = await repo.get(model1.model_id)
+
+    # Update the model with another repository instance
+    new_model1.name = "StillSomeoneElse"
+    await repo2.save(new_model1)
+
+    # Check model1 has been updated
+    updated_model1 = await repo2.get(model1.model_id)
+    assert updated_model1.name == "StillSomeoneElse"
+
+    # Check model1 has been updated
+    updated_model1b = await repo.get(model1.model_id)
+    assert updated_model1b.name == "StillSomeoneElse"
+
+
 @patch.object(AsyncSessionHandler, "commit", return_value=None, new_callable=AsyncMock)
 async def test_commit_triggers_once_per_operation_using_internal_uow(
     mocked_uow_commit: AsyncMock, repository_class, model_class, sa_manager

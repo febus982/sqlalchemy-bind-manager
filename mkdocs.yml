@@ -47,6 +47,7 @@ nav:
   - Repository:
       - Repository usage: repository/repository.md
       - Unit of work: repository/uow.md
+  - Components life cycle: lifecycle.md
 
 markdown_extensions:
   - pymdownx.details

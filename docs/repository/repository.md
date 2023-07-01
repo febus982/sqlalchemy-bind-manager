@@ -94,3 +94,16 @@ using either approach:
 
 Note that `AsyncSession` has [the same limitation on lazy loading](https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html#asyncio-orm-avoid-lazyloads),
 even when keeping the session opened, so it makes sense that the two Repository implementations behave consistently.
+
+/// details | Lazy loading using `AsyncAttrs`
+
+SQLAlchemy has recently added the `AsyncAttrs` model class mixin to allow lazy loading model attributes 
+with `AsyncSession`, however having to `await` a model property introduce a coupling between the
+application logic and the storage layer.
+
+This would mean the application logic has to know about the storage layer and make a distinction
+between sync and async models. This doesn't feel right, at least for now,
+therefore it's not enabled by default.
+
+If you want to attempt lazy loading refer to [SQLAlchemy documentation](https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html#synopsis-orm)
+///    
