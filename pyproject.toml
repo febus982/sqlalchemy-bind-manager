@@ -74,7 +74,21 @@ plugins = "pydantic.mypy"
 
 [tool.ruff]
 select = ["E", "F", "I"]
+extend-exclude = ["docs"]
 
 [tool.ruff.per-file-ignores]
 "__init__.py" = ["F401"]
 "repository.py" = ["F401"]
+
+[tool.black]
+files = '''
+(
+  sqlalchemy_bind_manager
+  tests
+)
+'''
+extend-exclude = '''
+(
+  /docs
+)
+'''
