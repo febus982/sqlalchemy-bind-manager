@@ -13,13 +13,13 @@ typing:
 	poetry run mypy
 
 format:
-	poetry run black --check sqlalchemy_bind_manager tests
+	poetry run black --check .
 
 lint:
 	poetry run ruff .
 
 format-fix:
-	poetry run black sqlalchemy_bind_manager tests
+	poetry run black .
 
 lint-fix:
 	poetry run ruff . --fix

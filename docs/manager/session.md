@@ -1,16 +1,18 @@
-Using the session is the same as standard SQLAlchemy, we just retrieve the session class
-using the `get_session()` method.
+Using the session is the same as standard SQLAlchemy. The recommended approach
+is using the `get_session()` context manager, so you don't need to manage the
+session life cycle.
 
 ```python
 # Persist an object
 o = ImperativeModel()
 o.name = "John"
-with sa_manager.get_bind().session_class()() as session:
+with sa_manager.get_session() as session:
     session.add(o)
     session.commit()
 
-# or using the get_session() helper method for better readability
-with sa_manager.get_session() as session:
+# We can also get the `session_class` property of the bind,
+# but t
+with sa_manager.get_bind().session_class()() as session:
     session.add(o)
     session.commit()
 ```
@@ -24,14 +26,47 @@ among the threads and produce undesired changes in the database.
 
 This is not thread safe:
 
+/// note | db.py (a module to have an easy to use session)
 ```python
 session = sa_manager.get_session()
+```
+///
+
+
+/// note | some_other_module.py (a module to have an easy-to=use session)
+```python
+from db import session
+
 session.add(model)
 session.commit()
 ```
+///
 
-If you truly need to have a long-lived session you'll need to use a scoped session,
-something like this:
+
+This instead would be thread safe:
+
+/// note | some_other_module.py (a module to have an easy-to=use session)
+
+```python
+def do_something():
+    session = sa_manager.get_session()
+    session.add(model)
+    session.commit()
+    session.close()
+
+do_something()
+```
+
+The `do_something` function can be also in another method, as long as
+the `session` variable has no global scope it will be safe.
+///
+
+/// tip | Using the `get_session()` context manager is much easier
+
+///
+
+If you truly need to have a long-lived session in a variable with global scope,
+you'll need to use a scoped session like this:
 
 ```python
 from sqlalchemy.orm import scoped_session
