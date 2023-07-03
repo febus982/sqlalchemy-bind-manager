@@ -12,6 +12,7 @@ from typing import (
     Union,
 )
 
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from .._bind_manager import SQLAlchemyAsyncBind
@@ -84,17 +85,22 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
             raise ModelNotFound("No rows found for provided primary key.")
         return model
 
-    async def delete(
-        self,
-        entity: Union[MODEL, PRIMARY_KEY],
-    ) -> None:
-        # TODO: delete without loading the model
-        if isinstance(entity, self._model):
-            obj = entity
-        else:
-            obj = await self.get(entity)  # type: ignore
+    async def get_many(self, identifiers: Iterable[PRIMARY_KEY]) -> List[MODEL]:
+        stmt = select(self._model).where(
+            getattr(self._model, self._model_pk()).in_(identifiers)
+        )
+
+        async with self._get_session(commit=False) as session:
+            return [x for x in (await session.execute(stmt)).scalars()]
+
+    async def delete(self, instance: MODEL) -> None:
         async with self._get_session() as session:
-            await session.delete(obj)
+            await session.delete(instance)
+
+    async def delete_many(self, instances: Iterable[MODEL]) -> None:
+        async with self._get_session() as session:
+            for instance in instances:
+                await session.delete(instance)
 
     async def find(
         self,

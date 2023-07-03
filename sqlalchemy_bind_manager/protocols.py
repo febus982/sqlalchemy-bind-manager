@@ -47,14 +47,29 @@ class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
         :return: A model instance
         :raises ModelNotFound: No model has been found using the primary key
         """
-        # TODO: implement get_many()
         ...
 
-    async def delete(self, entity: Union[MODEL, PRIMARY_KEY]) -> None:
+    async def get_many(self, identifiers: Iterable[PRIMARY_KEY]) -> List[MODEL]:
+        """Get a list of models by primary keys.
+
+        :param identifiers: A list of primary keys
+        :type identifiers: List
+        :return: A list of models
+        :rtype: List
+        """
+        ...
+
+    async def delete(self, instance: MODEL) -> None:
         """Deletes a model.
 
-        :param entity: The model instance or the primary key
-        :type entity: Union[MODEL, PRIMARY_KEY]
+        :param instance: The model instance
+        """
+        ...
+
+    async def delete_many(self, instances: Iterable[MODEL]) -> None:
+        """Deletes a collection of models in a single transaction.
+
+        :param instances: The model instances
         """
         ...
 
@@ -188,14 +203,29 @@ class SQLAlchemyRepositoryInterface(Protocol[MODEL]):
         :return: A model instance
         :raises ModelNotFound: No model has been found using the primary key
         """
-        # TODO: implement get_many()
         ...
 
-    def delete(self, entity: Union[MODEL, PRIMARY_KEY]) -> None:
+    def get_many(self, identifiers: Iterable[PRIMARY_KEY]) -> List[MODEL]:
+        """Get a list of models by primary keys.
+
+        :param identifiers: A list of primary keys
+        :type identifiers: List
+        :return: A list of models
+        :rtype: List
+        """
+        ...
+
+    def delete(self, instance: MODEL) -> None:
         """Deletes a model.
 
-        :param entity: The model instance or the primary key
-        :type entity: Union[MODEL, PRIMARY_KEY]
+        :param instance: The model instance
+        """
+        ...
+
+    async def delete_many(self, instances: Iterable[MODEL]) -> None:
+        """Deletes a collection of models in a single transaction.
+
+        :param instances: The model instances
         """
         ...
 

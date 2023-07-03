@@ -2,7 +2,7 @@ import pytest
 from sqlalchemy import select
 
 
-async def test_can_delete_by_instance(repository_class, model_class, sa_manager):
+def test_can_delete_by_instance(repository_class, model_class, sa_manager):
     model = model_class(
         model_id=1,
         name="Someone",
@@ -12,39 +12,39 @@ async def test_can_delete_by_instance(repository_class, model_class, sa_manager)
         name="SomeoneElse",
     )
     repo = repository_class(sa_manager.get_bind())
-    await repo.save_many({model, model2})
+    repo.save_many({model, model2})
 
-    results = [x for x in await repo.find()]
+    results = [x for x in repo.find()]
     assert len(results) == 2
 
-    await repo.delete(model)
-    results = [x for x in await repo.find()]
+    repo.delete_many([model])
+    results = [x for x in repo.find()]
     assert len(results) == 1
     assert results[0].model_id == 2
     assert results[0].name == "SomeoneElse"
 
 
-async def test_delete_inexistent_raises_exception(
-    repository_class, model_class, sa_manager
-):
+def test_delete_inexistent_raises_exception(repository_class, model_class, sa_manager):
     repo = repository_class(sa_manager.get_bind())
 
-    results = [x for x in await repo.find()]
+    results = [x for x in repo.find()]
     assert len(results) == 0
 
     with pytest.raises(Exception):
-        await repo.delete(4)
+        repo.delete_many([4])
 
     with pytest.raises(Exception):
-        await repo.delete(
-            model_class(
-                model_id=823,
-                name="Someone",
-            )
+        repo.delete_many(
+            [
+                model_class(
+                    model_id=823,
+                    name="Someone",
+                )
+            ]
         )
 
 
-async def test_relationships_are_respected(
+def test_relationships_are_respected(
     related_repository_class, related_model_classes, sa_manager
 ):
     parent = related_model_classes[0](
@@ -55,16 +55,15 @@ async def test_relationships_are_respected(
     parent.children.append(child)
     parent.children.append(child2)
     repo = related_repository_class(sa_manager.get_bind())
-    await repo.save(parent)
+    repo.save(parent)
 
-    retrieved_parent = await repo.get(parent.parent_model_id)
+    retrieved_parent = repo.get(parent.parent_model_id)
     assert len(retrieved_parent.children) == 2
 
-    await repo.delete(retrieved_parent)
+    repo.delete_many([retrieved_parent])
 
-    async with repo._get_session() as session:
+    with repo._get_session() as session:
         result = [
-            x
-            for x in (await session.execute(select(related_model_classes[1]))).scalars()
+            x for x in session.execute(select(related_model_classes[1])).scalars()
         ]
         assert len(result) == 0
