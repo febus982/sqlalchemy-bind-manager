@@ -3,7 +3,7 @@
 ### Bind manager
 
 The `SQLAlchemyBindManager` object holds all the SQLAlchemy Engines, which
-are supposed to be global objects. Therefore it should be created on application
+are supposed to be global objects, therefore it should be created on application
 startup and be globally accessible.
 
 From SQLAlchemy documentation:
@@ -17,22 +17,20 @@ From SQLAlchemy documentation:
 recommends we create `Session` object at the beginning of a logical operation where
 database access is potentially anticipated.
 
-The repository starts a `Session` for each _operation_, in order to maintain isolation.
-This means you can create a repository object almost whenever you want.
+The repository is not built for parallel execution, it keeps a `Session` object scoped to
+its lifecycle to avoid unnecessary queries, and executes a transaction for each _operation_
+to maintain isolation. This means you can create a repository object almost whenever you want,
+as long as you don't run parallel operations.
 
-/// details | There two exceptions: creating repositories in global variables or concurrent asyncio tasks
-    type: warning
-The repository creates and maintain the lifecycle of a session object to avoid
-emitting unnecessary queries to refresh the model state on new session.
+The session in the repository is not thread safe and [is not safe on concurrent asyncio tasks](https://docs.sqlalchemy.org/en/20/orm/session_basics.html#is-the-session-thread-safe-is-asyncsession-safe-to-share-in-concurrent-tasks) 
+therefore the repository has the same limitations.
 
-The session is not thread safe, therefore the repository is not thread safe as well.
+This means:
 
-Check the [Notes on multithreaded applications](/manager/session/#note-on-multithreaded-applications)
-
-The `AsyncSession` [is not safe on concurrent asyncio tasks](https://docs.sqlalchemy.org/en/20/orm/session_basics.html#is-the-session-thread-safe-is-asyncsession-safe-to-share-in-concurrent-tasks),
-therefore the same repository instance can't be used in multiple asyncio tasks like
-when using `asyncio.gather()`
-///
+* Do not assign a repository object to a global variable
+  (Check the [Notes on multithreaded applications](/manager/session/#note-on-multithreaded-applications))
+* Do not share a repository instance in multiple threads or processes (e.g. using `asyncio.to_thread`).
+* Do not use the same repository in concurrent asyncio task (e.g. using `asyncio.gather`)
 
 Even using multiple repository instances will work fine, however as they will have completely
 different sessions, it's likely that the second repository will fire additional SELECT queries
@@ -71,8 +69,8 @@ update_my_model()
 ```
 ///
 
-The recommendation is of course to use the same repository instance, where possible,
-and structure your code in a way to match the single repository instance approach.
+The recommendation is of course to try to write your application in a way you cna use
+a single repository instance, where possible.
 
 For example a strategy similar to this would be optimal, if possible:
 
