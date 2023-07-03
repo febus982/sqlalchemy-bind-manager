@@ -80,7 +80,7 @@ class AsyncSessionHandler:
                 loop.create_task(self._session_class.remove())
             else:
                 loop.run_until_complete(self._session_class.remove())
-        except:
+        except RuntimeError:
             asyncio.run(self._session_class.remove())
 
     @asynccontextmanager
