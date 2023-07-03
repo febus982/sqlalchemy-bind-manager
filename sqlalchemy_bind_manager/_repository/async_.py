@@ -12,6 +12,7 @@ from typing import (
     Union,
 )
 
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from .._bind_manager import SQLAlchemyAsyncBind
@@ -83,6 +84,14 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         if model is None:
             raise ModelNotFound("No rows found for provided primary key.")
         return model
+
+    async def get_many(self, identifiers: Iterable[PRIMARY_KEY]) -> List[MODEL]:
+        stmt = select(self._model).where(
+            getattr(self._model, self._model_pk()).in_(identifiers)
+        )
+
+        async with self._get_session(commit=False) as session:
+            return [x for x in (await session.execute(stmt)).scalars()]
 
     async def delete(
         self,

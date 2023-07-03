@@ -47,7 +47,16 @@ class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
         :return: A model instance
         :raises ModelNotFound: No model has been found using the primary key
         """
-        # TODO: implement get_many()
+        ...
+
+    async def get_many(self, identifiers: Iterable[PRIMARY_KEY]) -> List[MODEL]:
+        """Get a list of models by primary keys.
+
+        :param identifiers: A list of primary keys
+        :type identifiers: List
+        :return: A list of models
+        :rtype: List
+        """
         ...
 
     async def delete(self, entity: Union[MODEL, PRIMARY_KEY]) -> None:
@@ -189,6 +198,16 @@ class SQLAlchemyRepositoryInterface(Protocol[MODEL]):
         :raises ModelNotFound: No model has been found using the primary key
         """
         # TODO: implement get_many()
+        ...
+
+    def get_many(self, identifiers: Iterable[PRIMARY_KEY]) -> List[MODEL]:
+        """Get a list of models by primary keys.
+
+        :param identifiers: A list of primary keys
+        :type identifiers: List
+        :return: A list of models
+        :rtype: List
+        """
         ...
 
     def delete(self, entity: Union[MODEL, PRIMARY_KEY]) -> None:

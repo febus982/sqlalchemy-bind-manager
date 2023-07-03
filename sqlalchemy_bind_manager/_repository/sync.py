@@ -12,6 +12,7 @@ from typing import (
     Union,
 )
 
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from .._bind_manager import SQLAlchemyBind
@@ -72,6 +73,14 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         if model is None:
             raise ModelNotFound("No rows found for provided primary key.")
         return model
+
+    def get_many(self, identifiers: Iterable[PRIMARY_KEY]) -> List[MODEL]:
+        stmt = select(self._model).where(
+            getattr(self._model, self._model_pk()).in_(identifiers)
+        )
+
+        with self._get_session(commit=False) as session:
+            return [x for x in session.execute(stmt).scalars()]
 
     def delete(self, entity: Union[MODEL, PRIMARY_KEY]) -> None:
         # TODO: delete without loading the model
