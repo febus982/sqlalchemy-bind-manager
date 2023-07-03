@@ -62,7 +62,14 @@ class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
     async def delete(self, instance: MODEL) -> None:
         """Deletes a model.
 
-        :param instance: The model instance or the primary key
+        :param instance: The model instance
+        """
+        ...
+
+    async def delete_many(self, instances: Iterable[MODEL]) -> None:
+        """Deletes a collection of models in a single transaction.
+
+        :param instances: The model instances
         """
         ...
 
@@ -211,7 +218,14 @@ class SQLAlchemyRepositoryInterface(Protocol[MODEL]):
     def delete(self, instance: MODEL) -> None:
         """Deletes a model.
 
-        :param instance: The model instance or the primary key
+        :param instance: The model instance
+        """
+        ...
+
+    async def delete_many(self, instances: Iterable[MODEL]) -> None:
+        """Deletes a collection of models in a single transaction.
+
+        :param instances: The model instances
         """
         ...
 

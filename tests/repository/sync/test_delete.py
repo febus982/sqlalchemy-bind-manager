@@ -1,5 +1,4 @@
 import pytest
-
 from sqlalchemy import select
 
 
@@ -34,6 +33,14 @@ def test_delete_inexistent_raises_exception(repository_class, model_class, sa_ma
     with pytest.raises(Exception):
         repo.delete(4)
 
+    with pytest.raises(Exception):
+        repo.delete(
+            model_class(
+                model_id=823,
+                name="Someone",
+            )
+        )
+
 
 def test_relationships_are_respected(
     related_repository_class, related_model_classes, sa_manager
@@ -54,5 +61,7 @@ def test_relationships_are_respected(
     repo.delete(retrieved_parent)
 
     with repo._get_session() as session:
-        result = [x for x in session.execute(select(related_model_classes[1])).scalars()]
+        result = [
+            x for x in session.execute(select(related_model_classes[1])).scalars()
+        ]
         assert len(result) == 0

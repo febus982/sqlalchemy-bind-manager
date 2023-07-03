@@ -17,7 +17,7 @@ async def test_can_delete_by_instance(repository_class, model_class, sa_manager)
     results = [x for x in await repo.find()]
     assert len(results) == 2
 
-    await repo.delete(model)
+    await repo.delete_many([model])
     results = [x for x in await repo.find()]
     assert len(results) == 1
     assert results[0].model_id == 2
@@ -33,14 +33,16 @@ async def test_delete_inexistent_raises_exception(
     assert len(results) == 0
 
     with pytest.raises(Exception):
-        await repo.delete(4)
+        await repo.delete_many([4])
 
     with pytest.raises(Exception):
-        await repo.delete(
-            model_class(
-                model_id=823,
-                name="Someone",
-            )
+        await repo.delete_many(
+            [
+                model_class(
+                    model_id=823,
+                    name="Someone",
+                )
+            ]
         )
 
 
@@ -60,7 +62,7 @@ async def test_relationships_are_respected(
     retrieved_parent = await repo.get(parent.parent_model_id)
     assert len(retrieved_parent.children) == 2
 
-    await repo.delete(retrieved_parent)
+    await repo.delete_many([retrieved_parent])
 
     async with repo._get_session() as session:
         result = [

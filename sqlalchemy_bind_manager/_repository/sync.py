@@ -86,6 +86,11 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         with self._get_session() as session:
             session.delete(instance)
 
+    def delete_many(self, instances: Iterable[MODEL]) -> None:
+        with self._get_session() as session:
+            for model in instances:
+                session.delete(model)
+
     def find(
         self,
         search_params: Union[None, Mapping[str, Any]] = None,

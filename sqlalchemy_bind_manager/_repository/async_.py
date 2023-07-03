@@ -97,6 +97,11 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         async with self._get_session() as session:
             await session.delete(instance)
 
+    async def delete_many(self, instances: Iterable[MODEL]) -> None:
+        async with self._get_session() as session:
+            for instance in instances:
+                await session.delete(instance)
+
     async def find(
         self,
         search_params: Union[None, Mapping[str, Any]] = None,
