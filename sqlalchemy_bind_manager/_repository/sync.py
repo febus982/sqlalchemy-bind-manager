@@ -82,14 +82,9 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         with self._get_session(commit=False) as session:
             return [x for x in session.execute(stmt).scalars()]
 
-    def delete(self, entity: Union[MODEL, PRIMARY_KEY]) -> None:
-        # TODO: delete without loading the model
-        if isinstance(entity, self._model):
-            obj = entity
-        else:
-            obj = self.get(entity)  # type: ignore
+    def delete(self, instance: MODEL) -> None:
         with self._get_session() as session:
-            session.delete(obj)
+            session.delete(instance)
 
     def find(
         self,

@@ -59,11 +59,10 @@ class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
         """
         ...
 
-    async def delete(self, entity: Union[MODEL, PRIMARY_KEY]) -> None:
+    async def delete(self, instance: MODEL) -> None:
         """Deletes a model.
 
-        :param entity: The model instance or the primary key
-        :type entity: Union[MODEL, PRIMARY_KEY]
+        :param instance: The model instance or the primary key
         """
         ...
 
@@ -197,7 +196,6 @@ class SQLAlchemyRepositoryInterface(Protocol[MODEL]):
         :return: A model instance
         :raises ModelNotFound: No model has been found using the primary key
         """
-        # TODO: implement get_many()
         ...
 
     def get_many(self, identifiers: Iterable[PRIMARY_KEY]) -> List[MODEL]:
@@ -210,11 +208,10 @@ class SQLAlchemyRepositoryInterface(Protocol[MODEL]):
         """
         ...
 
-    def delete(self, entity: Union[MODEL, PRIMARY_KEY]) -> None:
+    def delete(self, instance: MODEL) -> None:
         """Deletes a model.
 
-        :param entity: The model instance or the primary key
-        :type entity: Union[MODEL, PRIMARY_KEY]
+        :param instance: The model instance or the primary key
         """
         ...
 
