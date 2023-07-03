@@ -1,4 +1,4 @@
-from asyncio import get_event_loop
+import asyncio
 from contextlib import asynccontextmanager, contextmanager
 from typing import AsyncIterator, Iterator
 from uuid import uuid4
@@ -74,11 +74,14 @@ class AsyncSessionHandler:
         if not getattr(self, "_session_class", None):
             return
 
-        loop = get_event_loop()
-        if loop.is_running():
-            loop.create_task(self._session_class.remove())
-        else:
-            loop.run_until_complete(self._session_class.remove())
+        try:
+            loop = asyncio.get_event_loop()
+            if loop.is_running():
+                loop.create_task(self._session_class.remove())
+            else:
+                loop.run_until_complete(self._session_class.remove())
+        except RuntimeError:
+            asyncio.run(self._session_class.remove())
 
     @asynccontextmanager
     async def get_session(self, read_only: bool = False) -> AsyncIterator[AsyncSession]:

@@ -30,10 +30,13 @@ def test_session_is_destroyed_on_cleanup_if_loop_is_not_running(sa_manager):
         uow._session_class,
         "remove",
         wraps=original_session_close,
-    ) as mocked_close:
+    ) as mocked_close, patch(
+        "asyncio.get_event_loop", side_effect=RuntimeError()
+    ) as mocked_get_event_loop:
         # This should trigger the garbage collector and close the session
         uow = None
 
+    mocked_get_event_loop.assert_called_once()
     mocked_close.assert_called_once()
 
 
