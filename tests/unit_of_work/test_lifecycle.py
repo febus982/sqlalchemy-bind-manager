@@ -1,11 +1,15 @@
-from sqlalchemy_bind_manager._unit_of_work import AsyncUnitOfWork
-
-
 async def test_repositories_are_initialised_with_uow_session(
-    sa_manager, repository_classes
+    sa_bind, repository_class, model_classes, uow_class
 ):
-    uow = AsyncUnitOfWork(
-        bind=sa_manager.get_bind(),
+    class RepoClass(repository_class):
+        _model = model_classes[0]
+
+    class ChildRepoClass(repository_class):
+        _model = model_classes[1]
+
+    repository_classes = [RepoClass, ChildRepoClass]
+    uow = uow_class(
+        bind=sa_bind,
         repositories=repository_classes,
     )
     for repo_class in repository_classes:

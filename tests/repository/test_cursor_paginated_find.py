@@ -1,6 +1,25 @@
 import pytest
+from sqlalchemy import Column, String
 
+from sqlalchemy_bind_manager._bind_manager import SQLAlchemyBind
 from sqlalchemy_bind_manager.repository import CursorReference
+
+
+@pytest.fixture
+async def model_class_string_pk(sa_bind):
+    class MyModel(sa_bind.model_declarative_base):
+        __tablename__ = "mymodel_string_pk"
+
+        model_id = Column(String, primary_key=True)
+        name = Column(String)
+
+    if isinstance(sa_bind, SQLAlchemyBind):
+        sa_bind.registry_mapper.metadata.create_all(sa_bind.engine)
+    else:
+        async with sa_bind.engine.begin() as conn:
+            await conn.run_sync(sa_bind.registry_mapper.metadata.create_all)
+
+    yield MyModel
 
 
 def _test_models(model_class):
@@ -32,13 +51,20 @@ def _test_models(model_class):
     ],
 )
 async def test_paginated_find_without_cursor(
-    repository_class, model_class, sa_manager, items_per_page, expected_next_page
+    repository_class,
+    model_class,
+    sa_bind,
+    sync_async_wrapper,
+    items_per_page,
+    expected_next_page,
 ):
-    repo = repository_class(sa_manager.get_bind())
-    await repo.save_many(_test_models(model_class))
+    repo = repository_class(bind=sa_bind, model_class=model_class)
+    await sync_async_wrapper(repo.save_many(_test_models(model_class)))
 
-    results = await repo.cursor_paginated_find(
-        items_per_page=items_per_page,
+    results = await sync_async_wrapper(
+        repo.cursor_paginated_find(
+            items_per_page=items_per_page,
+        )
     )
     assert len(results.items) == items_per_page
     assert results.items[0].name == "Someone"
@@ -56,13 +82,13 @@ async def test_paginated_find_without_cursor(
 
 
 async def test_paginated_find_without_query_result(
-    repository_class, model_class, sa_manager
+    repository_class, model_class, sa_bind, sync_async_wrapper
 ):
-    repo = repository_class(sa_manager.get_bind())
-    await repo.save_many(_test_models(model_class))
+    repo = repository_class(bind=sa_bind, model_class=model_class)
+    await sync_async_wrapper(repo.save_many(_test_models(model_class)))
 
-    results = await repo.cursor_paginated_find(
-        items_per_page=2, search_params=dict(name="Unknown")
+    results = await sync_async_wrapper(
+        repo.cursor_paginated_find(items_per_page=2, search_params=dict(name="Unknown"))
     )
     assert len(results.items) == 0
     assert results.page_info.items_per_page == 2
@@ -74,17 +100,19 @@ async def test_paginated_find_without_query_result(
 
 
 async def test_paginated_find_page_length_after(
-    repository_class, model_class, sa_manager
+    repository_class, model_class, sa_bind, sync_async_wrapper
 ):
-    repo = repository_class(sa_manager.get_bind())
-    await repo.save_many(_test_models(model_class))
+    repo = repository_class(bind=sa_bind, model_class=model_class)
+    await sync_async_wrapper(repo.save_many(_test_models(model_class)))
 
-    results = await repo.cursor_paginated_find(
-        cursor_reference=CursorReference(
-            column="model_id",
-            value=80,
-        ),
-        items_per_page=2,
+    results = await sync_async_wrapper(
+        repo.cursor_paginated_find(
+            cursor_reference=CursorReference(
+                column="model_id",
+                value=80,
+            ),
+            items_per_page=2,
+        )
     )
     assert len(results.items) == 2
     assert results.items[0].name == "SomeoneElse"
@@ -94,18 +122,20 @@ async def test_paginated_find_page_length_after(
 
 
 async def test_paginated_find_page_length_before(
-    repository_class, model_class, sa_manager
+    repository_class, model_class, sa_bind, sync_async_wrapper
 ):
-    repo = repository_class(sa_manager.get_bind())
-    await repo.save_many(_test_models(model_class))
+    repo = repository_class(bind=sa_bind, model_class=model_class)
+    await sync_async_wrapper(repo.save_many(_test_models(model_class)))
 
-    results = await repo.cursor_paginated_find(
-        cursor_reference=CursorReference(
-            column="model_id",
-            value=110,
-        ),
-        is_before_cursor=True,
-        items_per_page=2,
+    results = await sync_async_wrapper(
+        repo.cursor_paginated_find(
+            cursor_reference=CursorReference(
+                column="model_id",
+                value=110,
+            ),
+            is_before_cursor=True,
+            items_per_page=2,
+        )
     )
     assert len(results.items) == 2
     assert results.items[0].name == "SomeoneElse"
@@ -115,18 +145,20 @@ async def test_paginated_find_page_length_before(
 
 
 async def test_paginated_find_max_page_length_is_respected(
-    repository_class, model_class, sa_manager
+    repository_class, model_class, sa_bind, sync_async_wrapper
 ):
-    repo = repository_class(sa_manager.get_bind())
+    repo = repository_class(bind=sa_bind, model_class=model_class)
     repo._max_query_limit = 2
-    await repo.save_many(_test_models(model_class))
+    await sync_async_wrapper(repo.save_many(_test_models(model_class)))
 
-    results = await repo.cursor_paginated_find(
-        cursor_reference=CursorReference(
-            column="model_id",
-            value=80,
-        ),
-        items_per_page=50,
+    results = await sync_async_wrapper(
+        repo.cursor_paginated_find(
+            cursor_reference=CursorReference(
+                column="model_id",
+                value=80,
+            ),
+            items_per_page=50,
+        )
     )
     assert len(results.items) == 2
     assert results.items[0].name == "SomeoneElse"
@@ -135,16 +167,20 @@ async def test_paginated_find_max_page_length_is_respected(
     assert results.page_info.total_items == 4
 
 
-async def test_paginated_find_empty_result(repository_class, model_class, sa_manager):
-    repo = repository_class(sa_manager.get_bind())
-    await repo.save_many(_test_models(model_class))
+async def test_paginated_find_empty_result(
+    repository_class, model_class, sa_bind, sync_async_wrapper
+):
+    repo = repository_class(bind=sa_bind, model_class=model_class)
+    await sync_async_wrapper(repo.save_many(_test_models(model_class)))
 
-    results = await repo.cursor_paginated_find(
-        cursor_reference=CursorReference(
-            column="model_id",
-            value=110,
-        ),
-        items_per_page=2,
+    results = await sync_async_wrapper(
+        repo.cursor_paginated_find(
+            cursor_reference=CursorReference(
+                column="model_id",
+                value=110,
+            ),
+            items_per_page=2,
+        )
     )
     assert len(results.items) == 0
     assert results.page_info.items_per_page == 2
@@ -177,23 +213,26 @@ async def test_paginated_find_empty_result(repository_class, model_class, sa_man
 async def test_paginated_find_previous_next_page(
     repository_class,
     model_class,
-    sa_manager,
+    sa_bind,
+    sync_async_wrapper,
     before,
     after,
     has_next_page,
     has_previous_page,
     returned_ids,
 ):
-    repo = repository_class(sa_manager.get_bind())
-    await repo.save_many(_test_models(model_class))
+    repo = repository_class(bind=sa_bind, model_class=model_class)
+    await sync_async_wrapper(repo.save_many(_test_models(model_class)))
 
-    result = await repo.cursor_paginated_find(
-        cursor_reference=CursorReference(
-            column="model_id",
-            value=after or before,
-        ),
-        is_before_cursor=bool(before),
-        items_per_page=2,
+    result = await sync_async_wrapper(
+        repo.cursor_paginated_find(
+            cursor_reference=CursorReference(
+                column="model_id",
+                value=after or before,
+            ),
+            is_before_cursor=bool(before),
+            items_per_page=2,
+        )
     )
 
     assert len(returned_ids) == len(result.items)
@@ -210,7 +249,7 @@ async def test_paginated_find_previous_next_page(
     assert result.page_info.has_previous_page == has_previous_page
 
 
-# Lexigraphic order here is 100,110,80,90
+# Lexicographic order here is 100,110,80,90
 @pytest.mark.parametrize(
     ["before", "after", "has_next_page", "has_previous_page", "returned_ids"],
     [
@@ -237,25 +276,28 @@ async def test_paginated_find_previous_next_page(
     ],
 )
 async def test_paginated_find_string_pk(
-    repository_class_string_pk,
+    repository_class,
     model_class_string_pk,
-    sa_manager,
+    sa_bind,
+    sync_async_wrapper,
     before,
     after,
     has_next_page,
     has_previous_page,
     returned_ids,
 ):
-    repo = repository_class_string_pk(sa_manager.get_bind())
-    await repo.save_many(_test_models(model_class_string_pk))
+    repo = repository_class(bind=sa_bind, model_class=model_class_string_pk)
+    await sync_async_wrapper(repo.save_many(_test_models(model_class_string_pk)))
 
-    result = await repo.cursor_paginated_find(
-        cursor_reference=CursorReference(
-            column="model_id",
-            value=after or before,
-        ),
-        is_before_cursor=bool(before),
-        items_per_page=2,
+    result = await sync_async_wrapper(
+        repo.cursor_paginated_find(
+            cursor_reference=CursorReference(
+                column="model_id",
+                value=after or before,
+            ),
+            is_before_cursor=bool(before),
+            items_per_page=2,
+        )
     )
 
     assert len(returned_ids) == len(result.items)

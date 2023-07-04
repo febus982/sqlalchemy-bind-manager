@@ -16,7 +16,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from .._bind_manager import SQLAlchemyAsyncBind
-from .._transaction_handler import AsyncSessionHandler
+from .._session_handler import AsyncSessionHandler
 from ..exceptions import InvalidConfig, ModelNotFound
 from .base_repository import (
     BaseRepository,
