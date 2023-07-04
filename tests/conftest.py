@@ -1,5 +1,6 @@
 import inspect
 import os
+from contextlib import _AsyncGeneratorContextManager, asynccontextmanager
 from typing import Tuple, Type
 from uuid import uuid4
 
@@ -43,6 +44,26 @@ def sync_async_wrapper():
 
     async def f(call):
         return await call if inspect.iscoroutine(call) else call
+
+    return f
+
+
+@pytest.fixture()
+def sync_async_cm_wrapper():
+    """
+    Tiny wrapper to allow calling sync and async methods using await.
+
+    :return:
+    """
+
+    @asynccontextmanager
+    async def f(cm):
+        if isinstance(cm, _AsyncGeneratorContextManager):
+            async with cm as c:
+                yield c
+        else:
+            with cm as c:
+                yield c
 
     return f
 

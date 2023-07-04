@@ -1,4 +1,3 @@
-from contextlib import _AsyncGeneratorContextManager, asynccontextmanager
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
@@ -6,16 +5,6 @@ from sqlalchemy.ext.asyncio import async_scoped_session
 from sqlalchemy.orm import scoped_session
 
 from sqlalchemy_bind_manager._bind_manager import SQLAlchemyAsyncBind
-
-
-@asynccontextmanager
-async def cm_wrapper(cm):
-    if isinstance(cm, _AsyncGeneratorContextManager):
-        async with cm as c:
-            yield c
-    else:
-        with cm as c:
-            yield c
 
 
 async def test_session_is_removed_on_cleanup(session_handler_class, sa_bind):
@@ -64,6 +53,7 @@ async def test_commit_is_called_only_if_not_read_only(
     session_handler_class,
     model_class,
     sa_bind,
+    sync_async_cm_wrapper,
 ):
     uow = session_handler_class(sa_bind)
 
@@ -75,7 +65,9 @@ async def test_commit_is_called_only_if_not_read_only(
     with patch.object(
         session_handler_class, "commit", return_value=None
     ) as mocked_uow_commit:
-        async with cm_wrapper(uow.get_session(read_only=read_only_flag)) as _session:
+        async with sync_async_cm_wrapper(
+            uow.get_session(read_only=read_only_flag)
+        ) as _session:
             _session.add(model1)
 
     assert mocked_uow_commit.call_count == int(not read_only_flag)
