@@ -1,8 +1,9 @@
 import pytest
-from sqlalchemy import select
 
 
-async def test_can_delete_by_instance(repository_class, model_class, sa_bind, sync_async_wrapper):
+async def test_can_delete_by_instance(
+    repository_class, model_class, sa_bind, sync_async_wrapper
+):
     model = model_class(
         model_id=1,
         name="Someone",
@@ -36,14 +37,16 @@ async def test_delete_inexistent_raises_exception(
         await sync_async_wrapper(repo.delete_many([4]))
 
     with pytest.raises(Exception):
-        await sync_async_wrapper(repo.delete_many(
-            [
-                model_class(
-                    model_id=823,
-                    name="Someone",
-                )
-            ]
-        ))
+        await sync_async_wrapper(
+            repo.delete_many(
+                [
+                    model_class(
+                        model_id=823,
+                        name="Someone",
+                    )
+                ]
+            )
+        )
 
 
 async def test_relationships_are_respected(

@@ -1,4 +1,4 @@
-from unittest.mock import AsyncMock, patch, MagicMock
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -17,7 +17,9 @@ async def test_save_model(repository_class, model_class, sa_bind, sync_async_wra
     assert model.model_id is not None
 
 
-async def test_save_many_models(repository_class, model_class, sa_bind, sync_async_wrapper):
+async def test_save_many_models(
+    repository_class, model_class, sa_bind, sync_async_wrapper
+):
     model = model_class(
         name="Someone",
     )
@@ -42,13 +44,18 @@ async def test_failed_commit_does_rollback_and_reraises_exception(
         name="Someone",
     )
 
-    session_class = AsyncSession if isinstance(sa_bind, SQLAlchemyAsyncBind) else Session
+    session_class = (
+        AsyncSession if isinstance(sa_bind, SQLAlchemyAsyncBind) else Session
+    )
     session_mock = AsyncMock if isinstance(sa_bind, SQLAlchemyAsyncBind) else MagicMock
 
     with patch.object(
         session_class, "rollback", new_callable=session_mock, return_value=None
     ) as mocked_rollback, patch.object(
-        session_class, "commit", new_callable=session_mock, side_effect=SomeTestException
+        session_class,
+        "commit",
+        new_callable=session_mock,
+        side_effect=SomeTestException,
     ):
         repo = repository_class(bind=sa_bind, model_class=model_class)
 

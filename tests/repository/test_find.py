@@ -21,7 +21,9 @@ async def test_find(repository_class, model_class, sa_bind, sync_async_wrapper):
     assert len(results) == 3
 
 
-async def test_find_filtered(repository_class, model_class, sa_bind, sync_async_wrapper):
+async def test_find_filtered(
+    repository_class, model_class, sa_bind, sync_async_wrapper
+):
     model = model_class(
         name="Someone",
     )
@@ -38,7 +40,9 @@ async def test_find_filtered(repository_class, model_class, sa_bind, sync_async_
     assert len(results) == 1
 
 
-async def test_find_filtered_fails_if_invalid_filter(repository_class, model_class, sa_bind, sync_async_wrapper):
+async def test_find_filtered_fails_if_invalid_filter(
+    repository_class, model_class, sa_bind, sync_async_wrapper
+):
     repo = repository_class(bind=sa_bind, model_class=model_class)
     with pytest.raises(UnmappedProperty):
         await sync_async_wrapper(repo.find(search_params={"somename": "Someone"}))
@@ -58,16 +62,22 @@ async def test_find_ordered(repository_class, model_class, sa_bind, sync_async_w
     assert results[0].name == "Abbott"
     assert results[1].name == "Costello"
 
-    results2 = await sync_async_wrapper(repo.find(order_by=(("name", SortDirection.ASC),)))
+    results2 = await sync_async_wrapper(
+        repo.find(order_by=(("name", SortDirection.ASC),))
+    )
     assert results2[0].name == "Abbott"
     assert results2[1].name == "Costello"
 
-    results3 = await sync_async_wrapper(repo.find(order_by=(("name", SortDirection.DESC),)))
+    results3 = await sync_async_wrapper(
+        repo.find(order_by=(("name", SortDirection.DESC),))
+    )
     assert results3[1].name == "Abbott"
     assert results3[0].name == "Costello"
 
 
-async def test_find_ordered_fails_if_invalid_column(repository_class, model_class, sa_bind, sync_async_wrapper):
+async def test_find_ordered_fails_if_invalid_column(
+    repository_class, model_class, sa_bind, sync_async_wrapper
+):
     repo = repository_class(bind=sa_bind, model_class=model_class)
     with pytest.raises(UnmappedProperty):
         await repo.find(order_by=("unexisting",))

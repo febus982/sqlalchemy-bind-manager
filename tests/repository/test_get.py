@@ -1,7 +1,9 @@
 import pytest
 
 
-async def test_get_returns_model(repository_class, model_class, sa_bind, sync_async_wrapper):
+async def test_get_returns_model(
+    repository_class, model_class, sa_bind, sync_async_wrapper
+):
     model = model_class(
         model_id=1,
         name="Someone",
@@ -19,7 +21,9 @@ async def test_get_returns_model(repository_class, model_class, sa_bind, sync_as
     assert isinstance(result, model_class)
 
 
-async def test_get_many_returns_models(repository_class, model_class, sa_bind, sync_async_wrapper):
+async def test_get_many_returns_models(
+    repository_class, model_class, sa_bind, sync_async_wrapper
+):
     model = model_class(
         model_id=1,
         name="Someone",
@@ -52,7 +56,9 @@ async def test_get_many_returns_empty_list_if_nothing_found(
     assert len(result) == 0
 
 
-async def test_get_raises_exception_if_not_found(repository_class, model_class, sa_bind, sync_async_wrapper):
+async def test_get_raises_exception_if_not_found(
+    repository_class, model_class, sa_bind, sync_async_wrapper
+):
     repo = repository_class(bind=sa_bind, model_class=model_class)
 
     with pytest.raises(Exception):

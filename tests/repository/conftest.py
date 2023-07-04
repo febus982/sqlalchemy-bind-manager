@@ -1,5 +1,5 @@
 import os
-from typing import Iterator, Union
+from typing import Iterator, Type, Union
 from uuid import uuid4
 
 import pytest
@@ -49,7 +49,7 @@ def sync_async_sa_manager(multiple_config) -> Iterator[SQLAlchemyBindManager]:
 @pytest.fixture
 def repository_class(
     sa_bind: Union[SQLAlchemyBind, SQLAlchemyAsyncBind]
-) -> Union[SQLAlchemyAsyncRepository, SQLAlchemyRepository]:
+) -> Type[Union[SQLAlchemyAsyncRepository, SQLAlchemyRepository]]:
     base_class = (
         SQLAlchemyRepository
         if isinstance(sa_bind, SQLAlchemyBind)

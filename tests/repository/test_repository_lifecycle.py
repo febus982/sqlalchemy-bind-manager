@@ -10,7 +10,9 @@ from sqlalchemy_bind_manager.exceptions import (
 from sqlalchemy_bind_manager.repository import SQLAlchemyAsyncRepository
 
 
-def test_repository_fails_if_not_correct_bind(sa_manager, repository_class, model_class):
+def test_repository_fails_if_not_correct_bind(
+    sa_manager, repository_class, model_class
+):
     wrong_bind = "sync" if repository_class is SQLAlchemyAsyncRepository else "async"
 
     with pytest.raises(UnsupportedBind):
