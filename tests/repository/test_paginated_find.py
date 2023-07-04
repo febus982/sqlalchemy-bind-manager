@@ -1,19 +1,21 @@
-async def test_paginated_find_page_length(repository_class, model_class, sa_manager):
-    repo = repository_class(sa_manager.get_bind())
+async def test_paginated_find_page_length(
+    repository_class, model_class, sa_bind, sync_async_wrapper
+):
+    repo = repository_class(bind=sa_bind, model_class=model_class)
     model = model_class(
         name="Someone",
     )
-    await repo.save(model)
+    await sync_async_wrapper(repo.save(model))
     model2 = model_class(
         name="SomeoneElse",
     )
-    await repo.save(model2)
+    await sync_async_wrapper(repo.save(model2))
     model3 = model_class(
         name="StillSomeoneElse",
     )
-    await repo.save(model3)
+    await sync_async_wrapper(repo.save(model3))
 
-    results = await repo.paginated_find(page=1, items_per_page=2)
+    results = await sync_async_wrapper(repo.paginated_find(page=1, items_per_page=2))
     assert len(results.items) == 2
     assert results.items[0].name == "Someone"
     assert results.items[1].name == "SomeoneElse"
@@ -26,24 +28,24 @@ async def test_paginated_find_page_length(repository_class, model_class, sa_mana
 
 
 async def test_paginated_find_max_page_length_is_respected(
-    repository_class, model_class, sa_manager
+    repository_class, model_class, sa_bind, sync_async_wrapper
 ):
-    repo = repository_class(sa_manager.get_bind())
+    repo = repository_class(bind=sa_bind, model_class=model_class)
     repo._max_query_limit = 2
     model = model_class(
         name="Someone",
     )
-    await repo.save(model)
+    await sync_async_wrapper(repo.save(model))
     model2 = model_class(
         name="SomeoneElse",
     )
-    await repo.save(model2)
+    await sync_async_wrapper(repo.save(model2))
     model3 = model_class(
         name="StillSomeoneElse",
     )
-    await repo.save(model3)
+    await sync_async_wrapper(repo.save(model3))
 
-    results = await repo.paginated_find(page=1, items_per_page=50)
+    results = await sync_async_wrapper(repo.paginated_find(page=1, items_per_page=50))
     assert len(results.items) == 2
     assert results.items[0].name == "Someone"
     assert results.items[1].name == "SomeoneElse"
@@ -55,22 +57,24 @@ async def test_paginated_find_max_page_length_is_respected(
     assert results.page_info.has_previous_page is False
 
 
-async def test_paginated_find_last_page(repository_class, model_class, sa_manager):
-    repo = repository_class(sa_manager.get_bind())
+async def test_paginated_find_last_page(
+    repository_class, model_class, sa_bind, sync_async_wrapper
+):
+    repo = repository_class(bind=sa_bind, model_class=model_class)
     model = model_class(
         name="Someone",
     )
-    await repo.save(model)
+    await sync_async_wrapper(repo.save(model))
     model2 = model_class(
         name="SomeoneElse",
     )
-    await repo.save(model2)
+    await sync_async_wrapper(repo.save(model2))
     model3 = model_class(
         name="StillSomeoneElse",
     )
-    await repo.save(model3)
+    await sync_async_wrapper(repo.save(model3))
 
-    results = await repo.paginated_find(page=2, items_per_page=2)
+    results = await sync_async_wrapper(repo.paginated_find(page=2, items_per_page=2))
     assert len(results.items) == 1
     assert results.items[0].name == "StillSomeoneElse"
     assert results.page_info.page == 2
@@ -82,23 +86,23 @@ async def test_paginated_find_last_page(repository_class, model_class, sa_manage
 
 
 async def test_paginated_find_after_last_page(
-    repository_class, model_class, sa_manager
+    repository_class, model_class, sa_bind, sync_async_wrapper
 ):
-    repo = repository_class(sa_manager.get_bind())
+    repo = repository_class(bind=sa_bind, model_class=model_class)
     model = model_class(
         name="Someone",
     )
-    await repo.save(model)
+    await sync_async_wrapper(repo.save(model))
     model2 = model_class(
         name="SomeoneElse",
     )
-    await repo.save(model2)
+    await sync_async_wrapper(repo.save(model2))
     model3 = model_class(
         name="StillSomeoneElse",
     )
-    await repo.save(model3)
+    await sync_async_wrapper(repo.save(model3))
 
-    results = await repo.paginated_find(page=4, items_per_page=2)
+    results = await sync_async_wrapper(repo.paginated_find(page=4, items_per_page=2))
     assert len(results.items) == 0
     assert results.page_info.page == 0
     assert results.page_info.items_per_page == 2
@@ -108,24 +112,24 @@ async def test_paginated_find_after_last_page(
 
 
 async def test_paginated_find_no_result_filters(
-    repository_class, model_class, sa_manager
+    repository_class, model_class, sa_bind, sync_async_wrapper
 ):
-    repo = repository_class(sa_manager.get_bind())
+    repo = repository_class(bind=sa_bind, model_class=model_class)
     model = model_class(
         name="Someone",
     )
-    await repo.save(model)
+    await sync_async_wrapper(repo.save(model))
     model2 = model_class(
         name="SomeoneElse",
     )
-    await repo.save(model2)
+    await sync_async_wrapper(repo.save(model2))
     model3 = model_class(
         name="StillSomeoneElse",
     )
-    await repo.save(model3)
+    await sync_async_wrapper(repo.save(model3))
 
-    results = await repo.paginated_find(
-        page=1, items_per_page=2, search_params={"name": "Goofy"}
+    results = await sync_async_wrapper(
+        repo.paginated_find(page=1, items_per_page=2, search_params={"name": "Goofy"})
     )
     assert len(results.items) == 0
     assert results.page_info.page == 0
