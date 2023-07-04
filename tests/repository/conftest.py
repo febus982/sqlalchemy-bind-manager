@@ -1,5 +1,5 @@
 import os
-from typing import Iterator
+from typing import Iterator, Union
 from uuid import uuid4
 
 import pytest
@@ -9,6 +9,11 @@ from sqlalchemy_bind_manager import (
     SQLAlchemyAsyncConfig,
     SQLAlchemyBindManager,
     SQLAlchemyConfig,
+)
+from sqlalchemy_bind_manager._bind_manager import SQLAlchemyAsyncBind, SQLAlchemyBind
+from sqlalchemy_bind_manager._repository import (
+    SQLAlchemyAsyncRepository,
+    SQLAlchemyRepository,
 )
 
 
@@ -39,3 +44,16 @@ def sync_async_sa_manager(multiple_config) -> Iterator[SQLAlchemyBindManager]:
         pass
 
     clear_mappers()
+
+
+@pytest.fixture
+def repository_class(
+    sa_bind: Union[SQLAlchemyBind, SQLAlchemyAsyncBind]
+) -> Union[SQLAlchemyAsyncRepository, SQLAlchemyRepository]:
+    base_class = (
+        SQLAlchemyRepository
+        if isinstance(sa_bind, SQLAlchemyBind)
+        else SQLAlchemyAsyncRepository
+    )
+
+    return base_class
