@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
 
 from sqlalchemy_bind_manager._bind_manager import SQLAlchemyAsyncBind, SQLAlchemyBind
-from sqlalchemy_bind_manager._transaction_handler import (
+from sqlalchemy_bind_manager._session_handler import (
     AsyncSessionHandler,
     SessionHandler,
 )

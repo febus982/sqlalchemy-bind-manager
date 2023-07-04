@@ -1,7 +1,7 @@
 from unittest.mock import AsyncMock, MagicMock, patch
 
 from sqlalchemy_bind_manager._bind_manager import SQLAlchemyAsyncBind
-from sqlalchemy_bind_manager._transaction_handler import (
+from sqlalchemy_bind_manager._session_handler import (
     AsyncSessionHandler,
     SessionHandler,
 )

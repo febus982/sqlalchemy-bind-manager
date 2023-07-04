@@ -3,7 +3,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 from sqlalchemy.exc import InvalidRequestError
 
-from sqlalchemy_bind_manager._transaction_handler import SessionHandler
+from sqlalchemy_bind_manager._session_handler import SessionHandler
 from sqlalchemy_bind_manager._unit_of_work import UnitOfWork
 
 

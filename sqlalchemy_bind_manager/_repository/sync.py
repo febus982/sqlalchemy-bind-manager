@@ -16,7 +16,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from .._bind_manager import SQLAlchemyBind
-from .._transaction_handler import SessionHandler
+from .._session_handler import SessionHandler
 from ..exceptions import InvalidConfig, ModelNotFound
 from .base_repository import (
     BaseRepository,
