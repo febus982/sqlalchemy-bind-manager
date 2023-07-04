@@ -1,7 +1,7 @@
 import inspect
 import os
 from contextlib import _AsyncGeneratorContextManager, asynccontextmanager
-from typing import Tuple, Type
+from typing import Tuple, Type, Union
 from uuid import uuid4
 
 import pytest
@@ -9,7 +9,17 @@ from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import clear_mappers, relationship
 
 from sqlalchemy_bind_manager import SQLAlchemyAsyncConfig, SQLAlchemyConfig
-from sqlalchemy_bind_manager._bind_manager import SQLAlchemyBind, SQLAlchemyBindManager
+from sqlalchemy_bind_manager._bind_manager import (
+    SQLAlchemyAsyncBind,
+    SQLAlchemyBind,
+    SQLAlchemyBindManager,
+)
+from sqlalchemy_bind_manager._repository import (
+    SQLAlchemyAsyncRepository,
+    SQLAlchemyRepository,
+)
+from sqlalchemy_bind_manager._session_handler import AsyncSessionHandler, SessionHandler
+from sqlalchemy_bind_manager.repository import AsyncUnitOfWork, UnitOfWork
 
 
 @pytest.fixture
@@ -148,3 +158,30 @@ async def model_classes(sa_bind) -> Tuple[Type, Type]:
 @pytest.fixture
 async def model_class(model_classes: Tuple[Type, Type]) -> Type:
     return model_classes[0]
+
+
+@pytest.fixture
+def session_handler_class(sa_bind):
+    return (
+        AsyncSessionHandler
+        if isinstance(sa_bind, SQLAlchemyAsyncBind)
+        else SessionHandler
+    )
+
+
+@pytest.fixture
+def repository_class(
+    sa_bind: Union[SQLAlchemyBind, SQLAlchemyAsyncBind]
+) -> Type[Union[SQLAlchemyAsyncRepository, SQLAlchemyRepository]]:
+    base_class = (
+        SQLAlchemyRepository
+        if isinstance(sa_bind, SQLAlchemyBind)
+        else SQLAlchemyAsyncRepository
+    )
+
+    return base_class
+
+
+@pytest.fixture
+def uow_class(sa_bind):
+    return AsyncUnitOfWork if isinstance(sa_bind, SQLAlchemyAsyncBind) else UnitOfWork
