@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_scoped_session
 from sqlalchemy.orm import Session, scoped_session
 
 from sqlalchemy_bind_manager._bind_manager import SQLAlchemyAsyncBind
+from sqlalchemy_bind_manager._session_handler import AsyncSessionHandler, SessionHandler
 
 
 async def test_session_is_removed_on_cleanup(session_handler_class, sa_bind):
@@ -25,15 +26,9 @@ async def test_session_is_removed_on_cleanup(session_handler_class, sa_bind):
     mocked_remove.assert_called_once()
 
 
-async def test_session_is_removed_on_cleanup_even_if_loop_is_not_running(
-    session_handler_class, sa_bind
-):
-    # This test makes sense only for async implementation
-    if not isinstance(sa_bind, SQLAlchemyAsyncBind):
-        return
-
+async def test_session_is_removed_on_cleanup_even_if_loop_is_not_running(sa_manager):
     # Running the test without a loop will trigger the loop creation
-    sh = session_handler_class(sa_bind)
+    sh = AsyncSessionHandler(sa_manager.get_bind("async"))
     original_session_remove = sh.scoped_session.remove
 
     with patch.object(
@@ -104,15 +99,9 @@ async def test_rollback_is_called_if_commit_fails(
     assert mocked_session.rollback.call_count == int(commit_fails)
 
 
-async def test_session_is_different_on_different_asyncio_tasks(
-    session_handler_class, sa_bind
-):
-    # This test makes sense only for async implementation
-    if not isinstance(sa_bind, SQLAlchemyAsyncBind):
-        return
-
+async def test_session_is_different_on_different_asyncio_tasks(sa_manager):
     # Running the test without a loop will trigger the loop creation
-    sh = session_handler_class(sa_bind)
+    sh = AsyncSessionHandler(sa_manager.get_bind("async"))
 
     s1 = sh.scoped_session()
     s2 = sh.scoped_session()
@@ -134,15 +123,9 @@ async def test_session_is_different_on_different_asyncio_tasks(
     assert s[0] is not s[1]
 
 
-async def test_session_is_different_on_different_threads(
-    session_handler_class, sa_bind
-):
-    # This test makes sense only for sync implementation
-    if isinstance(sa_bind, SQLAlchemyAsyncBind):
-        return
-
+async def test_session_is_different_on_different_threads(sa_manager):
     # Running the test without a loop will trigger the loop creation
-    sh = session_handler_class(sa_bind)
+    sh = SessionHandler(sa_manager.get_bind("sync"))
 
     s1 = sh.scoped_session()
     s2 = sh.scoped_session()
