@@ -45,7 +45,7 @@ nav:
       - Session usage: manager/session.md
       - Alembic integration: manager/alembic.md
   - Repository:
-      - Repository usage: repository/repository.md
+      - Repository usage: repository/usage.md
       - Unit of work: repository/uow.md
   - Components life cycle: lifecycle.md
 
