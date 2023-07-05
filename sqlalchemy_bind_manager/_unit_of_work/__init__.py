@@ -16,24 +16,24 @@ from sqlalchemy_bind_manager.repository import (
 
 
 class UnitOfWork:
-    _transaction_handler: SessionHandler
+    _session_handler: SessionHandler
 
     def __init__(
         self, bind: SQLAlchemyBind, repositories: Iterable[Type[SQLAlchemyRepository]]
     ) -> None:
         super().__init__()
-        self._transaction_handler = SessionHandler(bind)
+        self._session_handler = SessionHandler(bind)
         for r in repositories:
-            setattr(self, r.__name__, r(session=self._transaction_handler.session))
+            setattr(self, r.__name__, r(session=self._session_handler.scoped_session()))
 
     @contextmanager
     def transaction(self, read_only: bool = False) -> Iterator[Session]:
-        with self._transaction_handler.get_session(read_only=read_only) as _s:
+        with self._session_handler.get_session(read_only=read_only) as _s:
             yield _s
 
 
 class AsyncUnitOfWork:
-    _transaction_handler: AsyncSessionHandler
+    _session_handler: AsyncSessionHandler
 
     def __init__(
         self,
@@ -41,11 +41,11 @@ class AsyncUnitOfWork:
         repositories: Iterable[Type[SQLAlchemyAsyncRepository]],
     ) -> None:
         super().__init__()
-        self._transaction_handler = AsyncSessionHandler(bind)
+        self._session_handler = AsyncSessionHandler(bind)
         for r in repositories:
-            setattr(self, r.__name__, r(session=self._transaction_handler.session))
+            setattr(self, r.__name__, r(session=self._session_handler.scoped_session()))
 
     @asynccontextmanager
     async def transaction(self, read_only: bool = False) -> AsyncIterator[AsyncSession]:
-        async with self._transaction_handler.get_session(read_only=read_only) as _s:
+        async with self._session_handler.get_session(read_only=read_only) as _s:
             yield _s

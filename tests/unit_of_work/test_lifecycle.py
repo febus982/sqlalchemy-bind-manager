@@ -17,4 +17,6 @@ async def test_repositories_are_initialised_with_uow_session(
         repo = getattr(uow, repo_class.__name__)
         assert not hasattr(repo, "_session_handler")
         assert hasattr(repo, "_external_session")
-        assert getattr(repo, "_external_session") is uow._transaction_handler.session
+        assert (
+            getattr(repo, "_external_session") is uow._session_handler.scoped_session()
+        )
