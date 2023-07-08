@@ -34,12 +34,16 @@ What you can do is:
 * Save the repositories in global variables and start a thread / asyncio task to handle
   a scoped request (e.g. one thread per HTTP request)
 
-What you cannot do is:
+What you should not do is:
 
 * Get a list of models
 * Save the models using `save()` in parallel threads / tasks (each task will have a different session)
 
-/// tip | The recommendation is of course to try to use a single repository instance, where possible.
+/// warning | Remember: Concurrent writes to the db can cause undesired scenarios like locks and deadlocks!
+
+///
+
+/// tip | The recommendation is to try to use a single repository instance, where possible.
 
 For example a strategy similar to this would be optimal, if possible:
 

@@ -10,20 +10,21 @@ be used for repository operations.
 ```python
 class MyRepo(SQLAlchemyRepository):
     _model = MyModel
-class MyOtherRepo(SQLAlchemyRepository):
-    _model = MyOtherModel
 
 bind = sa_manager.get_bind()
-uow = UnitOfWork(bind, (MyRepo, MyOtherRepo))
+uow = UnitOfWork(bind)
+uow.register_repository("repo_a", MyRepo)
+# args and kwargs are forwarded so we can also use directly `SQLAlchemyRepository` class
+uow.register_repository("repo_b", SQLAlchemyRepository, MyOtherModel)
 
 with uow.transaction():
-    uow.MyRepo.save(some_model)
-    uow.MyOtherRepo.save(some_other_model)
+    uow.repository("repo_a").save(some_model)
+    uow.repository("repo_b").save(some_other_model)
 
 # Optionally disable the commit/rollback handling
 with uow.transaction(read_only=True):
-    model1 = uow.MyRepo.get(1)
-    model2 = uow.MyOtherRepo.get(2)
+    model1 = uow.repository("repo_a").get(1)
+    model2 = uow.repository("repo_b").get(2)
 ```
 
 /// admonition | The unit of work implementation is still experimental.
