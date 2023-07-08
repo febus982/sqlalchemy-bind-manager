@@ -33,7 +33,7 @@ class BaseUnitOfWork(Generic[REPOSITORY, SESSION_HANDLER], ABC):
         **kwargs,
     ):
         kwargs.pop("session", None)
-        self._repositories[name] = repository_class(
+        self._repositories[name] = repository_class(  # type: ignore
             *args,
             session=self._session_handler.scoped_session(),
             model_class=model_class,
