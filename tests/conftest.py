@@ -1,5 +1,4 @@
 import inspect
-import os
 from contextlib import _AsyncGeneratorContextManager, asynccontextmanager
 from typing import Tuple, Type, Union
 from uuid import uuid4
@@ -80,29 +79,18 @@ def sync_async_cm_wrapper():
 
 @pytest.fixture
 def sa_manager() -> SQLAlchemyBindManager:
-    test_sync_db_path = f"./{uuid4()}.db"
-    test_async_db_path = f"./{uuid4()}.db"
     config = {
         "sync": SQLAlchemyConfig(
-            engine_url=f"sqlite:///{test_sync_db_path}",
+            engine_url="sqlite://",
             engine_options=dict(connect_args={"check_same_thread": False}),
         ),
         "async": SQLAlchemyAsyncConfig(
-            engine_url=f"sqlite+aiosqlite:///{test_sync_db_path}",
+            engine_url="sqlite+aiosqlite://",
             engine_options=dict(connect_args={"check_same_thread": False}),
         ),
     }
 
     yield SQLAlchemyBindManager(config)
-    try:
-        os.unlink(test_sync_db_path)
-    except FileNotFoundError:
-        pass
-
-    try:
-        os.unlink(test_async_db_path)
-    except FileNotFoundError:
-        pass
 
     clear_mappers()
 
