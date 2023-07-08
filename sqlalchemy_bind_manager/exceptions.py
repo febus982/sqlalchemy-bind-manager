@@ -24,3 +24,7 @@ class UnmappedProperty(Exception):
 
 class SessionNotFound(Exception):
     pass
+
+
+class RepositoryNotFound(Exception):
+    pass

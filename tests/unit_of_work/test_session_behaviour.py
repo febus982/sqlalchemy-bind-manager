@@ -19,14 +19,14 @@ async def test_commit_triggers_based_on_external_uow_context_manager(
     class ChildRepoClass(repository_class):
         _model = model_classes[1]
 
-    repository_classes = [RepoClass, ChildRepoClass]
-
     with patch.object(
         session_handler_class, "commit", return_value=None
     ) as mocked_uow_commit:
-        uow = uow_class(sa_bind, repository_classes)
-        repo1 = getattr(uow, repository_classes[0].__name__)
-        repo2 = getattr(uow, repository_classes[1].__name__)
+        uow = uow_class(sa_bind)
+        uow.register_repository(RepoClass.__name__, RepoClass)
+        uow.register_repository(ChildRepoClass.__name__, ChildRepoClass)
+        repo1 = uow.repository(RepoClass.__name__)
+        repo2 = uow.repository(ChildRepoClass.__name__)
 
         # Populate a database entry to be used for tests
         model1 = model_classes[0](
@@ -56,10 +56,11 @@ async def test_models_are_persisted_using_external_uow(
     class OtherRepoClass(repository_class):
         _model = model_classes[0]
 
-    repository_classes = [RepoClass, OtherRepoClass]
-    uow = uow_class(sa_bind, repository_classes)
-    repo1 = getattr(uow, repository_classes[0].__name__)
-    repo2 = getattr(uow, repository_classes[1].__name__)
+    uow = uow_class(sa_bind)
+    uow.register_repository(RepoClass.__name__, RepoClass)
+    uow.register_repository(OtherRepoClass.__name__, OtherRepoClass)
+    repo1 = uow.repository(RepoClass.__name__)
+    repo2 = uow.repository(OtherRepoClass.__name__)
 
     # Populate a database entry to be used for tests
     model1 = model_classes[0](
@@ -87,10 +88,9 @@ async def test_uow_repository_operations_fail_without_transaction(
     class RepoClass(repository_class):
         _model = model_classes[0]
 
-    repository_classes = [RepoClass]
-
-    uow = uow_class(sa_bind, repository_classes)
-    repo1 = getattr(uow, repository_classes[0].__name__)
+    uow = uow_class(sa_bind)
+    uow.register_repository(RepoClass.__name__, RepoClass)
+    repo1 = uow.repository(RepoClass.__name__)
 
     # Populate a database entry to be used for tests
     model1 = model_classes[0](
@@ -115,11 +115,11 @@ async def test_models_operations_with_external_session(
     class OtherRepoClass(repository_class):
         _model = model_classes[0]
 
-    repository_classes = [RepoClass, OtherRepoClass]
-
-    uow = uow_class(sa_bind, repository_classes)
-    repo1 = getattr(uow, repository_classes[0].__name__)
-    repo2 = getattr(uow, repository_classes[1].__name__)
+    uow = uow_class(sa_bind)
+    uow.register_repository(RepoClass.__name__, RepoClass)
+    uow.register_repository(OtherRepoClass.__name__, OtherRepoClass)
+    repo1 = uow.repository(RepoClass.__name__)
+    repo2 = uow.repository(OtherRepoClass.__name__)
 
     # Populate a database entry to be used for tests
     model1 = model_classes[0](
