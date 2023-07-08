@@ -182,13 +182,13 @@ be used for repository operations, **assumed the same bind is used for all the r
 ```python
 class MyRepo(SQLAlchemyRepository):
     _model = MyModel
-class MyOtherRepo(SQLAlchemyRepository):
-    _model = MyOtherModel
 
 bind = sa_manager.get_bind()
-uow = UnitOfWork(bind, (MyRepo, MyOtherRepo))
+uow = UnitOfWork(bind)
+uow.register_repository("repo_a", MyRepo)
+uow.register_repository("repo_b", SQLAlchemyRepository, MyOtherModel)
 
 with uow.transaction():
-    uow.MyRepo.save(some_model)
-    uow.MyOtherRepo.save(some_other_model)
+    uow.repository("repo_a").save(some_model)
+    uow.repository("repo_b").save(some_other_model)
 ```
