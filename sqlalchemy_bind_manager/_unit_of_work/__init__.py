@@ -29,9 +29,15 @@ class BaseUnitOfWork(Generic[REPOSITORY, SESSION_HANDLER], ABC):
         name: str,
         repository_class: Type[REPOSITORY],
         model_class: Union[Type, None] = None,
+        *args,
+        **kwargs,
     ):
+        kwargs.pop("session", None)
         self._repositories[name] = repository_class(
-            session=self._session_handler.scoped_session(), model_class=model_class
+            *args,
+            session=self._session_handler.scoped_session(),
+            model_class=model_class,
+            **kwargs,
         )
 
     def repository(self, name: str) -> REPOSITORY:

@@ -1,3 +1,5 @@
+from unittest.mock import MagicMock
+
 import pytest
 
 from sqlalchemy_bind_manager.exceptions import RepositoryNotFound
@@ -31,3 +33,54 @@ async def test_raises_exception_if_repository_not_found(sa_bind, uow_class):
     uow = uow_class(bind=sa_bind)
     with pytest.raises(RepositoryNotFound):
         uow.repository("Not existing")
+
+
+@pytest.mark.parametrize(
+    ["submitted_args", "submitted_kwargs", "received_args", "received_kwargs"],
+    [
+        pytest.param(
+            ("1", "2"),
+            dict(a="b"),
+            ("2",),
+            dict(model_class="1", a="b"),
+            id="first_arg_model_class_if_no_kwarg",
+        ),
+        pytest.param(
+            tuple([]),
+            dict(a="b", model_class="c"),
+            tuple([]),
+            dict(model_class="c", a="b"),
+            id="model_class_rearranged_if_in_kwargs",
+        ),
+        pytest.param(
+            tuple([]),
+            dict(a="b"),
+            tuple([]),
+            dict(model_class=None, a="b"),
+            id="model_class_default_to_none",
+        ),
+        pytest.param(
+            tuple([]),
+            dict(a="b", session="c"),
+            tuple([]),
+            dict(model_class=None, a="b"),
+            id="session_removed_from_kwargs",
+        ),
+    ],
+)
+async def test_additional_arguments_are_forwarded(
+    sa_bind,
+    uow_class,
+    submitted_args: tuple,
+    submitted_kwargs: dict,
+    received_args: tuple,
+    received_kwargs: dict,
+):
+    repo = MagicMock()
+
+    uow = uow_class(bind=sa_bind)
+    uow.register_repository("r", repo, *submitted_args, **submitted_kwargs)
+
+    repo.assert_called_once_with(
+        *received_args, session=uow._session_handler.scoped_session(), **received_kwargs
+    )
