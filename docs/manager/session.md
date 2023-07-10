@@ -11,7 +11,7 @@ with sa_manager.get_session() as session:
     session.commit()
 
 # We can also get the `session_class` property of the bind,
-# but t
+# but this is not recommended.
 with sa_manager.get_bind().session_class()() as session:
     session.add(o)
     session.commit()

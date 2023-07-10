@@ -34,7 +34,8 @@ however this might be necessary until version `1.0` is released.
 
 [//]: # (https://github.com/mkenney/software-guides/blob/master/STABILITY-BADGES.md)
 * [![stability-beta](https://img.shields.io/badge/stability-beta-33bbff.svg)](https://github.com/mkenney/software-guides/blob/master/STABILITY-BADGES.md#beta) **SQLAlchemy manager:** Implementation is mostly finalised, needs testing in production.
-* [![stability-beta](https://img.shields.io/badge/stability-beta-33bbff.svg)](https://github.com/mkenney/software-guides/blob/master/STABILITY-BADGES.md#beta) **Repository / Unit of work:** Implementation is mostly finalised, needs testing in production.
+* [![stability-beta](https://img.shields.io/badge/stability-beta-33bbff.svg)](https://github.com/mkenney/software-guides/blob/master/STABILITY-BADGES.md#beta) **Repository:** Implementation is mostly finalised, needs testing in production.
+* [![stability-experimental](https://img.shields.io/badge/stability-experimental-orange.svg)](https://github.com/mkenney/software-guides/blob/master/STABILITY-BADGES.md#experimental) **Unit of work:** The implementation is working but limited to repositories using the same engine. Distributed transactions across different engines are not yet supported.
 
 ## Installation
 
