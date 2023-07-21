@@ -73,7 +73,7 @@ o = MyModel()
 o.name = "John"
 with sa_manager.get_session() as session:
     session.add(o)
-    session.commit()
+    await session.commit()
 ```
 
 /// details | Long lived sessions and multithreading
