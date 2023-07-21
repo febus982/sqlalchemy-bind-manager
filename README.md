@@ -130,7 +130,7 @@ This will make sure we have an `AsyncEngine` and an `AsyncSession` are initialis
 ```python
 async with sa_manager.get_session() as session:
     session.add(o)
-    session.commit()
+    await session.commit()
 ```
 
 Note that async implementation has several differences from the sync one, make sure
