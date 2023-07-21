@@ -10,13 +10,19 @@ class MyModel(model_declarative_base):
     pass
 
 # Direct usage
-repo_instance = SQLAlchemyRepository(sqlalchemy_bind_manager.get_bind(), model_class=MyModel)
+repo_instance = SQLAlchemyRepository(
+    sa_manager.get_bind(),
+    model_class=MyModel
+)
 
+# Child class usage (when you need to implement custom repository methods)
 class ModelRepository(SQLAlchemyRepository[MyModel]):
     _model = MyModel
     
     def _some_custom_method_implemented(self):
         ...
+
+repo_instance_2 = ModelRepository(sa_manager.get_bind())
 ```
 
 The classes provide some common use methods:
@@ -82,7 +88,7 @@ otherwise we wouldn't need one).
 
 Each Repository instance create an internal scoped session. The session gets
 automatically closed when the Repository instance is not referenced by any variable (and the
-garbage collector clean it up)
+garbage collector cleans it up)
 
 In this way we ensure the `Session` we use is isolated, and the same for all the operations we do with the
 same Repository. 
