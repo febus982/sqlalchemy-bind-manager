@@ -82,7 +82,7 @@ The interfaces are exactly the same, however you'll need to `await` the relevant
 ```python
 async with sa_manager.get_session() as session:
     session.add(o)
-    session.commit()
+    await session.commit()
 ```
 
 Note that async implementation has several differences from the sync one, make sure
