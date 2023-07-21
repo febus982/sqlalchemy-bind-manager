@@ -26,6 +26,7 @@ The scope of this package is to:
 
 * Be able to setup a basic application with a few lines of code
 * Avoid common pitfalls found in other plugins for session lifecycle
+* Allow to build a [decoupled application](https://github.com/febus982/bootstrap-python-fastapi) without being bound to HTTP frameworks
 
 ## Components maturity
 
