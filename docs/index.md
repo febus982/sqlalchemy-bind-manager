@@ -86,5 +86,5 @@ session = sa_manager.get_session()
 ```
 
 This can create unexpected because of global variables and multi-threading.
-More details can be found in the [session page](/manager/session/#note-on-multithreaded-applications)
+More details can be found in the [session page](manager/session/#note-on-multithreaded-applications)
 ///
