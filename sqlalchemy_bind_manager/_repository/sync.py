@@ -58,11 +58,13 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
             yield self._external_session
 
     def save(self, instance: MODEL) -> MODEL:
+        self._fail_if_invalid_models([instance])
         with self._get_session() as session:
             session.add(instance)
         return instance
 
     def save_many(self, instances: Iterable[MODEL]) -> Iterable[MODEL]:
+        self._fail_if_invalid_models(instances)
         with self._get_session() as session:
             session.add_all(instances)
         return instances
@@ -83,10 +85,12 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
             return [x for x in session.execute(stmt).scalars()]
 
     def delete(self, instance: MODEL) -> None:
+        self._fail_if_invalid_models([instance])
         with self._get_session() as session:
             session.delete(instance)
 
     def delete_many(self, instances: Iterable[MODEL]) -> None:
+        self._fail_if_invalid_models(instances)
         with self._get_session() as session:
             for model in instances:
                 session.delete(model)

@@ -66,6 +66,7 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
             yield self._external_session
 
     async def save(self, instance: MODEL) -> MODEL:
+        self._fail_if_invalid_models([instance])
         async with self._get_session() as session:
             session.add(instance)
         return instance
@@ -74,6 +75,7 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         self,
         instances: Iterable[MODEL],
     ) -> Iterable[MODEL]:
+        self._fail_if_invalid_models(instances)
         async with self._get_session() as session:
             session.add_all(instances)
         return instances
@@ -94,10 +96,12 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
             return [x for x in (await session.execute(stmt)).scalars()]
 
     async def delete(self, instance: MODEL) -> None:
+        self._fail_if_invalid_models([instance])
         async with self._get_session() as session:
             await session.delete(instance)
 
     async def delete_many(self, instances: Iterable[MODEL]) -> None:
+        self._fail_if_invalid_models(instances)
         async with self._get_session() as session:
             for instance in instances:
                 await session.delete(instance)

@@ -318,3 +318,7 @@ class BaseRepository(Generic[MODEL], ABC):
             raise NotImplementedError("Composite primary keys are not supported.")
 
         return primary_keys[0].name
+
+    def _fail_if_invalid_models(self, objects: Iterable[MODEL]) -> None:
+        if [x for x in objects if not isinstance(x, self._model)]:
+            raise InvalidModel("Cannot handle models not belonging to this repository")
