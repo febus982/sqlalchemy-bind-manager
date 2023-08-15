@@ -39,26 +39,26 @@ build-backend = "poetry_dynamic_versioning.backend"
 
 [tool.poetry.dependencies]
 python = ">=3.8,<3.12"
-pydantic = "~1.10.2"
+pydantic = ">=1.10.2, <3.0.0"
 SQLAlchemy = { version = "~2.0.0", extras = ["asyncio", "mypy"] }
 
 [tool.poetry.group.dev]
 optional = true
 
 [tool.poetry.group.dev.dependencies]
-aiosqlite = "~0.18.0"
-coverage = "~6.5.0"
-black = "~22.10.0"
-mkdocs = "~1.4.3"
-mkdocs-material = "~9.1.16"
-mypy = "~0.990"
-pytest = "~7.2.0"
-pytest-asyncio = "~0.20.3"
-pytest-cov = "~4.0.0"
-pytest-factoryboy = "~2.5.0"
-pytest-xdist = "~3.0.2"
-ruff = "~0.0.263"
-pymdown-extensions = "^10.0.1"
+aiosqlite = ">=0.18.0"
+coverage = ">=6.5.0"
+black = ">=22.10.0"
+mkdocs = ">=1.4.3"
+mkdocs-material = ">=9.1.16"
+mypy = ">=0.990"
+pytest = ">=7.2.0"
+pytest-asyncio = ">=0.20.3"
+pytest-cov = ">=4.0.0"
+pytest-factoryboy = ">=2.5.0"
+pytest-xdist = ">=3.0.2"
+ruff = ">=0.0.263"
+pymdown-extensions = ">=10.0.1"
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"

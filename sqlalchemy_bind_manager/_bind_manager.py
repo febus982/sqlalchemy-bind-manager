@@ -19,15 +19,15 @@ from sqlalchemy_bind_manager.exceptions import (
 
 
 class SQLAlchemyConfig(BaseModel):
-    engine_options: Union[dict, None]
     engine_url: str
-    session_options: Union[dict, None]
+    engine_options: Union[dict, None] = None
+    session_options: Union[dict, None] = None
 
 
 class SQLAlchemyAsyncConfig(BaseModel):
-    engine_options: Union[dict, None]
     engine_url: str
-    session_options: Union[dict, None]
+    engine_options: Union[dict, None] = None
+    session_options: Union[dict, None] = None
 
 
 class SQLAlchemyBind(BaseModel):
