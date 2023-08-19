@@ -47,6 +47,26 @@ def test_session_is_removed_on_cleanup_even_if_loop_is_not_running(sa_manager):
     mocked_close.assert_called_once()
 
 
+def test_session_is_removed_on_cleanup_even_if_loop_search_errors_out(sa_manager):
+    # Running the test without a loop will trigger the loop creation
+    sh = AsyncSessionHandler(sa_manager.get_bind("async"))
+    original_session_remove = sh.scoped_session.remove
+
+    with patch.object(
+        sh.scoped_session,
+        "remove",
+        wraps=original_session_remove,
+    ) as mocked_close, patch(
+        "asyncio.get_event_loop",
+        side_effect=RuntimeError(),
+    ) as mocked_get_event_loop:
+        # This should trigger the garbage collector and close the session
+        sh = None
+
+    mocked_get_event_loop.assert_called_once()
+    mocked_close.assert_called_once()
+
+
 @pytest.mark.parametrize("read_only_flag", [True, False])
 async def test_commit_is_called_only_if_not_read_only(
     read_only_flag,
