@@ -23,7 +23,7 @@ Once the bind manager is initialised we can retrieve and use the SQLAlchemyBind 
 The `SQLAlchemyBind` class has the following attributes:
 
 * `engine`: The initialised SQLALchemy `Engine`
-* `model_declarative_base`: A base class that can be used to create [declarative models](https://docs.sqlalchemy.org/en/14/orm/mapping_styles.html#declarative-mapping)
+* `declarative_base`: A base class that can be used to create [declarative models](https://docs.sqlalchemy.org/en/14/orm/mapping_styles.html#declarative-mapping)
 * `registry_mapper`: The `registry` associated with the `engine`. It can be used with Alembic or to setup [imperative mapping](https://docs.sqlalchemy.org/en/14/orm/mapping_styles.html#imperative-mapping)
 * `session_class`: The class built by [sessionmaker()](https://docs.sqlalchemy.org/en/14/orm/session_api.html#sqlalchemy.orm.sessionmaker), either `Session` or `AsyncSession`
 

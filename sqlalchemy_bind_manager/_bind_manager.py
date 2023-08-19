@@ -1,6 +1,6 @@
 from typing import Mapping, MutableMapping, Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy.engine import Engine
 from sqlalchemy.ext.asyncio import (
@@ -10,7 +10,7 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
 )
 from sqlalchemy.orm import Session, sessionmaker
-from sqlalchemy.orm.decl_api import registry
+from sqlalchemy.orm.decl_api import DeclarativeMeta, registry
 
 from sqlalchemy_bind_manager.exceptions import (
     InvalidConfig,
@@ -32,22 +32,20 @@ class SQLAlchemyAsyncConfig(BaseModel):
 
 class SQLAlchemyBind(BaseModel):
     engine: Engine
-    model_declarative_base: type
+    declarative_base: DeclarativeMeta
     registry_mapper: registry
     session_class: sessionmaker[Session]
 
-    class Config:
-        arbitrary_types_allowed = True
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
 
 class SQLAlchemyAsyncBind(BaseModel):
     engine: AsyncEngine
-    model_declarative_base: type
+    declarative_base: DeclarativeMeta
     registry_mapper: registry
     session_class: async_sessionmaker[AsyncSession]
 
-    class Config:
-        arbitrary_types_allowed = True
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
 
 _SQLAlchemyConfig = Union[
@@ -123,7 +121,7 @@ class SQLAlchemyBindManager:
                 class_=Session,
                 **session_options,
             ),
-            model_declarative_base=registry_mapper.generate_base(),
+            declarative_base=registry_mapper.generate_base(),
         )
 
     def __build_async_bind(
@@ -141,7 +139,7 @@ class SQLAlchemyBindManager:
                 bind=engine,
                 **session_options,
             ),
-            model_declarative_base=registry_mapper.generate_base(),
+            declarative_base=registry_mapper.generate_base(),
         )
 
     def get_binds(self) -> Mapping[str, Union[SQLAlchemyBind, SQLAlchemyAsyncBind]]:

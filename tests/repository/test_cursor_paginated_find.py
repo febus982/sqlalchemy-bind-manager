@@ -7,7 +7,7 @@ from sqlalchemy_bind_manager.repository import CursorReference
 
 @pytest.fixture
 async def model_class_string_pk(sa_bind):
-    class MyModel(sa_bind.model_declarative_base):
+    class MyModel(sa_bind.declarative_base):
         __tablename__ = "mymodel_string_pk"
 
         model_id = Column(String, primary_key=True)

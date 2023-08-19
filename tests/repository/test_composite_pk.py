@@ -26,7 +26,7 @@ def sa_manager() -> SQLAlchemyBindManager:
 def model_class_composite_pk(sa_manager) -> Type:
     default_bind = sa_manager.get_bind()
 
-    class MyModel(default_bind.model_declarative_base):
+    class MyModel(default_bind.declarative_base):
         __tablename__ = "mymodel"
         # required in order to access columns with server defaults
         # or SQL expression defaults, subsequent to a flush, without

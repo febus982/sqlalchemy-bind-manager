@@ -72,7 +72,7 @@ Example:
 bind = sa_manager.get_bind()
 
 
-class MyModel(bind.model_declarative_base):
+class MyModel(bind.declarative_base):
     pass
 
 
@@ -144,7 +144,7 @@ The `SQLAlchemyRepository` and `SQLAlchemyAsyncRepository` class can be used dir
 from sqlalchemy_bind_manager.repository import SQLAlchemyRepository
 
 
-class MyModel(model_declarative_base):
+class MyModel(declarative_base):
     pass
 
 # Direct usage
