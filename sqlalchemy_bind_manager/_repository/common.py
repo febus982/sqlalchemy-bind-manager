@@ -3,7 +3,6 @@ from functools import partial
 from typing import Generic, List, TypeVar, Union
 
 from pydantic import BaseModel, StrictInt, StrictStr
-from pydantic.generics import GenericModel
 from sqlalchemy import asc, desc
 
 MODEL = TypeVar("MODEL")
@@ -19,7 +18,7 @@ class PageInfo(BaseModel):
     has_previous_page: bool
 
 
-class PaginatedResult(GenericModel, Generic[MODEL]):
+class PaginatedResult(BaseModel, Generic[MODEL]):
     items: List[MODEL]
     page_info: PageInfo
 
@@ -38,7 +37,7 @@ class CursorPageInfo(BaseModel):
     end_cursor: Union[CursorReference, None] = None
 
 
-class CursorPaginatedResult(GenericModel, Generic[MODEL]):
+class CursorPaginatedResult(BaseModel, Generic[MODEL]):
     items: List[MODEL]
     page_info: CursorPageInfo
 
