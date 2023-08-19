@@ -61,7 +61,7 @@ config = SQLAlchemyConfig(
 sa_manager = SQLAlchemyBindManager(config)
 
 # Declare a model
-class MyModel(sa_manager.get_bind().model_declarative_base):
+class MyModel(sa_manager.get_bind().declarative_base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(30))
 

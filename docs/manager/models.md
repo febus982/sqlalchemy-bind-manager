@@ -10,7 +10,7 @@ from sqlalchemy import String
 
 bind = sa_manager.get_bind()
 
-class MyModel(bind.model_declarative_base):
+class MyModel(bind.declarative_base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(30))
 ```

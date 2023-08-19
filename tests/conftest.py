@@ -102,7 +102,7 @@ def sa_bind(request, sa_manager):
 
 @pytest.fixture
 async def model_classes(sa_bind) -> Tuple[Type, Type]:
-    class ParentModel(sa_bind.model_declarative_base):
+    class ParentModel(sa_bind.declarative_base):
         __tablename__ = "parent_model"
         # required in order to access columns with server defaults
         # or SQL expression defaults, subsequent to a flush, without
@@ -119,7 +119,7 @@ async def model_classes(sa_bind) -> Tuple[Type, Type]:
             lazy="selectin",
         )
 
-    class ChildModel(sa_bind.model_declarative_base):
+    class ChildModel(sa_bind.declarative_base):
         __tablename__ = "child_model"
         # required in order to access columns with server defaults
         # or SQL expression defaults, subsequent to a flush, without

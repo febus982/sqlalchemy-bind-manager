@@ -27,7 +27,7 @@ bind_config = {
 
 sa_manager = SQLAlchemyBindManager(config=bind_config)
 
-class BookModel(sa_manager.get_bind().model_declarative_base):
+class BookModel(sa_manager.get_bind().declarative_base):
     id = Column(Integer)
     title = Column(String)
 ################################################################
