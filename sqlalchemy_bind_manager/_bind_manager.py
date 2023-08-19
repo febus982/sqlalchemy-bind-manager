@@ -1,6 +1,6 @@
 from typing import Mapping, MutableMapping, Union
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy.engine import Engine
 from sqlalchemy.ext.asyncio import (
@@ -36,8 +36,7 @@ class SQLAlchemyBind(BaseModel):
     registry_mapper: registry
     session_class: sessionmaker[Session]
 
-    class Config:
-        arbitrary_types_allowed = True
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
 
 class SQLAlchemyAsyncBind(BaseModel):
@@ -46,8 +45,7 @@ class SQLAlchemyAsyncBind(BaseModel):
     registry_mapper: registry
     session_class: async_sessionmaker[AsyncSession]
 
-    class Config:
-        arbitrary_types_allowed = True
+    model_config = ConfigDict(arbitrary_types_allowed=True)
 
 
 _SQLAlchemyConfig = Union[
