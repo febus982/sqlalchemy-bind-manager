@@ -38,7 +38,7 @@ requires = ["poetry-core", "poetry-dynamic-versioning"]
 build-backend = "poetry_dynamic_versioning.backend"
 
 [tool.poetry.dependencies]
-python = ">=3.8,<3.12"
+python = ">=3.8,<3.13"
 pydantic = "^2.1.1"
 SQLAlchemy = { version = "~2.0.0", extras = ["asyncio", "mypy"] }
 
