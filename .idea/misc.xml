@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="Black">
+    <option name="sdkName" value="Poetry (sqlalchemy-bind-manager)" />
+  </component>
   <component name="BlackConnectSettings" triggerOnEachSave="true" />
   <component name="ProjectRootManager" version="2" project-jdk-name="Poetry (sqlalchemy-bind-manager)" project-jdk-type="Python SDK" />
   <component name="PythonCompatibilityInspectionAdvertiser">

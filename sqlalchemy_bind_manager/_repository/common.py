@@ -1,6 +1,6 @@
 from enum import Enum
 from functools import partial
-from typing import Generic, List, TypeVar, Union
+from typing import Callable, Generic, List, TypeVar, Union
 
 from pydantic import BaseModel, StrictInt, StrictStr
 from sqlalchemy import asc, desc
@@ -43,5 +43,5 @@ class CursorPaginatedResult(BaseModel, Generic[MODEL]):
 
 
 class SortDirection(Enum):
-    ASC = partial(asc)
-    DESC = partial(desc)
+    ASC: Callable = partial(asc)
+    DESC: Callable = partial(desc)
