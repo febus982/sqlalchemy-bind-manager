@@ -1,4 +1,17 @@
 # SQLAlchemy bind manager
+![Static Badge](https://img.shields.io/badge/Python-3.8_%7C_3.9_%7C_3.10_%7C_3.11-blue?logo=python&logoColor=white)
+[![Stable Version](https://img.shields.io/pypi/v/sqlalchemy-bind-manager?color=blue)](https://pypi.org/project/sqlalchemy-bind-manager/)
+[![stability-beta](https://img.shields.io/badge/stability-beta-33bbff.svg)](https://github.com/mkenney/software-guides/blob/master/STABILITY-BADGES.md#beta)
+
+[![Python tests](https://github.com/febus982/sqlalchemy-bind-manager/actions/workflows/python-tests.yml/badge.svg?branch=main)](https://github.com/febus982/sqlalchemy-bind-manager/actions/workflows/python-tests.yml)
+[![Bandit checks](https://github.com/febus982/sqlalchemy-bind-manager/actions/workflows/python-bandit.yml/badge.svg?branch=main)](https://github.com/febus982/sqlalchemy-bind-manager/actions/workflows/python-bandit.yml)
+[![Maintainability](https://api.codeclimate.com/v1/badges/0140f7f4e559ae806887/maintainability)](https://codeclimate.com/github/febus982/sqlalchemy-bind-manager/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/0140f7f4e559ae806887/test_coverage)](https://codeclimate.com/github/febus982/sqlalchemy-bind-manager/test_coverage)
+
+[![Checked with mypy](https://www.mypy-lang.org/static/mypy_badge.svg)](https://mypy-lang.org/)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v1.json)](https://github.com/charliermarsh/ruff)
+[![security: bandit](https://img.shields.io/badge/security-bandit-yellow.svg)](https://github.com/PyCQA/bandit)
 
 This package provides an easy way to configure and use SQLAlchemy without
 depending on frameworks.

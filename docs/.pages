@@ -1,12 +1,6 @@
 nav:
   - Home: index.md
-  - Bind manager:
-      - Configuration: manager/config.md
-      - Models setup: manager/models.md
-      - Session usage: manager/session.md
-      - Alembic integration: manager/alembic.md
-  - Repository:
-      - Repository usage: repository/usage.md
-      - Unit of work: repository/uow.md
+  - Bind manager: manager
+  - Repository: repository
   - Components life cycle: lifecycle.md
   - ...
