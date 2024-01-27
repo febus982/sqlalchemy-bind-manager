@@ -121,18 +121,22 @@ class CursorPaginatedResultPresenter:
                 total_items=total_items_count,
                 has_previous_page=has_previous_page,
                 has_next_page=has_next_page,
-                start_cursor=CursorReference(
-                    column=reference_column,
-                    value=getattr(result_items[0], reference_column),
-                )
-                if result_items
-                else None,
-                end_cursor=CursorReference(
-                    column=reference_column,
-                    value=getattr(result_items[-1], reference_column),
-                )
-                if result_items
-                else None,
+                start_cursor=(
+                    CursorReference(
+                        column=reference_column,
+                        value=getattr(result_items[0], reference_column),
+                    )
+                    if result_items
+                    else None
+                ),
+                end_cursor=(
+                    CursorReference(
+                        column=reference_column,
+                        value=getattr(result_items[-1], reference_column),
+                    )
+                    if result_items
+                    else None
+                ),
             ),
         )
 
@@ -164,18 +168,22 @@ class CursorPaginatedResultPresenter:
                 total_items=total_items_count,
                 has_previous_page=has_previous_page,
                 has_next_page=has_next_page,
-                start_cursor=CursorReference(
-                    column=reference_column,
-                    value=getattr(result_items[0], reference_column),
-                )
-                if result_items
-                else None,
-                end_cursor=CursorReference(
-                    column=reference_column,
-                    value=getattr(result_items[-1], reference_column),
-                )
-                if result_items
-                else None,
+                start_cursor=(
+                    CursorReference(
+                        column=reference_column,
+                        value=getattr(result_items[0], reference_column),
+                    )
+                    if result_items
+                    else None
+                ),
+                end_cursor=(
+                    CursorReference(
+                        column=reference_column,
+                        value=getattr(result_items[-1], reference_column),
+                    )
+                    if result_items
+                    else None
+                ),
             ),
         )
 

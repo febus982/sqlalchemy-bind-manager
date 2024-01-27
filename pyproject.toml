@@ -47,18 +47,23 @@ optional = true
 
 [tool.poetry.group.dev.dependencies]
 aiosqlite = ">=0.18.0"
+bandit = ">=1.7.7"
 coverage = ">=6.5.0"
 black = ">=22.10.0"
+mike = ">=2.0.0"
 mkdocs = ">=1.4.3"
+mkdocstrings = { version = ">=0.24.0", extras = ["python"] }
+mkdocs-gen-files = ">=0.5.0"
 mkdocs-material = ">=9.1.16"
 mypy = ">=0.990"
+pymdown-extensions = ">=10.0.1"
 pytest = ">=7.2.0"
 pytest-asyncio = ">=0.20.3"
 pytest-cov = ">=4.0.0"
 pytest-factoryboy = ">=2.5.0"
 pytest-xdist = ">=3.0.2"
 ruff = ">=0.0.263"
-pymdown-extensions = ">=10.0.1"
+mkdocs-awesome-pages-plugin = "^2.9.2"
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
@@ -67,6 +72,20 @@ addopts = "-n auto --cov-report=term-missing"
 testpaths = [
     "tests",
 ]
+
+[tool.coverage.run]
+branch = true
+source = ["sqlalchemy_bind_manager"]
+concurrency = ["multiprocessing"]
+parallel = true
+
+[tool.coverage.report]
+fail_under = 100
+exclude_also = [
+    "pragma: no cover",
+    "pass",
+    "\\.\\.\\.",
+    ]
 
 [tool.mypy]
 files = "sqlalchemy_bind_manager"
@@ -81,12 +100,7 @@ extend-exclude = ["docs"]
 "repository.py" = ["F401"]
 
 [tool.black]
-files = '''
-(
-  sqlalchemy_bind_manager
-  tests
-)
-'''
+target-version = ["py38", "py39", "py310", "py311", "py312"]
 extend-exclude = '''
 (
   /docs
