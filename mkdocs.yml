@@ -23,6 +23,7 @@ plugins:
 
 theme:
   name: material
+  custom_dir: mkdocs-overrides
   features:
     - navigation.expand
     - navigation.top
