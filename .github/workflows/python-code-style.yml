@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  quality:
+  format:
     runs-on: ubuntu-latest
 
     steps:
