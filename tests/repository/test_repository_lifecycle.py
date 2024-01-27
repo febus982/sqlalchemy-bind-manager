@@ -27,11 +27,9 @@ def test_repository_fails_if_both_bind_and_session(repository_class, model_class
 
 
 def test_repository_fails_if_no_model_or_wrong_model(repository_class, sa_bind):
-    class ExtendedClassRepo(repository_class):
-        ...
+    class ExtendedClassRepo(repository_class): ...
 
-    class SomeObject:
-        ...
+    class SomeObject: ...
 
     with pytest.raises(InvalidModel):
         ExtendedClassRepo(bind=sa_bind)

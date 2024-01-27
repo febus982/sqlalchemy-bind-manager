@@ -1,0 +1,82 @@
+on:
+  workflow_call:
+    inputs:
+      site-version:
+        required: true
+        type: string
+      version-alias:
+        required: false
+        type: string
+        default: ""
+      branch:
+        required: false
+        type: string
+        default: "gh-pages"
+      set-default:
+        required: false
+        type: boolean
+        default: false
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+# NOTE: There's no option to not cancel pending jobs, but we should be able to avoid race conditions on
+# the published gh-pages branch anyway. The expectation is to have at maximum one running process
+# (after merging to main) and one release process waiting.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build_deploy_pages:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install poetry
+          poetry config virtualenvs.create false
+          poetry install --no-root --with dev
+
+      - name: Configure Git user
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+      - name: Make sure previous versions are available to mike
+        run: |
+          git fetch origin gh-pages --depth=1
+
+      - name: Build and deploy static pages
+        run: |
+          mike deploy ${{ inputs.site-version }} ${{ inputs.version-alias }} --update-aliases --push --branch ${{ inputs.branch }}
+
+      - name: Set default site version
+        if: ${{ inputs.set-default }}
+        run: |
+          mike set-default ${{ inputs.site-version }} --push --branch ${{ inputs.branch }}
+
+      #  `mike` is specifically built to be used together with GitHub pages.
+      # To upload the website to another service (i.e. AWS S3) uncomment
+      # the following step to download the rendered HTML documentation to ./site directory.
+      # You'll need to implement the upload steps for your provider.
+
+#      - name: Download artifact to ./site
+#        run: |
+#          rm -rf ./site
+#          git archive -o site.tar ${{ inputs.branch }}
+#          mkdir -p ./site
+#          tar xf site.tar -C ./site

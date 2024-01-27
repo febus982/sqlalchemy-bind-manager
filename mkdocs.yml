@@ -7,6 +7,20 @@ docs_dir: docs/
 repo_name: 'febus982/sqlalchemy-bind-manager'
 repo_url: 'https://github.com/febus982/sqlalchemy-bind-manager'
 
+plugins:
+  - search
+  - awesome-pages
+  - mike
+  - gen-files:
+      scripts:
+        - scripts/gen_pages.py  # or any other name or path
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            docstring_style: sphinx
+            docstring_section_style: spacy
+
 theme:
   name: material
   features:
@@ -15,20 +29,27 @@ theme:
     - content.code.copy
 
   palette:
-
-    # Palette toggle for light mode
-    - scheme: default
-      primary: teal
+    # Palette toggle for automatic mode
+    - media: "(prefers-color-scheme)"
       toggle:
-        icon: material/brightness-7
+        icon: material/brightness-auto
         name: Switch to dark mode
 
     # Palette toggle for dark mode
     - scheme: slate
+      media: "(prefers-color-scheme: dark)"
       primary: teal
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
+
+    # Palette toggle for light mode
+    - scheme: default
+      media: "(prefers-color-scheme: light)"
+      primary: teal
+      toggle:
+        icon: material/brightness-7
+        name: Switch to auto mode
 
 extra:
   social:
@@ -37,17 +58,6 @@ extra:
     - icon: fontawesome/brands/linkedin
       link: https://www.linkedin.com/in/federico-b-a0b78232
 
-nav:
-  - Home: index.md
-  - Bind manager:
-      - Configuration: manager/config.md
-      - Models setup: manager/models.md
-      - Session usage: manager/session.md
-      - Alembic integration: manager/alembic.md
-  - Repository:
-      - Repository usage: repository/usage.md
-      - Unit of work: repository/uow.md
-  - Components life cycle: lifecycle.md
 
 markdown_extensions:
   - pymdownx.details

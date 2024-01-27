@@ -1,0 +1,86 @@
+# This workflow will publish a python package on pypi, when a release is created
+
+name: release
+
+on:
+  release:
+    types: [ published ]
+
+jobs:
+  build:
+    outputs:
+      version: ${{ steps.docs-version-step.outputs.version }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install poetry poetry-dynamic-versioning
+
+      - name: Build package
+        run: |
+          poetry build
+
+      - name: Archive the dist folder
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          path: dist
+          retention-days: 1
+
+      - name: Export version for site docs
+        id: docs-version-step
+        run: |
+          ./scripts/docs-version.sh
+          echo "Identified version: $(./scripts/docs-version.sh)"
+          echo "version=$(./scripts/docs-version.sh)"
+          echo "version=$(./scripts/docs-version.sh)" >> $GITHUB_OUTPUT
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      contents: write
+      id-token: write
+
+    steps:
+      - name: Download the dist folder from the build job
+        uses: actions/download-artifact@v3
+        with:
+          name: dist
+          path: dist
+
+      - name: Upload binaries to release
+        uses: shogo82148/actions-upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: dist/*
+
+      - name: Publish package distributions to TestPyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        ################################
+        # REMOVE CUSTOM REPOSITORY TO  #
+        # PUBLISH ON OFFICIAL PYPI     #
+        ################################
+        with:
+          repository-url: https://test.pypi.org/legacy/
+
+  site:
+    needs: build
+    uses: ./.github/workflows/reusable-github-pages.yml
+    permissions:
+      contents: write
+    with:
+      site-version: ${{ needs.build.outputs.version }}
+      version-alias: "stable"
+      set-default: true
