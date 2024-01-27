@@ -57,7 +57,9 @@ extra:
       link: https://github.com/febus982/sqlalchemy-bind-manager
     - icon: fontawesome/brands/linkedin
       link: https://www.linkedin.com/in/federico-b-a0b78232
-
+  version:
+    provider: mike
+    default: stable
 
 markdown_extensions:
   - pymdownx.details
