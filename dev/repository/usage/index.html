@@ -13,8 +13,10 @@
       
       
       
-        <link rel="prev" href="../uow/">
+        <link rel="prev" href="../../manager/alembic/">
       
+      
+        <link rel="next" href="../uow/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -22,7 +24,7 @@
     
     
       
-        <title>Usage - SQLAlchemy bind manager</title>
+        <title>Repository usage - SQLAlchemy bind manager</title>
       
     
     
@@ -112,7 +114,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Usage
+              Repository usage
             
           </span>
         </div>
@@ -324,7 +326,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../manager/config.md" class="md-nav__link">
+      <a href="../../manager/config/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -345,7 +347,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../manager/models.md" class="md-nav__link">
+      <a href="../../manager/models/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -366,7 +368,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../manager/session.md" class="md-nav__link">
+      <a href="../../manager/session/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -387,7 +389,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../../manager/alembic.md" class="md-nav__link">
+      <a href="../../manager/alembic/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -412,21 +414,21 @@
       
   
   
+    
   
   
+  
     
     
     
     
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
         
         
         
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
         
           
           <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
@@ -440,7 +442,7 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
           <label class="md-nav__title" for="__nav_3">
             <span class="md-nav__icon md-icon"></span>
             Repository
@@ -451,10 +453,28 @@
                 
   
   
+    
   
   
-    <li class="md-nav__item">
-      <a href="../usage.md" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Repository usage
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         
   
   <span class="md-ellipsis">
@@ -463,6 +483,57 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#repository-unit-of-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      Repository / Unit of work
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Repository / Unit of work">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#maximum-query-limit" class="md-nav__link">
+    <span class="md-ellipsis">
+      Maximum query limit
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#session-lifecycle-in-repositories" class="md-nav__link">
+    <span class="md-ellipsis">
+      Session lifecycle in repositories
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -475,7 +546,7 @@
   
   
     <li class="md-nav__item">
-      <a href="../uow.md" class="md-nav__link">
+      <a href="../uow/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
@@ -929,293 +1000,6 @@
   
 
     
-      
-      
-  
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
-        
-          
-          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
-            
-  
-  <span class="md-ellipsis">
-    Manager
-  </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_6">
-            <span class="md-nav__icon md-icon"></span>
-            Manager
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../manager/alembic/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Alembic
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../manager/config/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Config
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../manager/models/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Models
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../manager/session/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Session
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
-      
-      
-  
-  
-    
-  
-  
-  
-    
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
-      
-        
-        
-        
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" checked>
-        
-          
-          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
-            
-  
-  <span class="md-ellipsis">
-    Repository
-  </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_7">
-            <span class="md-nav__icon md-icon"></span>
-            Repository
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../uow/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Uow
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-    
-  
-  
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Usage
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
-        
-  
-  <span class="md-ellipsis">
-    Usage
-  </span>
-  
-
-      </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#repository-unit-of-work" class="md-nav__link">
-    <span class="md-ellipsis">
-      Repository / Unit of work
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Repository / Unit of work">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#maximum-query-limit" class="md-nav__link">
-    <span class="md-ellipsis">
-      Maximum query limit
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#session-lifecycle-in-repositories" class="md-nav__link">
-    <span class="md-ellipsis">
-      Session lifecycle in repositories
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-    
   </ul>
 </nav>
                   </div>
@@ -1291,7 +1075,7 @@
   
 
 
-  <h1>Usage</h1>
+  <h1>Repository usage</h1>
 
 <h2 id="repository-unit-of-work">Repository / Unit of work</h2>
 <p>The <code>SQLAlchemyRepository</code> and <code>SQLAlchemyAsyncRepository</code> class can be used directly or by extending them.</p>
