@@ -76,8 +76,8 @@ testpaths = [
 [tool.coverage.run]
 branch = true
 source = ["sqlalchemy_bind_manager"]
-concurrency = ["multiprocessing"]
-parallel = true
+# It's not necessary to setup concurrency here
+# because pytest-cov takes care of that
 
 [tool.coverage.report]
 fail_under = 100
