@@ -42,7 +42,10 @@ SESSION_HANDLER = TypeVar("SESSION_HANDLER", SessionHandler, AsyncSessionHandler
 
 class BaseUnitOfWork(Generic[REPOSITORY, SESSION_HANDLER], ABC):
     _session_handler: SESSION_HANDLER
-    _repositories: Dict[str, REPOSITORY] = {}
+    _repositories: Dict[str, REPOSITORY]
+
+    def __init__(self):
+        self._repositories = {}
 
     def register_repository(
         self,
