@@ -24,16 +24,18 @@ multiple threads, like spawning a thread per request, then you should not store 
 initialised session in a global variable, otherwise the state of your models will be shared
 among the threads and produce undesired changes in the database.
 
-This is not thread safe:
+This is **not** thread safe:
 
 /// note | db.py (a module to have an easy to use session)
 ```python
+sa_manager = SQLAlchemyBindManager(some_config)
+
 session = sa_manager.get_session()
 ```
 ///
 
 
-/// note | some_other_module.py (a module to have an easy-to=use session)
+/// note | some_other_module.py
 ```python
 from db import session
 
@@ -45,9 +47,16 @@ session.commit()
 
 This instead would be thread safe:
 
-/// note | some_other_module.py (a module to have an easy-to=use session)
-
+/// note | db.py (a module to have an easy to use SQLAlchemyBindManager)
 ```python
+sa_manager = SQLAlchemyBindManager(some_config)
+```
+///
+
+/// note | some_other_module.py
+```python
+from db import sa_manager
+
 def do_something():
     session = sa_manager.get_session()
     session.add(model)
@@ -57,8 +66,7 @@ def do_something():
 do_something()
 ```
 
-The `do_something` function can be also in another method, as long as
-the `session` variable has no global scope it will be safe.
+As long as the `session` variable has no global scope it will be safe.
 ///
 
 /// tip | Using the `get_session()` context manager is much easier
@@ -77,3 +85,7 @@ session = scoped_session(sa_manager.get_bind().session_class())
 Handling the life cycle of scoped sessions is not supported by this documentations.
 Please refer to [SQLAlchemy documentation](https://docs.sqlalchemy.org/en/20/orm/contextual.html)
 about this.
+
+/// tip | The repository implementation will handle the session life cycle for you
+
+///

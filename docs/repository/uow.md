@@ -27,14 +27,11 @@ with uow.transaction(read_only=True):
     model2 = uow.repository("repo_b").get(2)
 ```
 
-/// admonition | The unit of work implementation is still experimental.
+/// admonition | The unit of work implementation is limited to repositories using the same bind.
     type: warning
 
-There are some limitations in the current implementation that could radically change
-the implementation:
-
-* Distributed transactions are not yet supported. 
-* The direct use of `SQLAlchemyRepository` and `SQLAlchemyAsyncRepository` classes is not yet supported.
+[Two-phase commits](https://docs.sqlalchemy.org/en/20/orm/session_transaction.html#enabling-two-phase-commit)
+are not yet supported.
 ///
 
 Both the UnitOfWork classes create an internal `scoped_session` or `async_scoped_session`, behaving
