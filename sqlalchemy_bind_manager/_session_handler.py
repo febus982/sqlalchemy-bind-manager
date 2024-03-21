@@ -73,6 +73,10 @@ class SessionHandler:
             raise
 
 
+# Reference: https://docs.astral.sh/ruff/rules/asyncio-dangling-task/
+_background_asyncio_tasks = set()
+
+
 class AsyncSessionHandler:
     scoped_session: async_scoped_session
 
@@ -91,7 +95,14 @@ class AsyncSessionHandler:
         try:
             loop = asyncio.get_event_loop()
             if loop.is_running():
-                loop.create_task(self.scoped_session.remove())
+                task = loop.create_task(self.scoped_session.remove())
+                # Add task to the set. This creates a strong reference.
+                _background_asyncio_tasks.add(task)
+
+                # To prevent keeping references to finished tasks forever,
+                # make each task remove its own reference from the set after
+                # completion:
+                task.add_done_callback(_background_asyncio_tasks.discard)
             else:
                 loop.run_until_complete(self.scoped_session.remove())
         except RuntimeError:
