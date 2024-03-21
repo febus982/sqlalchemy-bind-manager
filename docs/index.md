@@ -1,10 +1,9 @@
 # SQLAlchemy bind manager
-![Static Badge](https://img.shields.io/badge/Python-3.8_%7C_3.9_%7C_3.10_%7C_3.11-blue?logo=python&logoColor=white)
+![Static Badge](https://img.shields.io/badge/Python-3.8_%7C_3.9_%7C_3.10_%7C_3.11_%7C_3.12-blue?logo=python&logoColor=white)
 [![Stable Version](https://img.shields.io/pypi/v/sqlalchemy-bind-manager?color=blue)](https://pypi.org/project/sqlalchemy-bind-manager/)
 [![stability-beta](https://img.shields.io/badge/stability-beta-33bbff.svg)](https://github.com/mkenney/software-guides/blob/master/STABILITY-BADGES.md#beta)
 
 [![Python tests](https://github.com/febus982/sqlalchemy-bind-manager/actions/workflows/python-tests.yml/badge.svg?branch=main)](https://github.com/febus982/sqlalchemy-bind-manager/actions/workflows/python-tests.yml)
-[![Bandit checks](https://github.com/febus982/sqlalchemy-bind-manager/actions/workflows/python-bandit.yml/badge.svg?branch=main)](https://github.com/febus982/sqlalchemy-bind-manager/actions/workflows/python-bandit.yml)
 [![Maintainability](https://api.codeclimate.com/v1/badges/0140f7f4e559ae806887/maintainability)](https://codeclimate.com/github/febus982/sqlalchemy-bind-manager/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/0140f7f4e559ae806887/test_coverage)](https://codeclimate.com/github/febus982/sqlalchemy-bind-manager/test_coverage)
 
