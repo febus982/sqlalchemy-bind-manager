@@ -34,7 +34,7 @@ from sqlalchemy.orm import Mapper, aliased, class_mapper, lazyload
 from sqlalchemy.orm.exc import UnmappedClassError
 from sqlalchemy.sql import Select
 
-from sqlalchemy_bind_manager.exceptions import InvalidModel, UnmappedProperty
+from sqlalchemy_bind_manager.exceptions import InvalidModelError, UnmappedPropertyError
 
 from .common import (
     MODEL,
@@ -54,7 +54,7 @@ class BaseRepository(Generic[MODEL], ABC):
         if getattr(self, "_model", None) is None or not self._is_mapped_class(
             self._model
         ):
-            raise InvalidModel(
+            raise InvalidModelError(
                 "You need to supply a valid model class"
                 " either in the `model_class` parameter"
                 " or in the `_model` class property."
@@ -78,11 +78,11 @@ class BaseRepository(Generic[MODEL], ABC):
 
         :param property_name: The name of the property to be evaluated.
         :type property_name: str
-        :raises UnmappedProperty: When the property is not mapped.
+        :raises UnmappedPropertyError: When the property is not mapped.
         """
         m: Mapper = class_mapper(self._model)
         if property_name not in m.column_attrs:
-            raise UnmappedProperty(
+            raise UnmappedPropertyError(
                 f"Property `{property_name}` is not mapped"
                 f" in the ORM for model `{self._model}`"
             )
@@ -341,4 +341,4 @@ class BaseRepository(Generic[MODEL], ABC):
 
     def _fail_if_invalid_models(self, objects: Iterable[MODEL]) -> None:
         if [x for x in objects if not isinstance(x, self._model)]:
-            raise InvalidModel("Cannot handle models not belonging to this repository")
+            raise InvalidModelError("Cannot handle models not belonging to this repository")

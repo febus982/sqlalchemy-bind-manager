@@ -2,7 +2,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from sqlalchemy_bind_manager.exceptions import RepositoryNotFound
+from sqlalchemy_bind_manager.exceptions import RepositoryNotFoundError
 
 
 async def test_repositories_are_initialised_with_uow_session(
@@ -31,7 +31,7 @@ async def test_repositories_are_initialised_with_uow_session(
 
 async def test_raises_exception_if_repository_not_found(sa_bind, uow_class):
     uow = uow_class(bind=sa_bind)
-    with pytest.raises(RepositoryNotFound):
+    with pytest.raises(RepositoryNotFoundError):
         uow.repository("Not existing")
 
 

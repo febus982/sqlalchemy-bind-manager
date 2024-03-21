@@ -30,7 +30,7 @@ from sqlalchemy_bind_manager._session_handler import (
     AsyncSessionHandler,
     SessionHandler,
 )
-from sqlalchemy_bind_manager.exceptions import RepositoryNotFound
+from sqlalchemy_bind_manager.exceptions import RepositoryNotFoundError
 from sqlalchemy_bind_manager.repository import (
     SQLAlchemyAsyncRepository,
     SQLAlchemyRepository,
@@ -67,7 +67,7 @@ class BaseUnitOfWork(Generic[REPOSITORY, SESSION_HANDLER], ABC):
         try:
             return self._repositories[name]
         except KeyError:
-            raise RepositoryNotFound(
+            raise RepositoryNotFoundError(
                 "The repository has not been initialised in this unit of work"
             )
 

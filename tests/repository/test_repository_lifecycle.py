@@ -3,9 +3,9 @@ from unittest.mock import MagicMock
 import pytest
 
 from sqlalchemy_bind_manager.exceptions import (
-    InvalidConfig,
-    InvalidModel,
-    UnsupportedBind,
+    InvalidConfigError,
+    InvalidModelError,
+    UnsupportedBindError,
 )
 from sqlalchemy_bind_manager.repository import SQLAlchemyAsyncRepository
 
@@ -15,14 +15,14 @@ def test_repository_fails_if_not_correct_bind(
 ):
     wrong_bind = "sync" if repository_class is SQLAlchemyAsyncRepository else "async"
 
-    with pytest.raises(UnsupportedBind):
+    with pytest.raises(UnsupportedBindError):
         repository_class(bind=sa_manager.get_bind(wrong_bind), model_class=model_class)
 
 
 def test_repository_fails_if_both_bind_and_session(repository_class, model_class):
     bind = MagicMock()
     session = MagicMock()
-    with pytest.raises(InvalidConfig):
+    with pytest.raises(InvalidConfigError):
         repository_class(bind=bind, session=session, model_class=model_class)
 
 
@@ -31,13 +31,13 @@ def test_repository_fails_if_no_model_or_wrong_model(repository_class, sa_bind):
 
     class SomeObject: ...
 
-    with pytest.raises(InvalidModel):
+    with pytest.raises(InvalidModelError):
         ExtendedClassRepo(bind=sa_bind)
 
-    with pytest.raises(InvalidModel):
+    with pytest.raises(InvalidModelError):
         repository_class(bind=sa_bind)
 
-    with pytest.raises(InvalidModel):
+    with pytest.raises(InvalidModelError):
         repository_class(bind=sa_bind, model_class=SomeObject)
 
 

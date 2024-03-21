@@ -32,7 +32,7 @@ from sqlalchemy_bind_manager._bind_manager import (
     SQLAlchemyAsyncBind,
     SQLAlchemyBind,
 )
-from sqlalchemy_bind_manager.exceptions import UnsupportedBind
+from sqlalchemy_bind_manager.exceptions import UnsupportedBindError
 
 
 class SessionHandler:
@@ -40,7 +40,7 @@ class SessionHandler:
 
     def __init__(self, bind: SQLAlchemyBind):
         if not isinstance(bind, SQLAlchemyBind):
-            raise UnsupportedBind("Bind is not an instance of SQLAlchemyBind")
+            raise UnsupportedBindError("Bind is not an instance of SQLAlchemyBind")
         else:
             self.scoped_session = scoped_session(bind.session_class)
 
@@ -82,7 +82,7 @@ class AsyncSessionHandler:
 
     def __init__(self, bind: SQLAlchemyAsyncBind):
         if not isinstance(bind, SQLAlchemyAsyncBind):
-            raise UnsupportedBind("Bind is not an instance of SQLAlchemyAsyncBind")
+            raise UnsupportedBindError("Bind is not an instance of SQLAlchemyAsyncBind")
         else:
             self.scoped_session = async_scoped_session(
                 bind.session_class, asyncio.current_task

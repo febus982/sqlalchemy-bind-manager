@@ -37,7 +37,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from .._bind_manager import SQLAlchemyAsyncBind
 from .._session_handler import AsyncSessionHandler
-from ..exceptions import InvalidConfig, ModelNotFound
+from ..exceptions import InvalidConfigError, ModelNotFoundError
 from .base_repository import (
     BaseRepository,
 )
@@ -72,7 +72,7 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         """
         super().__init__(model_class=model_class)
         if not (bool(bind) ^ bool(session)):
-            raise InvalidConfig("Either `bind` or `session` have to be used, not both")
+            raise InvalidConfigError("Either `bind` or `session` have to be used, not both")
         self._external_session = session
         if bind:
             self._session_handler = AsyncSessionHandler(bind)
@@ -104,7 +104,7 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         async with self._get_session(commit=False) as session:
             model = await session.get(self._model, identifier)
         if model is None:
-            raise ModelNotFound("No rows found for provided primary key.")
+            raise ModelNotFoundError("No rows found for provided primary key.")
         return model
 
     async def get_many(self, identifiers: Iterable[PRIMARY_KEY]) -> List[MODEL]:

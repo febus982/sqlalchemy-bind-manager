@@ -1,6 +1,6 @@
 import pytest
 
-from sqlalchemy_bind_manager.exceptions import UnmappedProperty
+from sqlalchemy_bind_manager.exceptions import UnmappedPropertyError
 from sqlalchemy_bind_manager.repository import SortDirection
 
 
@@ -44,7 +44,7 @@ async def test_find_filtered_fails_if_invalid_filter(
     repository_class, model_class, sa_bind, sync_async_wrapper
 ):
     repo = repository_class(bind=sa_bind, model_class=model_class)
-    with pytest.raises(UnmappedProperty):
+    with pytest.raises(UnmappedPropertyError):
         await sync_async_wrapper(repo.find(search_params={"somename": "Someone"}))
 
 
@@ -79,7 +79,7 @@ async def test_find_ordered_fails_if_invalid_column(
     repository_class, model_class, sa_bind, sync_async_wrapper
 ):
     repo = repository_class(bind=sa_bind, model_class=model_class)
-    with pytest.raises(UnmappedProperty):
+    with pytest.raises(UnmappedPropertyError):
         await repo.find(order_by=("unexisting",))
-    with pytest.raises(UnmappedProperty):
+    with pytest.raises(UnmappedPropertyError):
         await repo.find(order_by=(("unexisting", SortDirection.DESC),))
