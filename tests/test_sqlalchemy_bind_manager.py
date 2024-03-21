@@ -8,8 +8,8 @@ from sqlalchemy_bind_manager import (
     SQLAlchemyConfig,
 )
 from sqlalchemy_bind_manager.exceptions import (
-    InvalidConfig,
-    NotInitializedBind,
+    InvalidConfigError,
+    NotInitializedBindError,
 )
 
 
@@ -30,13 +30,13 @@ from sqlalchemy_bind_manager.exceptions import (
 )
 def test_invalid_config_raises_exception(supplied_config):
     # We consciously ignore the type to supply an invalid config
-    with pytest.raises(InvalidConfig):
+    with pytest.raises(InvalidConfigError):
         SQLAlchemyBindManager(supplied_config)  # type: ignore
 
 
 def test_initialised_bind_raises_error(single_config):
     sa_manager = SQLAlchemyBindManager(single_config)
-    with pytest.raises(NotInitializedBind):
+    with pytest.raises(NotInitializedBindError):
         sa_manager.get_session("uninitialised bind")
 
 

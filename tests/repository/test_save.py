@@ -37,7 +37,7 @@ async def test_save_many_models(
 async def test_failed_commit_does_rollback_and_reraises_exception(
     repository_class, model_class, sa_bind, sync_async_wrapper
 ):
-    class SomeTestException(Exception):
+    class SomeTestError(Exception):
         pass
 
     model = model_class(
@@ -55,11 +55,11 @@ async def test_failed_commit_does_rollback_and_reraises_exception(
         session_class,
         "commit",
         new_callable=session_mock,
-        side_effect=SomeTestException,
+        side_effect=SomeTestError,
     ):
         repo = repository_class(bind=sa_bind, model_class=model_class)
 
-        with pytest.raises(SomeTestException):
+        with pytest.raises(SomeTestError):
             await sync_async_wrapper(repo.save(model))
         mocked_rollback.assert_called_once()
 

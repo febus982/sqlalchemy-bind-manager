@@ -19,33 +19,33 @@
 #  DEALINGS IN THE SOFTWARE.
 
 
-class NotInitializedBind(Exception):
+class NotInitializedBindError(Exception):
     pass
 
 
-class UnsupportedBind(Exception):
+class UnsupportedBindError(Exception):
     pass
 
 
-class InvalidConfig(Exception):
+class InvalidConfigError(Exception):
     pass
 
 
-class ModelNotFound(Exception):
+class ModelNotFoundError(Exception):
     pass
 
 
-class InvalidModel(Exception):
+class InvalidModelError(Exception):
     pass
 
 
-class UnmappedProperty(Exception):
+class UnmappedPropertyError(Exception):
     pass
 
 
-class SessionNotFound(Exception):
+class SessionNotFoundError(Exception):
     pass
 
 
-class RepositoryNotFound(Exception):
+class RepositoryNotFoundError(Exception):
     pass

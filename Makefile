@@ -1,40 +1,49 @@
-.PHONY: docs
+.PHONY: dev-dependencies update-dependencies test docs fix check typing lint format ci-test ci-coverage poetry-export
 
-test:
-	poetry run pytest -n auto --cov
-
-ci-test:
-	poetry run pytest
-
-ci-coverage:
-	poetry run pytest --cov --cov-report lcov
-
-typing:
-	poetry run mypy
-
-format:
-	poetry run black --check .
-
-lint:
-	poetry run ruff .
-
-bandit:
-	poetry run bandit -c .bandit.yml -r .
-
-format-fix:
-	poetry run black .
-
-lint-fix:
-	poetry run ruff . --fix
-
+#########################
+###### dev commands #####
+#########################
 dev-dependencies:
 	poetry install --with dev --no-root
 
 update-dependencies:
 	poetry update --with dev
 
-fix:  format-fix lint-fix
-check: typing format lint test bandit
+test:
+	poetry run pytest -n auto --cov
 
 docs:
 	poetry run mkdocs serve
+
+fix:
+	poetry run ruff . --fix
+	poetry run ruff format .
+
+check: poetry-export
+	tox
+
+typing: poetry-export
+	tox -e typing
+
+lint: poetry-export
+	tox -e lint
+
+format: poetry-export
+	tox -e format
+
+
+#########################
+#### Helper commands ####
+#########################
+poetry-export:
+	poetry export -f requirements.txt --output /tmp/requirements.txt --with dev
+
+
+#########################
+###### CI commands ######
+#########################
+ci-test:
+	poetry run pytest
+
+ci-coverage:
+	poetry run pytest --cov --cov-report lcov

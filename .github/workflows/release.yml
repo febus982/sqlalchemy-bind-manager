@@ -72,8 +72,8 @@ jobs:
         # REMOVE CUSTOM REPOSITORY TO  #
         # PUBLISH ON OFFICIAL PYPI     #
         ################################
-        with:
-          repository-url: https://test.pypi.org/legacy/
+#        with:
+#          repository-url: https://test.pypi.org/legacy/
 
   site:
     needs: build

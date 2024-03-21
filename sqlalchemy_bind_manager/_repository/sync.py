@@ -37,7 +37,7 @@ from sqlalchemy.orm import Session
 
 from .._bind_manager import SQLAlchemyBind
 from .._session_handler import SessionHandler
-from ..exceptions import InvalidConfig, ModelNotFound
+from ..exceptions import InvalidConfigError, ModelNotFoundError
 from .base_repository import (
     BaseRepository,
 )
@@ -64,7 +64,9 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
     ) -> None:
         super().__init__(model_class=model_class)
         if not (bool(bind) ^ bool(session)):
-            raise InvalidConfig("Either `bind` or `session` have to be used, not both")
+            raise InvalidConfigError(
+                "Either `bind` or `session` have to be used, not both"
+            )
         self._external_session = session
         if bind:
             self._session_handler = SessionHandler(bind)
@@ -93,7 +95,7 @@ class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         with self._get_session(commit=False) as session:
             model = session.get(self._model, identifier)
         if model is None:
-            raise ModelNotFound("No rows found for provided primary key.")
+            raise ModelNotFoundError("No rows found for provided primary key.")
         return model
 
     def get_many(self, identifiers: Iterable[PRIMARY_KEY]) -> List[MODEL]:

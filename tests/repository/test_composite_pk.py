@@ -1,4 +1,4 @@
-from typing import Type
+from typing import ClassVar, Type
 
 import pytest
 from sqlalchemy import Column, Integer, String
@@ -31,7 +31,7 @@ def model_class_composite_pk(sa_manager) -> Type:
         # required in order to access columns with server defaults
         # or SQL expression defaults, subsequent to a flush, without
         # triggering an expired load
-        __mapper_args__ = {"eager_defaults": True}
+        __mapper_args__: ClassVar = {"eager_defaults": True}
 
         model_id = Column(Integer, primary_key=True)
         model_other_id = Column(Integer, primary_key=True)

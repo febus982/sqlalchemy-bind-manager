@@ -32,7 +32,7 @@ from sqlalchemy_bind_manager._bind_manager import (
     SQLAlchemyAsyncBind,
     SQLAlchemyBind,
 )
-from sqlalchemy_bind_manager.exceptions import UnsupportedBind
+from sqlalchemy_bind_manager.exceptions import UnsupportedBindError
 
 
 class SessionHandler:
@@ -40,7 +40,7 @@ class SessionHandler:
 
     def __init__(self, bind: SQLAlchemyBind):
         if not isinstance(bind, SQLAlchemyBind):
-            raise UnsupportedBind("Bind is not an instance of SQLAlchemyBind")
+            raise UnsupportedBindError("Bind is not an instance of SQLAlchemyBind")
         else:
             self.scoped_session = scoped_session(bind.session_class)
 
@@ -73,12 +73,16 @@ class SessionHandler:
             raise
 
 
+# Reference: https://docs.astral.sh/ruff/rules/asyncio-dangling-task/
+_background_asyncio_tasks = set()
+
+
 class AsyncSessionHandler:
     scoped_session: async_scoped_session
 
     def __init__(self, bind: SQLAlchemyAsyncBind):
         if not isinstance(bind, SQLAlchemyAsyncBind):
-            raise UnsupportedBind("Bind is not an instance of SQLAlchemyAsyncBind")
+            raise UnsupportedBindError("Bind is not an instance of SQLAlchemyAsyncBind")
         else:
             self.scoped_session = async_scoped_session(
                 bind.session_class, asyncio.current_task
@@ -91,7 +95,14 @@ class AsyncSessionHandler:
         try:
             loop = asyncio.get_event_loop()
             if loop.is_running():
-                loop.create_task(self.scoped_session.remove())
+                task = loop.create_task(self.scoped_session.remove())
+                # Add task to the set. This creates a strong reference.
+                _background_asyncio_tasks.add(task)
+
+                # To prevent keeping references to finished tasks forever,
+                # make each task remove its own reference from the set after
+                # completion:
+                task.add_done_callback(_background_asyncio_tasks.discard)
             else:
                 loop.run_until_complete(self.scoped_session.remove())
         except RuntimeError:

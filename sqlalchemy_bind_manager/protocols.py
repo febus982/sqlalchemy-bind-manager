@@ -65,7 +65,7 @@ class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
 
         :param identifier: The primary key
         :return: A model instance
-        :raises ModelNotFound: No model has been found using the primary key
+        :raises ModelNotFoundError: No model has been found using the primary key
         """
         ...
 
@@ -221,7 +221,7 @@ class SQLAlchemyRepositoryInterface(Protocol[MODEL]):
 
         :param identifier: The primary key
         :return: A model instance
-        :raises ModelNotFound: No model has been found using the primary key
+        :raises ModelNotFoundError: No model has been found using the primary key
         """
         ...
 

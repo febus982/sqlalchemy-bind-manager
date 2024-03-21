@@ -33,8 +33,8 @@ from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.orm.decl_api import DeclarativeMeta, registry
 
 from sqlalchemy_bind_manager.exceptions import (
-    InvalidConfig,
-    NotInitializedBind,
+    InvalidConfigError,
+    NotInitializedBindError,
 )
 
 
@@ -99,7 +99,7 @@ class SQLAlchemyBindManager:
                 isinstance(config, SQLAlchemyAsyncConfig),
             ]
         ):
-            raise InvalidConfig(
+            raise InvalidConfigError(
                 f"Config for bind `{name}` is not a SQLAlchemyConfig"
                 f" or SQLAlchemyAsyncConfig object"
             )
@@ -181,7 +181,7 @@ class SQLAlchemyBindManager:
         try:
             return self.__binds[bind_name]
         except KeyError:
-            raise NotInitializedBind("Bind not initialized")
+            raise NotInitializedBindError("Bind not initialized")
 
     def get_session(
         self, bind_name: str = DEFAULT_BIND_NAME
