@@ -1,6 +1,6 @@
 import inspect
 from contextlib import _AsyncGeneratorContextManager, asynccontextmanager
-from typing import Tuple, Type, Union
+from typing import ClassVar, Tuple, Type, Union
 from uuid import uuid4
 
 import pytest
@@ -107,7 +107,7 @@ async def model_classes(sa_bind) -> Tuple[Type, Type]:
         # required in order to access columns with server defaults
         # or SQL expression defaults, subsequent to a flush, without
         # triggering an expired load
-        __mapper_args__ = {"eager_defaults": True}
+        __mapper_args__: ClassVar = {"eager_defaults": True}
 
         model_id = Column(Integer, primary_key=True, autoincrement=True)
         name = Column(String)
@@ -124,7 +124,7 @@ async def model_classes(sa_bind) -> Tuple[Type, Type]:
         # required in order to access columns with server defaults
         # or SQL expression defaults, subsequent to a flush, without
         # triggering an expired load
-        __mapper_args__ = {"eager_defaults": True}
+        __mapper_args__: ClassVar = {"eager_defaults": True}
 
         model_id = Column(Integer, primary_key=True, autoincrement=True)
         parent_model_id = Column(

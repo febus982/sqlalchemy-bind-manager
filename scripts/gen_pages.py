@@ -35,7 +35,7 @@ for path in sorted(Path(src_dir).rglob("*.py")):
     full_doc_path = Path(nav_pages_path, doc_path)
 
     # Handle edge cases
-    parts = (src_dir,) + tuple(module_path.parts)
+    parts = (src_dir, *tuple(module_path.parts))
     if parts[-1] == "__init__":
         parts = parts[:-1]
         doc_path = doc_path.with_name("index.md")
