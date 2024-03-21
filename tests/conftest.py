@@ -159,7 +159,7 @@ def session_handler_class(sa_bind):
 
 @pytest.fixture
 def repository_class(
-    sa_bind: Union[SQLAlchemyBind, SQLAlchemyAsyncBind]
+    sa_bind: Union[SQLAlchemyBind, SQLAlchemyAsyncBind],
 ) -> Type[Union[SQLAlchemyAsyncRepository, SQLAlchemyRepository]]:
     base_class = (
         SQLAlchemyRepository

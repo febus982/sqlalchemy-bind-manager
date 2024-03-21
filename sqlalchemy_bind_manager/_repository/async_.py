@@ -72,7 +72,9 @@ class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
         """
         super().__init__(model_class=model_class)
         if not (bool(bind) ^ bool(session)):
-            raise InvalidConfigError("Either `bind` or `session` have to be used, not both")
+            raise InvalidConfigError(
+                "Either `bind` or `session` have to be used, not both"
+            )
         self._external_session = session
         if bind:
             self._session_handler = AsyncSessionHandler(bind)

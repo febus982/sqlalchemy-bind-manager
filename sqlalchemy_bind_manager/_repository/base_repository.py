@@ -341,4 +341,6 @@ class BaseRepository(Generic[MODEL], ABC):
 
     def _fail_if_invalid_models(self, objects: Iterable[MODEL]) -> None:
         if [x for x in objects if not isinstance(x, self._model)]:
-            raise InvalidModelError("Cannot handle models not belonging to this repository")
+            raise InvalidModelError(
+                "Cannot handle models not belonging to this repository"
+            )
