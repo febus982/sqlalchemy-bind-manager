@@ -24,7 +24,9 @@ from ._repository import (
     PaginatedResult,
     SortDirection,
     SQLAlchemyAsyncRepository,
+    SQLAlchemyAsyncRepositoryInterface,
     SQLAlchemyRepository,
+    SQLAlchemyRepositoryInterface,
 )
 from ._unit_of_work import (
     AsyncUnitOfWork,

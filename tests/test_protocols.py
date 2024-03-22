@@ -6,13 +6,17 @@ from sqlalchemy_bind_manager.protocols import (
 )
 from sqlalchemy_bind_manager.repository import (
     SQLAlchemyAsyncRepository,
+    SQLAlchemyAsyncRepositoryInterface,
     SQLAlchemyRepository,
+    SQLAlchemyRepositoryInterface,
 )
 
 
-def test_protocols():
+def test_protocols_and_interfaces():
     assert issubclass(SQLAlchemyRepository, SQLAlchemyRepositoryProtocol)
+    assert issubclass(SQLAlchemyRepositoryInterface, SQLAlchemyRepositoryProtocol)
     assert issubclass(SQLAlchemyAsyncRepository, SQLAlchemyAsyncRepositoryProtocol)
+    assert issubclass(SQLAlchemyAsyncRepositoryInterface, SQLAlchemyAsyncRepositoryProtocol)
 
     sync_methods = [
         method

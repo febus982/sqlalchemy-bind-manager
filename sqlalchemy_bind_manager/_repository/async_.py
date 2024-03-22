@@ -18,7 +18,6 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 #  DEALINGS IN THE SOFTWARE.
 
-from abc import ABC
 from contextlib import asynccontextmanager
 from typing import (
     Any,
@@ -50,9 +49,10 @@ from .common import (
     SortDirection,
 )
 from .result_presenters import CursorPaginatedResultPresenter, PaginatedResultPresenter
+from .abstract import SQLAlchemyAsyncRepositoryInterface
 
 
-class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL]):
+class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], SQLAlchemyAsyncRepositoryInterface[MODEL]):
     _session_handler: AsyncSessionHandler
     _external_session: Union[AsyncSession, None]
 

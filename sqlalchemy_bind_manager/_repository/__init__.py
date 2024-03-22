@@ -26,3 +26,4 @@ from .common import (
     SortDirection,
 )
 from .sync import SQLAlchemyRepository
+from .abstract import SQLAlchemyAsyncRepositoryInterface, SQLAlchemyRepositoryInterface
