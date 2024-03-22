@@ -1,8 +1,8 @@
-::: sqlalchemy_bind_manager.protocols
+::: sqlalchemy_bind_manager.repository
     options:
       members:
-      - SQLAlchemyRepositoryInterface
-      - SQLAlchemyAsyncRepositoryInterface
+      - SQLAlchemyRepository
+      - SQLAlchemyAsyncRepository
       - SortDirection
       - PaginatedResult
       - CursorPaginatedResult

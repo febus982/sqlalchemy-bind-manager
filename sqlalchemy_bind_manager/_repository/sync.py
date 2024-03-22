@@ -75,27 +75,13 @@ class SQLAlchemyRepository(
         if bind:
             self._session_handler = SessionHandler(bind)
 
-    @contextmanager
-    def _get_session(self, commit: bool = True) -> Iterator[Session]:
-        if not self._external_session:
-            with self._session_handler.get_session(not commit) as _session:
-                yield _session
-        else:
-            yield self._external_session
-
-    def save(self, instance: MODEL) -> MODEL:
-        self._fail_if_invalid_models([instance])
-        with self._get_session() as session:
-            session.add(instance)
-        return instance
-
-    def save_many(self, instances: Iterable[MODEL]) -> Iterable[MODEL]:
-        self._fail_if_invalid_models(instances)
-        with self._get_session() as session:
-            session.add_all(instances)
-        return instances
-
     def get(self, identifier: PRIMARY_KEY) -> MODEL:
+        """Get a model by primary key.
+
+        :param identifier: The primary key
+        :return: A model instance
+        :raises ModelNotFoundError: No model has been found using the primary key
+        """
         with self._get_session(commit=False) as session:
             model = session.get(self._model, identifier)
         if model is None:
@@ -103,6 +89,11 @@ class SQLAlchemyRepository(
         return model
 
     def get_many(self, identifiers: Iterable[PRIMARY_KEY]) -> List[MODEL]:
+        """Get a list of models by primary keys.
+
+        :param identifiers: A list of primary keys
+        :return: A list of models
+        """
         stmt = select(self._model).where(
             getattr(self._model, self._model_pk()).in_(identifiers)
         )
@@ -110,12 +101,42 @@ class SQLAlchemyRepository(
         with self._get_session(commit=False) as session:
             return [x for x in session.execute(stmt).scalars()]
 
+    def save(self, instance: MODEL) -> MODEL:
+        """Persist a model.
+
+        :param instance: A mapped object instance to be persisted
+        :return: The model instance after being persisted
+        """
+        self._fail_if_invalid_models([instance])
+        with self._get_session() as session:
+            session.add(instance)
+        return instance
+
+    def save_many(self, instances: Iterable[MODEL]) -> Iterable[MODEL]:
+        """Persist many models in a single database get_session.
+
+        :param instances: A list of mapped objects to be persisted
+        :return: The model instances after being persisted
+        """
+        self._fail_if_invalid_models(instances)
+        with self._get_session() as session:
+            session.add_all(instances)
+        return instances
+
     def delete(self, instance: MODEL) -> None:
+        """Deletes a model.
+
+        :param instance: The model instance
+        """
         self._fail_if_invalid_models([instance])
         with self._get_session() as session:
             session.delete(instance)
 
     def delete_many(self, instances: Iterable[MODEL]) -> None:
+        """Deletes a collection of models in a single transaction.
+
+        :param instances: The model instances
+        """
         self._fail_if_invalid_models(instances)
         with self._get_session() as session:
             for model in instances:
@@ -126,6 +147,23 @@ class SQLAlchemyRepository(
         search_params: Union[None, Mapping[str, Any]] = None,
         order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
     ) -> List[MODEL]:
+        """Find models using filters.
+
+        E.g.
+
+            # find all models with name = John
+            find(search_params={"name":"John"})
+
+            # find all models ordered by `name` column
+            find(order_by=["name"])
+
+            # find all models with reversed order by `name` column
+            find(order_by=[("name", SortDirection.DESC)])
+
+        :param search_params: A mapping containing equality filters
+        :param order_by:
+        :return: A collection of models
+        """
         stmt = self._find_query(search_params, order_by)
 
         with self._get_session() as session:
@@ -139,6 +177,32 @@ class SQLAlchemyRepository(
         search_params: Union[None, Mapping[str, Any]] = None,
         order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
     ) -> PaginatedResult[MODEL]:
+        """Find models using filters and limit/offset pagination. Returned results
+        do include pagination metadata.
+
+        E.g.
+
+            # find all models with name = John
+            paginated_find(search_params={"name":"John"})
+
+            # find first 50 models with name = John
+            paginated_find(50, search_params={"name":"John"})
+
+            # find 50 models with name = John, skipping 2 pages (100)
+            paginated_find(50, 3, search_params={"name":"John"})
+
+            # find all models ordered by `name` column
+            paginated_find(order_by=["name"])
+
+            # find all models with reversed order by `name` column
+            paginated_find(order_by=[("name", SortDirection.DESC)])
+
+        :param items_per_page: Number of models to retrieve
+        :param page: Page to retrieve
+        :param search_params: A mapping containing equality filters
+        :param order_by:
+        :return: A collection of models
+        """
         find_stmt = self._find_query(search_params, order_by)
         paginated_stmt = self._paginate_query_by_page(find_stmt, page, items_per_page)
 
@@ -162,6 +226,31 @@ class SQLAlchemyRepository(
         is_before_cursor: bool = False,
         search_params: Union[None, Mapping[str, Any]] = None,
     ) -> CursorPaginatedResult[MODEL]:
+        """Find models using filters and cursor based pagination. Returned results
+        do include pagination metadata.
+
+        E.g.
+
+            # finds all models with name = John
+            cursor_paginated_find(search_params={"name":"John"})
+
+            # finds first 50 models with name = John
+            cursor_paginated_find(50, search_params={"name":"John"})
+
+            # finds first 50 models after the one with "id" 123
+            cursor_paginated_find(50, CursorReference(column="id", value=123))
+
+            # finds last 50 models before the one with "id" 123
+            cursor_paginated_find(50, CursorReference(column="id", value=123), True)
+
+        :param items_per_page: Number of models to retrieve
+        :param cursor_reference: A cursor reference containing ordering column
+            and threshold value
+        :param is_before_cursor: If True it will return items before the cursor,
+            otherwise items after
+        :param search_params: A mapping containing equality filters
+        :return: A collection of models
+        """
         find_stmt = self._find_query(search_params)
 
         paginated_stmt = self._cursor_paginated_query(
@@ -184,3 +273,11 @@ class SQLAlchemyRepository(
                 cursor_reference=cursor_reference,
                 is_before_cursor=is_before_cursor,
             )
+
+    @contextmanager
+    def _get_session(self, commit: bool = True) -> Iterator[Session]:
+        if not self._external_session:
+            with self._session_handler.get_session(not commit) as _session:
+                yield _session
+        else:
+            yield self._external_session
