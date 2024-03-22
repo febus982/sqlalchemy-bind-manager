@@ -13,10 +13,10 @@
       
       
       
-        <link rel="prev" href="../">
+        <link rel="prev" href="../../lifecycle/">
       
       
-        <link rel="next" href="../_session_handler/">
+        <link rel="next" href="../repository/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -24,7 +24,7 @@
     
     
       
-        <title>bind manager - SQLAlchemy bind manager</title>
+        <title>Bind manager - SQLAlchemy bind manager</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#sqlalchemy_bind_manager._bind_manager" class="md-skip">
+        <a href="#sqlalchemy_bind_manager" class="md-skip">
           Skip to content
         </a>
       
@@ -130,7 +130,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-               bind manager
+              Bind manager
             
           </span>
         </div>
@@ -571,27 +571,6 @@
                 
   
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Index
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
     
   
   
@@ -606,7 +585,7 @@
           
   
   <span class="md-ellipsis">
-     bind manager
+    Bind manager
   </span>
   
 
@@ -617,7 +596,7 @@
         
   
   <span class="md-ellipsis">
-     bind manager
+    Bind manager
   </span>
   
 
@@ -637,16 +616,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#sqlalchemy_bind_manager._bind_manager" class="md-nav__link">
+  <a href="#sqlalchemy_bind_manager" class="md-nav__link">
     <span class="md-ellipsis">
-      _bind_manager
+      sqlalchemy_bind_manager
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#sqlalchemy_bind_manager._bind_manager.SQLAlchemyBindManager" class="md-nav__link">
+    <nav class="md-nav" aria-label="sqlalchemy_bind_manager">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sqlalchemy_bind_manager.SQLAlchemyBindManager" class="md-nav__link">
     <span class="md-ellipsis">
       SQLAlchemyBindManager
     </span>
@@ -656,9 +636,68 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#sqlalchemy_bind_manager._bind_manager.SQLAlchemyBindManager.get_bind_mappers_metadata" class="md-nav__link">
+  <a href="#sqlalchemy_bind_manager.SQLAlchemyBindManager.get_bind_mappers_metadata" class="md-nav__link">
     <span class="md-ellipsis">
       get_bind_mappers_metadata
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sqlalchemy_bind_manager.SQLAlchemyBindManager.get_bind" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_bind
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sqlalchemy_bind_manager.SQLAlchemyBindManager.get_binds" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_binds
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sqlalchemy_bind_manager.SQLAlchemyBindManager.get_mapper" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_mapper
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sqlalchemy_bind_manager.SQLAlchemyBindManager.get_session" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_session
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sqlalchemy_bind_manager.SQLAlchemyConfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      SQLAlchemyConfig
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sqlalchemy_bind_manager.SQLAlchemyAsyncConfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      SQLAlchemyAsyncConfig
     </span>
   </a>
   
@@ -673,69 +712,6 @@
   
 </nav>
       
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../_session_handler/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-     session handler
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../exceptions/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Exceptions
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../protocols/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Protocols
-  </span>
-  
-
-      </a>
     </li>
   
 
@@ -768,232 +744,16 @@
   
   
   
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_7" >
-        
-          
-          <label class="md-nav__link" for="__nav_5_7" id="__nav_5_7_label" tabindex="0">
-            
-  
-  <span class="md-ellipsis">
-     repository
-  </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_7_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5_7">
-            <span class="md-nav__icon md-icon"></span>
-             repository
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
     <li class="md-nav__item">
-      <a href="../_repository/" class="md-nav__link">
+      <a href="../exceptions/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Index
+    Exceptions
   </span>
   
 
       </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../_repository/async_/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Async 
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../_repository/base_repository/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Base repository
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../_repository/common/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Common
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../_repository/result_presenters/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Result presenters
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../_repository/sync/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Sync
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_8" >
-        
-          
-          <label class="md-nav__link" for="__nav_5_8" id="__nav_5_8_label" tabindex="0">
-            
-  
-  <span class="md-ellipsis">
-     unit of work
-  </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_8_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5_8">
-            <span class="md-nav__icon md-icon"></span>
-             unit of work
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../_unit_of_work/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Index
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
     </li>
   
 
@@ -1031,16 +791,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#sqlalchemy_bind_manager._bind_manager" class="md-nav__link">
+  <a href="#sqlalchemy_bind_manager" class="md-nav__link">
     <span class="md-ellipsis">
-      _bind_manager
+      sqlalchemy_bind_manager
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#sqlalchemy_bind_manager._bind_manager.SQLAlchemyBindManager" class="md-nav__link">
+    <nav class="md-nav" aria-label="sqlalchemy_bind_manager">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sqlalchemy_bind_manager.SQLAlchemyBindManager" class="md-nav__link">
     <span class="md-ellipsis">
       SQLAlchemyBindManager
     </span>
@@ -1050,9 +811,68 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#sqlalchemy_bind_manager._bind_manager.SQLAlchemyBindManager.get_bind_mappers_metadata" class="md-nav__link">
+  <a href="#sqlalchemy_bind_manager.SQLAlchemyBindManager.get_bind_mappers_metadata" class="md-nav__link">
     <span class="md-ellipsis">
       get_bind_mappers_metadata
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sqlalchemy_bind_manager.SQLAlchemyBindManager.get_bind" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_bind
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sqlalchemy_bind_manager.SQLAlchemyBindManager.get_binds" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_binds
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sqlalchemy_bind_manager.SQLAlchemyBindManager.get_mapper" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_mapper
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sqlalchemy_bind_manager.SQLAlchemyBindManager.get_session" class="md-nav__link">
+    <span class="md-ellipsis">
+      get_session
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sqlalchemy_bind_manager.SQLAlchemyConfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      SQLAlchemyConfig
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sqlalchemy_bind_manager.SQLAlchemyAsyncConfig" class="md-nav__link">
+    <span class="md-ellipsis">
+      SQLAlchemyAsyncConfig
     </span>
   </a>
   
@@ -1081,13 +901,18 @@
   
 
 
-  <h1> bind manager</h1>
+  <h1>Bind manager</h1>
 
 <div class="doc doc-object doc-module">
 
 
 
-<a id="sqlalchemy_bind_manager._bind_manager"></a>
+<h2 id="sqlalchemy_bind_manager" class="doc doc-heading">
+          <span class="doc doc-object-name doc-module-name">sqlalchemy_bind_manager</span>
+
+
+</h2>
+
   <div class="doc doc-contents first">
 
   
@@ -1105,11 +930,11 @@
 
 
 
-<h2 id="sqlalchemy_bind_manager._bind_manager.SQLAlchemyBindManager" class="doc doc-heading">
-          <code>SQLAlchemyBindManager</code>
+<h3 id="sqlalchemy_bind_manager.SQLAlchemyBindManager" class="doc doc-heading">
+          <span class="doc doc-object-name doc-class-name">sqlalchemy_bind_manager.SQLAlchemyBindManager</span>
 
 
-</h2>
+</h3>
 
 
   <div class="doc doc-contents ">
@@ -1117,10 +942,7 @@
 
             <details class="quote">
               <summary>Source code in <code>sqlalchemy_bind_manager/_bind_manager.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 79</span>
-<span class="normal"> 80</span>
-<span class="normal"> 81</span>
-<span class="normal"> 82</span>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 82</span>
 <span class="normal"> 83</span>
 <span class="normal"> 84</span>
 <span class="normal"> 85</span>
@@ -1230,12 +1052,46 @@
 <span class="normal">189</span>
 <span class="normal">190</span>
 <span class="normal">191</span>
-<span class="normal">192</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">SQLAlchemyBindManager</span><span class="p">:</span>
+<span class="normal">192</span>
+<span class="normal">193</span>
+<span class="normal">194</span>
+<span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span>
+<span class="normal">202</span>
+<span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span>
+<span class="normal">211</span>
+<span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">SQLAlchemyBindManager</span><span class="p">:</span>
     <span class="n">__binds</span><span class="p">:</span> <span class="n">MutableMapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">SQLAlchemyBind</span><span class="p">,</span> <span class="n">SQLAlchemyAsyncBind</span><span class="p">]]</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">config</span><span class="p">:</span> <span class="n">_SQLAlchemyConfig</span><span class="p">,</span>
+        <span class="n">config</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span>
+            <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">SQLAlchemyConfig</span><span class="p">,</span> <span class="n">SQLAlchemyAsyncConfig</span><span class="p">]],</span>
+            <span class="n">SQLAlchemyConfig</span><span class="p">,</span>
+            <span class="n">SQLAlchemyAsyncConfig</span><span class="p">,</span>
+        <span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__binds</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">):</span>
@@ -1316,34 +1172,57 @@
             <span class="n">declarative_base</span><span class="o">=</span><span class="n">registry_mapper</span><span class="o">.</span><span class="n">generate_base</span><span class="p">(),</span>
         <span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">get_binds</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">SQLAlchemyBind</span><span class="p">,</span> <span class="n">SQLAlchemyAsyncBind</span><span class="p">]]:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__binds</span>
-
     <span class="k">def</span> <span class="nf">get_bind_mappers_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">MetaData</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Returns the mappers metadata in a format that can be used</span>
-<span class="sd">        in Alembic configuration</span>
+<span class="sd">        Returns the registered mappers metadata in a format</span>
+<span class="sd">        that can be used in Alembic configuration</span>
 
 <span class="sd">        :returns: mappers metadata</span>
-<span class="sd">        :rtype: dict</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">b</span><span class="o">.</span><span class="n">registry_mapper</span><span class="o">.</span><span class="n">metadata</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__binds</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
 
     <span class="k">def</span> <span class="nf">get_bind</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">bind_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_BIND_NAME</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">SQLAlchemyBind</span><span class="p">,</span> <span class="n">SQLAlchemyAsyncBind</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a bind object by name.</span>
+
+<span class="sd">        :param bind_name: A registered bind name</span>
+<span class="sd">        :return: a bind object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__binds</span><span class="p">[</span><span class="n">bind_name</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">NotInitializedBindError</span><span class="p">(</span><span class="s2">&quot;Bind not initialized&quot;</span><span class="p">)</span>
 
+    <span class="k">def</span> <span class="nf">get_binds</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">SQLAlchemyBind</span><span class="p">,</span> <span class="n">SQLAlchemyAsyncBind</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns all the registered bind objects.</span>
+
+<span class="sd">        :returns: A mapping containing the registered binds</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__binds</span>
+
+    <span class="k">def</span> <span class="nf">get_mapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bind_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_BIND_NAME</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">registry</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the registered SQLAlchemy registry_mapper for the given bind name</span>
+
+<span class="sd">        :param bind_name: A registered bind name</span>
+<span class="sd">        :return: the registered registry_mapper</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_bind</span><span class="p">(</span><span class="n">bind_name</span><span class="p">)</span><span class="o">.</span><span class="n">registry_mapper</span>
+
     <span class="k">def</span> <span class="nf">get_session</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">bind_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_BIND_NAME</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Session</span><span class="p">,</span> <span class="n">AsyncSession</span><span class="p">]:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_bind</span><span class="p">(</span><span class="n">bind_name</span><span class="p">)</span><span class="o">.</span><span class="n">session_class</span><span class="p">()</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a SQLAlchemy Session object, ready to be used either</span>
+<span class="sd">        directly or as a context manager</span>
 
-    <span class="k">def</span> <span class="nf">get_mapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bind_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_BIND_NAME</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">registry</span><span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_bind</span><span class="p">(</span><span class="n">bind_name</span><span class="p">)</span><span class="o">.</span><span class="n">registry_mapper</span>
+<span class="sd">        :param bind_name: A registered bind name</span>
+<span class="sd">        :return: The SQLAlchemy Session object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_bind</span><span class="p">(</span><span class="n">bind_name</span><span class="p">)</span><span class="o">.</span><span class="n">session_class</span><span class="p">()</span>
 </code></pre></div></td></tr></table></div>
             </details>
 
@@ -1364,34 +1243,35 @@
 
 
 
-<h3 id="sqlalchemy_bind_manager._bind_manager.SQLAlchemyBindManager.get_bind_mappers_metadata" class="doc doc-heading">
-          <code class="highlight language-python"><span class="n">get_bind_mappers_metadata</span><span class="p">()</span></code>
+<h4 id="sqlalchemy_bind_manager.SQLAlchemyBindManager.get_bind_mappers_metadata" class="doc doc-heading">
+          <span class="doc doc-object-name doc-function-name">get_bind_mappers_metadata</span>
 
-</h3>
 
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">get_bind_mappers_metadata</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n"><span title="typing.Mapping">Mapping</span></span><span class="p">[</span><span class="n">str</span><span class="p">,</span> <span class="n"><span title="sqlalchemy.MetaData">MetaData</span></span><span class="p">]</span>
+</code></pre></div>
 
   <div class="doc doc-contents ">
   
-      <p>Returns the mappers metadata in a format that can be used
-in Alembic configuration</p>
+      <p>Returns the registered mappers metadata in a format
+that can be used in Alembic configuration</p>
 
 
 
+  <p><strong>Returns:</strong></p>
   <table>
     <thead>
       <tr>
-        <th><b>RETURNS</b></th>
-        <th><b>DESCRIPTION</b></th>
+        <th>Type</th>
+        <th>Description</th>
       </tr>
     </thead>
     <tbody>
         <tr>
           <td>
-              <span class="doc-returns-annotation">
-                  <code>dict</code>
-              </span>
+                <code><span title="typing.Mapping">Mapping</span>[str, <span title="sqlalchemy.MetaData">MetaData</span>]</code>
           </td>
-          <td class="doc-returns-details">
+          <td>
             <div class="doc-md-description">
               <p>mappers metadata</p>
             </div>
@@ -1402,21 +1282,19 @@ in Alembic configuration</p>
 
           <details class="quote">
             <summary>Source code in <code>sqlalchemy_bind_manager/_bind_manager.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">168</span>
-<span class="normal">169</span>
-<span class="normal">170</span>
-<span class="normal">171</span>
-<span class="normal">172</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">172</span>
 <span class="normal">173</span>
 <span class="normal">174</span>
 <span class="normal">175</span>
-<span class="normal">176</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_bind_mappers_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">MetaData</span><span class="p">]:</span>
+<span class="normal">176</span>
+<span class="normal">177</span>
+<span class="normal">178</span>
+<span class="normal">179</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_bind_mappers_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">MetaData</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Returns the mappers metadata in a format that can be used</span>
-<span class="sd">    in Alembic configuration</span>
+<span class="sd">    Returns the registered mappers metadata in a format</span>
+<span class="sd">    that can be used in Alembic configuration</span>
 
 <span class="sd">    :returns: mappers metadata</span>
-<span class="sd">    :rtype: dict</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">b</span><span class="o">.</span><span class="n">registry_mapper</span><span class="o">.</span><span class="n">metadata</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__binds</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
 </code></pre></div></td></tr></table></div>
@@ -1424,6 +1302,481 @@ in Alembic configuration</p>
   </div>
 
 </div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sqlalchemy_bind_manager.SQLAlchemyBindManager.get_bind" class="doc doc-heading">
+          <span class="doc doc-object-name doc-function-name">get_bind</span>
+
+
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">get_bind</span><span class="p">(</span><span class="n">bind_name</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="n">DEFAULT_BIND_NAME</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="typing.Union">Union</span></span><span class="p">[</span><span class="n"><span title="sqlalchemy_bind_manager._bind_manager.SQLAlchemyBind">SQLAlchemyBind</span></span><span class="p">,</span> <span class="n"><span title="sqlalchemy_bind_manager._bind_manager.SQLAlchemyAsyncBind">SQLAlchemyAsyncBind</span></span><span class="p">]</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>Returns a bind object by name.</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>bind_name</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A registered bind name</p>
+            </div>
+          </td>
+          <td>
+                <code><span title="sqlalchemy_bind_manager._bind_manager.DEFAULT_BIND_NAME">DEFAULT_BIND_NAME</span></code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><span title="typing.Union">Union</span>[<span title="sqlalchemy_bind_manager._bind_manager.SQLAlchemyBind">SQLAlchemyBind</span>, <span title="sqlalchemy_bind_manager._bind_manager.SQLAlchemyAsyncBind">SQLAlchemyAsyncBind</span>]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>a bind object</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>sqlalchemy_bind_manager/_bind_manager.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">181</span>
+<span class="normal">182</span>
+<span class="normal">183</span>
+<span class="normal">184</span>
+<span class="normal">185</span>
+<span class="normal">186</span>
+<span class="normal">187</span>
+<span class="normal">188</span>
+<span class="normal">189</span>
+<span class="normal">190</span>
+<span class="normal">191</span>
+<span class="normal">192</span>
+<span class="normal">193</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_bind</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span> <span class="n">bind_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_BIND_NAME</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">SQLAlchemyBind</span><span class="p">,</span> <span class="n">SQLAlchemyAsyncBind</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a bind object by name.</span>
+
+<span class="sd">    :param bind_name: A registered bind name</span>
+<span class="sd">    :return: a bind object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__binds</span><span class="p">[</span><span class="n">bind_name</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">NotInitializedBindError</span><span class="p">(</span><span class="s2">&quot;Bind not initialized&quot;</span><span class="p">)</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sqlalchemy_bind_manager.SQLAlchemyBindManager.get_binds" class="doc doc-heading">
+          <span class="doc doc-object-name doc-function-name">get_binds</span>
+
+
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">get_binds</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n"><span title="typing.Mapping">Mapping</span></span><span class="p">[</span><span class="n">str</span><span class="p">,</span> <span class="n"><span title="typing.Union">Union</span></span><span class="p">[</span><span class="n"><span title="sqlalchemy_bind_manager._bind_manager.SQLAlchemyBind">SQLAlchemyBind</span></span><span class="p">,</span> <span class="n"><span title="sqlalchemy_bind_manager._bind_manager.SQLAlchemyAsyncBind">SQLAlchemyAsyncBind</span></span><span class="p">]]</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>Returns all the registered bind objects.</p>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><span title="typing.Mapping">Mapping</span>[str, <span title="typing.Union">Union</span>[<span title="sqlalchemy_bind_manager._bind_manager.SQLAlchemyBind">SQLAlchemyBind</span>, <span title="sqlalchemy_bind_manager._bind_manager.SQLAlchemyAsyncBind">SQLAlchemyAsyncBind</span>]]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A mapping containing the registered binds</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>sqlalchemy_bind_manager/_bind_manager.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">195</span>
+<span class="normal">196</span>
+<span class="normal">197</span>
+<span class="normal">198</span>
+<span class="normal">199</span>
+<span class="normal">200</span>
+<span class="normal">201</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_binds</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="n">SQLAlchemyBind</span><span class="p">,</span> <span class="n">SQLAlchemyAsyncBind</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns all the registered bind objects.</span>
+
+<span class="sd">    :returns: A mapping containing the registered binds</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__binds</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sqlalchemy_bind_manager.SQLAlchemyBindManager.get_mapper" class="doc doc-heading">
+          <span class="doc doc-object-name doc-function-name">get_mapper</span>
+
+
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">get_mapper</span><span class="p">(</span><span class="n">bind_name</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="n">DEFAULT_BIND_NAME</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="sqlalchemy.orm.decl_api.registry">registry</span></span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>Returns the registered SQLAlchemy registry_mapper for the given bind name</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>bind_name</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A registered bind name</p>
+            </div>
+          </td>
+          <td>
+                <code><span title="sqlalchemy_bind_manager._bind_manager.DEFAULT_BIND_NAME">DEFAULT_BIND_NAME</span></code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><span title="sqlalchemy.orm.decl_api.registry">registry</span></code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>the registered registry_mapper</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>sqlalchemy_bind_manager/_bind_manager.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">203</span>
+<span class="normal">204</span>
+<span class="normal">205</span>
+<span class="normal">206</span>
+<span class="normal">207</span>
+<span class="normal">208</span>
+<span class="normal">209</span>
+<span class="normal">210</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_mapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bind_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_BIND_NAME</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">registry</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns the registered SQLAlchemy registry_mapper for the given bind name</span>
+
+<span class="sd">    :param bind_name: A registered bind name</span>
+<span class="sd">    :return: the registered registry_mapper</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_bind</span><span class="p">(</span><span class="n">bind_name</span><span class="p">)</span><span class="o">.</span><span class="n">registry_mapper</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 id="sqlalchemy_bind_manager.SQLAlchemyBindManager.get_session" class="doc doc-heading">
+          <span class="doc doc-object-name doc-function-name">get_session</span>
+
+
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="n">get_session</span><span class="p">(</span><span class="n">bind_name</span><span class="p">:</span> <span class="n">str</span> <span class="o">=</span> <span class="n">DEFAULT_BIND_NAME</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="typing.Union">Union</span></span><span class="p">[</span><span class="n"><span title="sqlalchemy.orm.Session">Session</span></span><span class="p">,</span> <span class="n"><span title="sqlalchemy.ext.asyncio.AsyncSession">AsyncSession</span></span><span class="p">]</span>
+</code></pre></div>
+
+  <div class="doc doc-contents ">
+  
+      <p>Returns a SQLAlchemy Session object, ready to be used either
+directly or as a context manager</p>
+
+
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>bind_name</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>A registered bind name</p>
+            </div>
+          </td>
+          <td>
+                <code><span title="sqlalchemy_bind_manager._bind_manager.DEFAULT_BIND_NAME">DEFAULT_BIND_NAME</span></code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><span title="typing.Union">Union</span>[<span title="sqlalchemy.orm.Session">Session</span>, <span title="sqlalchemy.ext.asyncio.AsyncSession">AsyncSession</span>]</code>
+          </td>
+          <td>
+            <div class="doc-md-description">
+              <p>The SQLAlchemy Session object</p>
+            </div>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+          <details class="quote">
+            <summary>Source code in <code>sqlalchemy_bind_manager/_bind_manager.py</code></summary>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">212</span>
+<span class="normal">213</span>
+<span class="normal">214</span>
+<span class="normal">215</span>
+<span class="normal">216</span>
+<span class="normal">217</span>
+<span class="normal">218</span>
+<span class="normal">219</span>
+<span class="normal">220</span>
+<span class="normal">221</span>
+<span class="normal">222</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_session</span><span class="p">(</span>
+    <span class="bp">self</span><span class="p">,</span> <span class="n">bind_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_BIND_NAME</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Session</span><span class="p">,</span> <span class="n">AsyncSession</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a SQLAlchemy Session object, ready to be used either</span>
+<span class="sd">    directly or as a context manager</span>
+
+<span class="sd">    :param bind_name: A registered bind name</span>
+<span class="sd">    :return: The SQLAlchemy Session object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_bind</span><span class="p">(</span><span class="n">bind_name</span><span class="p">)</span><span class="o">.</span><span class="n">session_class</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+          </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="sqlalchemy_bind_manager.SQLAlchemyConfig" class="doc doc-heading">
+          <span class="doc doc-object-name doc-class-name">sqlalchemy_bind_manager.SQLAlchemyConfig</span>
+
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Configuration for synchronous engines</p>
+
+            <details class="quote">
+              <summary>Source code in <code>sqlalchemy_bind_manager/_bind_manager.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span>
+<span class="normal">46</span>
+<span class="normal">47</span>
+<span class="normal">48</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">SQLAlchemyConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Configuration for synchronous engines</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">engine_url</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">engine_options</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">session_options</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="sqlalchemy_bind_manager.SQLAlchemyAsyncConfig" class="doc doc-heading">
+          <span class="doc doc-object-name doc-class-name">sqlalchemy_bind_manager.SQLAlchemyAsyncConfig</span>
+
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Configuration for asynchronous engines</p>
+
+            <details class="quote">
+              <summary>Source code in <code>sqlalchemy_bind_manager/_bind_manager.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span>
+<span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">SQLAlchemyAsyncConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Configuration for asynchronous engines</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">engine_url</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">engine_options</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">session_options</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
 
 
 

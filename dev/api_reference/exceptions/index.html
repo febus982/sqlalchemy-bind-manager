@@ -13,10 +13,8 @@
       
       
       
-        <link rel="prev" href="../protocols/">
+        <link rel="prev" href="../repository/">
       
-      
-        <link rel="next" href="../_repository/">
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
@@ -24,7 +22,7 @@
     
     
       
-        <title>Repository - SQLAlchemy bind manager</title>
+        <title>Exceptions - SQLAlchemy bind manager</title>
       
     
     
@@ -78,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#sqlalchemy_bind_manager.repository" class="md-skip">
+        <a href="#sqlalchemy_bind_manager.exceptions" class="md-skip">
           Skip to content
         </a>
       
@@ -130,7 +128,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Repository
+              Exceptions
             
           </span>
         </div>
@@ -574,11 +572,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../" class="md-nav__link">
+      <a href="../bind_manager/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-    Index
+    Bind manager
   </span>
   
 
@@ -595,74 +593,11 @@
   
   
     <li class="md-nav__item">
-      <a href="../_bind_manager/" class="md-nav__link">
+      <a href="../repository/" class="md-nav__link">
         
   
   <span class="md-ellipsis">
-     bind manager
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../_session_handler/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-     session handler
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../exceptions/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Exceptions
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../protocols/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Protocols
+    Repository
   </span>
   
 
@@ -690,7 +625,7 @@
           
   
   <span class="md-ellipsis">
-    Repository
+    Exceptions
   </span>
   
 
@@ -701,7 +636,7 @@
         
   
   <span class="md-ellipsis">
-    Repository
+    Exceptions
   </span>
   
 
@@ -721,254 +656,86 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#sqlalchemy_bind_manager.repository" class="md-nav__link">
+  <a href="#sqlalchemy_bind_manager.exceptions" class="md-nav__link">
     <span class="md-ellipsis">
-      repository
+      exceptions
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="exceptions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sqlalchemy_bind_manager.exceptions.NotInitializedBindError" class="md-nav__link">
+    <span class="md-ellipsis">
+      NotInitializedBindError
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sqlalchemy_bind_manager.exceptions.UnsupportedBindError" class="md-nav__link">
+    <span class="md-ellipsis">
+      UnsupportedBindError
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sqlalchemy_bind_manager.exceptions.InvalidConfigError" class="md-nav__link">
+    <span class="md-ellipsis">
+      InvalidConfigError
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sqlalchemy_bind_manager.exceptions.ModelNotFoundError" class="md-nav__link">
+    <span class="md-ellipsis">
+      ModelNotFoundError
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sqlalchemy_bind_manager.exceptions.InvalidModelError" class="md-nav__link">
+    <span class="md-ellipsis">
+      InvalidModelError
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sqlalchemy_bind_manager.exceptions.UnmappedPropertyError" class="md-nav__link">
+    <span class="md-ellipsis">
+      UnmappedPropertyError
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sqlalchemy_bind_manager.exceptions.RepositoryNotFoundError" class="md-nav__link">
+    <span class="md-ellipsis">
+      RepositoryNotFoundError
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
     </ul>
   
 </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_7" >
-        
-          
-          <label class="md-nav__link" for="__nav_5_7" id="__nav_5_7_label" tabindex="0">
-            
-  
-  <span class="md-ellipsis">
-     repository
-  </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_7_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5_7">
-            <span class="md-nav__icon md-icon"></span>
-             repository
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../_repository/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Index
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../_repository/async_/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Async 
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../_repository/base_repository/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Base repository
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../_repository/common/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Common
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../_repository/result_presenters/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Result presenters
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../_repository/sync/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Sync
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
-      
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
-  
-  
-    
-    
-    
-    
-    <li class="md-nav__item md-nav__item--nested">
-      
-        
-        
-          
-        
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5_8" >
-        
-          
-          <label class="md-nav__link" for="__nav_5_8" id="__nav_5_8_label" tabindex="0">
-            
-  
-  <span class="md-ellipsis">
-     unit of work
-  </span>
-  
-
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_8_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_5_8">
-            <span class="md-nav__icon md-icon"></span>
-             unit of work
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../_unit_of_work/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Index
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
       
     </li>
   
@@ -1007,11 +774,80 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#sqlalchemy_bind_manager.repository" class="md-nav__link">
+  <a href="#sqlalchemy_bind_manager.exceptions" class="md-nav__link">
     <span class="md-ellipsis">
-      repository
+      exceptions
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="exceptions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sqlalchemy_bind_manager.exceptions.NotInitializedBindError" class="md-nav__link">
+    <span class="md-ellipsis">
+      NotInitializedBindError
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sqlalchemy_bind_manager.exceptions.UnsupportedBindError" class="md-nav__link">
+    <span class="md-ellipsis">
+      UnsupportedBindError
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sqlalchemy_bind_manager.exceptions.InvalidConfigError" class="md-nav__link">
+    <span class="md-ellipsis">
+      InvalidConfigError
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sqlalchemy_bind_manager.exceptions.ModelNotFoundError" class="md-nav__link">
+    <span class="md-ellipsis">
+      ModelNotFoundError
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sqlalchemy_bind_manager.exceptions.InvalidModelError" class="md-nav__link">
+    <span class="md-ellipsis">
+      InvalidModelError
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sqlalchemy_bind_manager.exceptions.UnmappedPropertyError" class="md-nav__link">
+    <span class="md-ellipsis">
+      UnmappedPropertyError
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sqlalchemy_bind_manager.exceptions.RepositoryNotFoundError" class="md-nav__link">
+    <span class="md-ellipsis">
+      RepositoryNotFoundError
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1033,13 +869,18 @@
   
 
 
-  <h1>Repository</h1>
+  <h1>Exceptions</h1>
 
 <div class="doc doc-object doc-module">
 
 
 
-<a id="sqlalchemy_bind_manager.repository"></a>
+<h2 id="sqlalchemy_bind_manager.exceptions" class="doc doc-heading">
+          <span class="doc doc-object-name doc-module-name">sqlalchemy_bind_manager.exceptions</span>
+
+
+</h2>
+
   <div class="doc doc-contents first">
 
   
@@ -1052,6 +893,295 @@
 
 
 
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="sqlalchemy_bind_manager.exceptions.NotInitializedBindError" class="doc doc-heading">
+          <span class="doc doc-object-name doc-class-name">sqlalchemy_bind_manager.exceptions.NotInitializedBindError</span>
+
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Raised when a bind object does not exist (i.e. not yet initialized)</p>
+
+            <details class="quote">
+              <summary>Source code in <code>sqlalchemy_bind_manager/exceptions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">22</span>
+<span class="normal">23</span>
+<span class="normal">24</span>
+<span class="normal">25</span>
+<span class="normal">26</span>
+<span class="normal">27</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">NotInitializedBindError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Raised when a bind object does not exist (i.e. not yet initialized)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">pass</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="sqlalchemy_bind_manager.exceptions.UnsupportedBindError" class="doc doc-heading">
+          <span class="doc doc-object-name doc-class-name">sqlalchemy_bind_manager.exceptions.UnsupportedBindError</span>
+
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Raised when the internal session handler is given an unsupported bind object.
+Usually it happens when Async and Sync implementation are mixed up
+(i.e. initializing an <code>AsyncUnitOfWork</code> instance with a Sync bind)</p>
+
+            <details class="quote">
+              <summary>Source code in <code>sqlalchemy_bind_manager/exceptions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span>
+<span class="normal">35</span>
+<span class="normal">36</span>
+<span class="normal">37</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">UnsupportedBindError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Raised when the internal session handler is given an unsupported bind object.</span>
+<span class="sd">    Usually it happens when Async and Sync implementation are mixed up</span>
+<span class="sd">    (i.e. initializing an `AsyncUnitOfWork` instance with a Sync bind)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">pass</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="sqlalchemy_bind_manager.exceptions.InvalidConfigError" class="doc doc-heading">
+          <span class="doc doc-object-name doc-class-name">sqlalchemy_bind_manager.exceptions.InvalidConfigError</span>
+
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Raised when a class is initialized with an invalid configuration and/or parameters.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>sqlalchemy_bind_manager/exceptions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">40</span>
+<span class="normal">41</span>
+<span class="normal">42</span>
+<span class="normal">43</span>
+<span class="normal">44</span>
+<span class="normal">45</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">InvalidConfigError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Raised when a class is initialized with an invalid configuration and/or parameters.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">pass</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="sqlalchemy_bind_manager.exceptions.ModelNotFoundError" class="doc doc-heading">
+          <span class="doc doc-object-name doc-class-name">sqlalchemy_bind_manager.exceptions.ModelNotFoundError</span>
+
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Raised when a Repository is not able to find a model using the provided primary key.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>sqlalchemy_bind_manager/exceptions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">48</span>
+<span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span>
+<span class="normal">53</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ModelNotFoundError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Raised when a Repository is not able to find a model using the provided primary key.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">pass</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="sqlalchemy_bind_manager.exceptions.InvalidModelError" class="doc doc-heading">
+          <span class="doc doc-object-name doc-class-name">sqlalchemy_bind_manager.exceptions.InvalidModelError</span>
+
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Raised when an invalid model is passed to a Repository object or class.</p>
+<p>i.e.:</p>
+<ul>
+<li>Trying to instantiate a repository with a non SQLAlchemy model</li>
+<li>Trying to save a model belonging to another Repository class</li>
+</ul>
+
+            <details class="quote">
+              <summary>Source code in <code>sqlalchemy_bind_manager/exceptions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">56</span>
+<span class="normal">57</span>
+<span class="normal">58</span>
+<span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span>
+<span class="normal">63</span>
+<span class="normal">64</span>
+<span class="normal">65</span>
+<span class="normal">66</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">InvalidModelError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Raised when an invalid model is passed to a Repository object or class.</span>
+
+<span class="sd">    i.e.:</span>
+
+<span class="sd">     * Trying to instantiate a repository with a non SQLAlchemy model</span>
+<span class="sd">     * Trying to save a model belonging to another Repository class</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">pass</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="sqlalchemy_bind_manager.exceptions.UnmappedPropertyError" class="doc doc-heading">
+          <span class="doc doc-object-name doc-class-name">sqlalchemy_bind_manager.exceptions.UnmappedPropertyError</span>
+
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Raised when trying to execute queries using not mapped column names.
+(i.e. passing a non-existing column to <code>search_params</code>
+or <code>order_by</code> parameters when invoking <code>find()</code>)</p>
+
+            <details class="quote">
+              <summary>Source code in <code>sqlalchemy_bind_manager/exceptions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">69</span>
+<span class="normal">70</span>
+<span class="normal">71</span>
+<span class="normal">72</span>
+<span class="normal">73</span>
+<span class="normal">74</span>
+<span class="normal">75</span>
+<span class="normal">76</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">UnmappedPropertyError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Raised when trying to execute queries using not mapped column names.</span>
+<span class="sd">    (i.e. passing a non-existing column to `search_params`</span>
+<span class="sd">    or `order_by` parameters when invoking `find()`)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">pass</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  </div>
+
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h3 id="sqlalchemy_bind_manager.exceptions.RepositoryNotFoundError" class="doc doc-heading">
+          <span class="doc doc-object-name doc-class-name">sqlalchemy_bind_manager.exceptions.RepositoryNotFoundError</span>
+
+
+</h3>
+
+
+  <div class="doc doc-contents ">
+
+  
+      <p>Raised when trying to use a repository that has not been registered
+with the unit of work instance.</p>
+
+            <details class="quote">
+              <summary>Source code in <code>sqlalchemy_bind_manager/exceptions.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">79</span>
+<span class="normal">80</span>
+<span class="normal">81</span>
+<span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span>
+<span class="normal">85</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">RepositoryNotFoundError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Raised when trying to use a repository that has not been registered</span>
+<span class="sd">    with the unit of work instance.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">pass</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+
+  </div>
+
+
+</div>
 
 
 
