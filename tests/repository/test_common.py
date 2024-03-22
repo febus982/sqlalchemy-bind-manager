@@ -1,4 +1,4 @@
-from sqlalchemy_bind_manager._repository import CursorReference
+from sqlalchemy_bind_manager.repository import CursorReference
 
 
 def test_cursor_reference_doesnt_coerce_values():

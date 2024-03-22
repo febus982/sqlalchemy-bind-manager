@@ -29,7 +29,6 @@ from typing import (
     runtime_checkable,
 )
 
-from sqlalchemy_bind_manager._repository import SortDirection
 from sqlalchemy_bind_manager._repository.common import (
     MODEL,
     PRIMARY_KEY,
@@ -38,28 +37,12 @@ from sqlalchemy_bind_manager.repository import (
     CursorPaginatedResult,
     CursorReference,
     PaginatedResult,
+    SortDirection,
 )
 
 
 @runtime_checkable
 class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
-    async def save(self, instance: MODEL) -> MODEL:
-        """Persist a model.
-
-        :param instance: A mapped object instance to be persisted
-        :return: The model instance after being persisted
-        """
-        ...
-
-    async def save_many(self, instances: Iterable[MODEL]) -> Iterable[MODEL]:
-        """Persist many models in a single database get_session.
-
-        :param instances: A list of mapped objects to be persisted
-        :type instances: Iterable
-        :return: The model instances after being persisted
-        """
-        ...
-
     async def get(self, identifier: PRIMARY_KEY) -> MODEL:
         """Get a model by primary key.
 
@@ -73,9 +56,23 @@ class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
         """Get a list of models by primary keys.
 
         :param identifiers: A list of primary keys
-        :type identifiers: List
         :return: A list of models
-        :rtype: List
+        """
+        ...
+
+    async def save(self, instance: MODEL) -> MODEL:
+        """Persist a model.
+
+        :param instance: A mapped object instance to be persisted
+        :return: The model instance after being persisted
+        """
+        ...
+
+    async def save_many(self, instances: Iterable[MODEL]) -> Iterable[MODEL]:
+        """Persist many models in a single database get_session.
+
+        :param instances: A list of mapped objects to be persisted
+        :return: The model instances after being persisted
         """
         ...
 
@@ -101,21 +98,19 @@ class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
         """Find models using filters.
 
         E.g.
-        find(search_params={"name":"John"})
-            finds all models with name = John
 
-        find(order_by=["name"])
-            finds all models ordered by `name` column
+            # find all models with name = John
+            find(search_params={"name":"John"})
 
-        find(order_by=[("name", SortDirection.DESC)])
-            finds all models with reversed order by `name` column
+            # find all models ordered by `name` column
+            find(order_by=["name"])
+
+            # find all models with reversed order by `name` column
+            find(order_by=[("name", SortDirection.DESC)])
 
         :param search_params: A mapping containing equality filters
-        :type search_params: Mapping
         :param order_by:
-        :type order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]]
         :return: A collection of models
-        :rtype: List
         """
         ...
 
@@ -130,31 +125,27 @@ class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
         do include pagination metadata.
 
         E.g.
-        paginated_find(search_params={"name":"John"})
-            finds all models with name = John
 
-        paginated_find(50, search_params={"name":"John"})
-            finds first 50 models with name = John
+            # find all models with name = John
+            paginated_find(search_params={"name":"John"})
 
-        paginated_find(50, 3, search_params={"name":"John"})
-            finds 50 models with name = John, skipping 2 pages (100)
+            # find first 50 models with name = John
+            paginated_find(50, search_params={"name":"John"})
 
-        paginated_find(order_by=["name"])
-            finds all models ordered by `name` column
+            # find 50 models with name = John, skipping 2 pages (100)
+            paginated_find(50, 3, search_params={"name":"John"})
 
-        paginated_find(order_by=[("name", SortDirection.DESC)])
-            finds all models with reversed order by `name` column
+            # find all models ordered by `name` column
+            paginated_find(order_by=["name"])
+
+            # find all models with reversed order by `name` column
+            paginated_find(order_by=[("name", SortDirection.DESC)])
 
         :param items_per_page: Number of models to retrieve
-        :type items_per_page: int
         :param page: Page to retrieve
-        :type page: int
         :param search_params: A mapping containing equality filters
-        :type search_params: Mapping
         :param order_by:
-        :type order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]]
         :return: A collection of models
-        :rtype: List
         """
         ...
 
@@ -169,53 +160,32 @@ class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
         do include pagination metadata.
 
         E.g.
-        cursor_paginated_find(search_params={"name":"John"})
-            finds all models with name = John
 
-        cursor_paginated_find(50, search_params={"name":"John"})
-            finds first 50 models with name = John
+            # finds all models with name = John
+            cursor_paginated_find(search_params={"name":"John"})
 
-        cursor_paginated_find(50, CursorReference(column="id", value=123))
-            finds first 50 models after the one with "id" 123
+            # finds first 50 models with name = John
+            cursor_paginated_find(50, search_params={"name":"John"})
 
-        cursor_paginated_find(50, CursorReference(column="id", value=123), True)
-            finds last 50 models before the one with "id" 123
+            # finds first 50 models after the one with "id" 123
+            cursor_paginated_find(50, CursorReference(column="id", value=123))
+
+            # finds last 50 models before the one with "id" 123
+            cursor_paginated_find(50, CursorReference(column="id", value=123), True)
 
         :param items_per_page: Number of models to retrieve
-        :type items_per_page: int
         :param cursor_reference: A cursor reference containing ordering column
             and threshold value
-        :type cursor_reference: Union[CursorReference, None]
         :param is_before_cursor: If True it will return items before the cursor,
             otherwise items after
-        :type is_before_cursor: bool
         :param search_params: A mapping containing equality filters
-        :type search_params: Mapping
         :return: A collection of models
-        :rtype: List
         """
         ...
 
 
 @runtime_checkable
 class SQLAlchemyRepositoryInterface(Protocol[MODEL]):
-    def save(self, instance: MODEL) -> MODEL:
-        """Persist a model.
-
-        :param instance: A mapped object instance to be persisted
-        :return: The model instance after being persisted
-        """
-        ...
-
-    def save_many(self, instances: Iterable[MODEL]) -> Iterable[MODEL]:
-        """Persist many models in a single database get_session.
-
-        :param instances: A list of mapped objects to be persisted
-        :type instances: Iterable
-        :return: The model instances after being persisted
-        """
-        ...
-
     def get(self, identifier: PRIMARY_KEY) -> MODEL:
         """Get a model by primary key.
 
@@ -229,9 +199,23 @@ class SQLAlchemyRepositoryInterface(Protocol[MODEL]):
         """Get a list of models by primary keys.
 
         :param identifiers: A list of primary keys
-        :type identifiers: List
         :return: A list of models
-        :rtype: List
+        """
+        ...
+
+    def save(self, instance: MODEL) -> MODEL:
+        """Persist a model.
+
+        :param instance: A mapped object instance to be persisted
+        :return: The model instance after being persisted
+        """
+        ...
+
+    def save_many(self, instances: Iterable[MODEL]) -> Iterable[MODEL]:
+        """Persist many models in a single database get_session.
+
+        :param instances: A list of mapped objects to be persisted
+        :return: The model instances after being persisted
         """
         ...
 
@@ -242,7 +226,7 @@ class SQLAlchemyRepositoryInterface(Protocol[MODEL]):
         """
         ...
 
-    async def delete_many(self, instances: Iterable[MODEL]) -> None:
+    def delete_many(self, instances: Iterable[MODEL]) -> None:
         """Deletes a collection of models in a single transaction.
 
         :param instances: The model instances
@@ -257,21 +241,19 @@ class SQLAlchemyRepositoryInterface(Protocol[MODEL]):
         """Find models using filters.
 
         E.g.
-        find(search_params={"name":"John"})
-            finds all models with name = John
 
-        find(order_by=["name"])
-            finds all models ordered by `name` column
+            # find all models with name = John
+            find(search_params={"name":"John"})
 
-        find(order_by=[("name", SortDirection.DESC)])
-            finds all models with reversed order by `name` column
+            # find all models ordered by `name` column
+            find(order_by=["name"])
+
+            # find all models with reversed order by `name` column
+            find(order_by=[("name", SortDirection.DESC)])
 
         :param search_params: A mapping containing equality filters
-        :type search_params: Mapping
         :param order_by:
-        :type order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]]
         :return: A collection of models
-        :rtype: List
         """
         ...
 
@@ -286,31 +268,27 @@ class SQLAlchemyRepositoryInterface(Protocol[MODEL]):
         do include pagination metadata.
 
         E.g.
-        paginated_find(search_params={"name":"John"})
-            finds all models with name = John
 
-        paginated_find(50, search_params={"name":"John"})
-            finds first 50 models with name = John
+            # find all models with name = John
+            paginated_find(search_params={"name":"John"})
 
-        paginated_find(50, 3, search_params={"name":"John"})
-            finds 50 models with name = John, skipping 2 pages (100)
+            # find first 50 models with name = John
+            paginated_find(50, search_params={"name":"John"})
 
-        paginated_find(order_by=["name"])
-            finds all models ordered by `name` column
+            # find 50 models with name = John, skipping 2 pages (100)
+            paginated_find(50, 3, search_params={"name":"John"})
 
-        paginated_find(order_by=[("name", SortDirection.DESC)])
-            finds all models with reversed order by `name` column
+            # find all models ordered by `name` column
+            paginated_find(order_by=["name"])
+
+            # find all models with reversed order by `name` column
+            paginated_find(order_by=[("name", SortDirection.DESC)])
 
         :param items_per_page: Number of models to retrieve
-        :type items_per_page: int
         :param page: Page to retrieve
-        :type page: int
         :param search_params: A mapping containing equality filters
-        :type search_params: Mapping
         :param order_by:
-        :type order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]]
         :return: A collection of models
-        :rtype: List
         """
         ...
 
@@ -325,29 +303,25 @@ class SQLAlchemyRepositoryInterface(Protocol[MODEL]):
         do include pagination metadata.
 
         E.g.
-        cursor_paginated_find(search_params={"name":"John"})
-            finds all models with name = John
 
-        cursor_paginated_find(50, search_params={"name":"John"})
-            finds first 50 models with name = John
+            # finds all models with name = John
+            cursor_paginated_find(search_params={"name":"John"})
 
-        cursor_paginated_find(50, CursorReference(column="id", value=123))
-            finds first 50 models after the one with "id" 123
+            # finds first 50 models with name = John
+            cursor_paginated_find(50, search_params={"name":"John"})
 
-        cursor_paginated_find(50, CursorReference(column="id", value=123), True)
-            finds last 50 models before the one with "id" 123
+            # finds first 50 models after the one with "id" 123
+            cursor_paginated_find(50, CursorReference(column="id", value=123))
+
+            # finds last 50 models before the one with "id" 123
+            cursor_paginated_find(50, CursorReference(column="id", value=123), True)
 
         :param items_per_page: Number of models to retrieve
-        :type items_per_page: int
         :param cursor_reference: A cursor reference containing ordering column
             and threshold value
-        :type cursor_reference: Union[CursorReference, None]
         :param is_before_cursor: If True it will return items before the cursor,
             otherwise items after
-        :type is_before_cursor: bool
         :param search_params: A mapping containing equality filters
-        :type search_params: Mapping
         :return: A collection of models
-        :rtype: List
         """
         ...

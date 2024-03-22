@@ -11,15 +11,33 @@ plugins:
   - search
   - awesome-pages
   - mike
-  - gen-files:
-      scripts:
-        - scripts/gen_pages.py  # or any other name or path
+#  - gen-files:
+#      scripts:
+#        - scripts/gen_pages.py  # or any other name or path
   - mkdocstrings:
+      default_handler: python
       handlers:
         python:
           options:
+            # General options
+            show_source: true
+            show_bases: false
+            # Headings options
+            show_root_heading: true
+            show_root_members_full_path: true
+            # Members options
+            inherited_members: true
+            group_by_category: true
+            members_order: source
+            # Docstrings options
             docstring_style: sphinx
-            docstring_section_style: spacy
+            merge_init_into_class: false
+            show_if_no_docstring: false
+            # Signature options
+            show_signature_annotations: true
+            separate_signature: true
+            signature_crossrefs: true
+            unwrap_annotated: true
 
 theme:
   name: material

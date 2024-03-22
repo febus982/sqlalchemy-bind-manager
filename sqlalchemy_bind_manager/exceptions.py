@@ -20,32 +20,66 @@
 
 
 class NotInitializedBindError(Exception):
+    """
+    Raised when a bind object does not exist (i.e. not yet initialized)
+    """
+
     pass
 
 
 class UnsupportedBindError(Exception):
+    """
+    Raised when the internal session handler is given an unsupported bind object.
+    Usually it happens when Async and Sync implementation are mixed up
+    (i.e. initializing an `AsyncUnitOfWork` instance with a Sync bind)
+    """
+
     pass
 
 
 class InvalidConfigError(Exception):
+    """
+    Raised when a class is initialized with an invalid configuration and/or parameters.
+    """
+
     pass
 
 
 class ModelNotFoundError(Exception):
+    """
+    Raised when a Repository is not able to find a model using the provided primary key.
+    """
+
     pass
 
 
 class InvalidModelError(Exception):
+    """
+    Raised when an invalid model is passed to a Repository object or class.
+
+    i.e.:
+
+     * Trying to instantiate a repository with a non SQLAlchemy model
+     * Trying to save a model belonging to another Repository class
+    """
+
     pass
 
 
 class UnmappedPropertyError(Exception):
-    pass
+    """
+    Raised when trying to execute queries using not mapped column names.
+    (i.e. passing a non-existing column to `search_params`
+    or `order_by` parameters when invoking `find()`)
+    """
 
-
-class SessionNotFoundError(Exception):
     pass
 
 
 class RepositoryNotFoundError(Exception):
+    """
+    Raised when trying to use a repository that has not been registered
+    with the unit of work instance.
+    """
+
     pass
