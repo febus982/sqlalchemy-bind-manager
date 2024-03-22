@@ -3,4 +3,5 @@ nav:
   - Bind manager: manager
   - Repository: repository
   - Components life cycle: lifecycle.md
+  - API Reference: api_reference
   - ...

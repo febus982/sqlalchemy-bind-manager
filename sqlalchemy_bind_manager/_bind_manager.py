@@ -39,12 +39,20 @@ from sqlalchemy_bind_manager.exceptions import (
 
 
 class SQLAlchemyConfig(BaseModel):
+    """
+    Configuration for synchronous engines
+    """
+
     engine_url: str
     engine_options: Union[dict, None] = None
     session_options: Union[dict, None] = None
 
 
 class SQLAlchemyAsyncConfig(BaseModel):
+    """
+    Configuration for asynchronous engines
+    """
+
     engine_url: str
     engine_options: Union[dict, None] = None
     session_options: Union[dict, None] = None
@@ -68,11 +76,6 @@ class SQLAlchemyAsyncBind(BaseModel):
     model_config = ConfigDict(arbitrary_types_allowed=True)
 
 
-_SQLAlchemyConfig = Union[
-    Mapping[str, Union[SQLAlchemyConfig, SQLAlchemyAsyncConfig]],
-    SQLAlchemyConfig,
-    SQLAlchemyAsyncConfig,
-]
 DEFAULT_BIND_NAME = "default"
 
 
@@ -81,7 +84,11 @@ class SQLAlchemyBindManager:
 
     def __init__(
         self,
-        config: _SQLAlchemyConfig,
+        config: Union[
+            Mapping[str, Union[SQLAlchemyConfig, SQLAlchemyAsyncConfig]],
+            SQLAlchemyConfig,
+            SQLAlchemyAsyncConfig,
+        ],
     ) -> None:
         self.__binds = {}
         if isinstance(config, Mapping):
@@ -162,31 +169,54 @@ class SQLAlchemyBindManager:
             declarative_base=registry_mapper.generate_base(),
         )
 
-    def get_binds(self) -> Mapping[str, Union[SQLAlchemyBind, SQLAlchemyAsyncBind]]:
-        return self.__binds
-
     def get_bind_mappers_metadata(self) -> Mapping[str, MetaData]:
         """
-        Returns the mappers metadata in a format that can be used
-        in Alembic configuration
+        Returns the registered mappers metadata in a format
+        that can be used in Alembic configuration
 
         :returns: mappers metadata
-        :rtype: dict
         """
         return {k: b.registry_mapper.metadata for k, b in self.__binds.items()}
 
     def get_bind(
         self, bind_name: str = DEFAULT_BIND_NAME
     ) -> Union[SQLAlchemyBind, SQLAlchemyAsyncBind]:
+        """
+        Returns a bind object by name.
+
+        :param bind_name: A registered bind name
+        :return: a bind object
+        """
         try:
             return self.__binds[bind_name]
         except KeyError:
             raise NotInitializedBindError("Bind not initialized")
 
+    def get_binds(self) -> Mapping[str, Union[SQLAlchemyBind, SQLAlchemyAsyncBind]]:
+        """
+        Returns all the registered bind objects.
+
+        :returns: A mapping containing the registered binds
+        """
+        return self.__binds
+
+    def get_mapper(self, bind_name: str = DEFAULT_BIND_NAME) -> registry:
+        """
+        Returns the registered SQLAlchemy registry_mapper for the given bind name
+
+        :param bind_name: A registered bind name
+        :return: the registered registry_mapper
+        """
+        return self.get_bind(bind_name).registry_mapper
+
     def get_session(
         self, bind_name: str = DEFAULT_BIND_NAME
     ) -> Union[Session, AsyncSession]:
-        return self.get_bind(bind_name).session_class()
+        """
+        Returns a SQLAlchemy Session object, ready to be used either
+        directly or as a context manager
 
-    def get_mapper(self, bind_name: str = DEFAULT_BIND_NAME) -> registry:
-        return self.get_bind(bind_name).registry_mapper
+        :param bind_name: A registered bind name
+        :return: The SQLAlchemy Session object
+        """
+        return self.get_bind(bind_name).session_class()

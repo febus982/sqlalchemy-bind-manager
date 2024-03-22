@@ -7,18 +7,22 @@ import pytest
 from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import clear_mappers, relationship
 
-from sqlalchemy_bind_manager import SQLAlchemyAsyncConfig, SQLAlchemyConfig
+from sqlalchemy_bind_manager import (
+    SQLAlchemyAsyncConfig,
+    SQLAlchemyBindManager,
+    SQLAlchemyConfig,
+)
 from sqlalchemy_bind_manager._bind_manager import (
     SQLAlchemyAsyncBind,
     SQLAlchemyBind,
-    SQLAlchemyBindManager,
-)
-from sqlalchemy_bind_manager._repository import (
-    SQLAlchemyAsyncRepository,
-    SQLAlchemyRepository,
 )
 from sqlalchemy_bind_manager._session_handler import AsyncSessionHandler, SessionHandler
-from sqlalchemy_bind_manager.repository import AsyncUnitOfWork, UnitOfWork
+from sqlalchemy_bind_manager.repository import (
+    AsyncUnitOfWork,
+    SQLAlchemyAsyncRepository,
+    SQLAlchemyRepository,
+    UnitOfWork,
+)
 
 
 @pytest.fixture

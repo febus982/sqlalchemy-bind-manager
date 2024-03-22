@@ -2,10 +2,10 @@ from dataclasses import dataclass
 
 import pytest
 
-from sqlalchemy_bind_manager._repository import CursorReference
 from sqlalchemy_bind_manager._repository.result_presenters import (
     CursorPaginatedResultPresenter,
 )
+from sqlalchemy_bind_manager.repository import CursorReference
 
 
 @dataclass
