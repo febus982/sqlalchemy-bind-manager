@@ -18,7 +18,6 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 #  DEALINGS IN THE SOFTWARE.
 
-from abc import ABC
 from contextlib import contextmanager
 from typing import (
     Any,
@@ -52,7 +51,7 @@ from .common import (
 from .result_presenters import CursorPaginatedResultPresenter, PaginatedResultPresenter
 
 
-class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
+class SQLAlchemyRepository(Generic[MODEL], BaseRepository[MODEL]):
     _session_handler: SessionHandler
     _external_session: Union[Session, None]
 

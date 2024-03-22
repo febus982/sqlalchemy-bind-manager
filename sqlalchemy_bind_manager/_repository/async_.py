@@ -52,7 +52,7 @@ from .common import (
 from .result_presenters import CursorPaginatedResultPresenter, PaginatedResultPresenter
 
 
-class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL], ABC):
+class SQLAlchemyAsyncRepository(Generic[MODEL], BaseRepository[MODEL]):
     _session_handler: AsyncSessionHandler
     _external_session: Union[AsyncSession, None]
 

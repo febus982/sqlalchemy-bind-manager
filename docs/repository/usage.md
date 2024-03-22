@@ -44,13 +44,15 @@ and inversion of control patterns such as
 [dependency injection](https://en.wikipedia.org/wiki/Dependency_injection).
 
 ```python
-from sqlalchemy_bind_manager.protocols import SQLAlchemyRepositoryInterface, SQLAlchemyAsyncRepositoryInterface
+from sqlalchemy_bind_manager.protocols import SQLAlchemyRepositoryProtocol, SQLAlchemyAsyncRepositoryProtocol
 
-def some_function(repository: SQLAlchemyRepositoryInterface[MyModel]):
+
+def some_function(repository: SQLAlchemyRepositoryProtocol[MyModel]):
     model = repository.get(123)
     ...
 
-async def some_async_function(repository: SQLAlchemyAsyncRepositoryInterface[MyModel]):
+
+async def some_async_function(repository: SQLAlchemyAsyncRepositoryProtocol[MyModel]):
     model = await repository.get(123)
     ...
 ```

@@ -42,7 +42,7 @@ from sqlalchemy_bind_manager.repository import (
 
 
 @runtime_checkable
-class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
+class SQLAlchemyAsyncRepositoryProtocol(Protocol[MODEL]):
     async def get(self, identifier: PRIMARY_KEY) -> MODEL:
         """Get a model by primary key.
 
@@ -185,7 +185,7 @@ class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
 
 
 @runtime_checkable
-class SQLAlchemyRepositoryInterface(Protocol[MODEL]):
+class SQLAlchemyRepositoryProtocol(Protocol[MODEL]):
     def get(self, identifier: PRIMARY_KEY) -> MODEL:
         """Get a model by primary key.
 

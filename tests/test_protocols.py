@@ -1,8 +1,8 @@
 from inspect import signature
 
 from sqlalchemy_bind_manager.protocols import (
-    SQLAlchemyAsyncRepositoryInterface,
-    SQLAlchemyRepositoryInterface,
+    SQLAlchemyAsyncRepositoryProtocol,
+    SQLAlchemyRepositoryProtocol,
 )
 from sqlalchemy_bind_manager.repository import (
     SQLAlchemyAsyncRepository,
@@ -11,17 +11,17 @@ from sqlalchemy_bind_manager.repository import (
 
 
 def test_protocols():
-    assert issubclass(SQLAlchemyRepository, SQLAlchemyRepositoryInterface)
-    assert issubclass(SQLAlchemyAsyncRepository, SQLAlchemyAsyncRepositoryInterface)
+    assert issubclass(SQLAlchemyRepository, SQLAlchemyRepositoryProtocol)
+    assert issubclass(SQLAlchemyAsyncRepository, SQLAlchemyAsyncRepositoryProtocol)
 
     sync_methods = [
         method
-        for method in dir(SQLAlchemyRepositoryInterface)
+        for method in dir(SQLAlchemyRepositoryProtocol)
         if method.startswith("_") is False
     ]
     async_methods = [
         method
-        for method in dir(SQLAlchemyAsyncRepositoryInterface)
+        for method in dir(SQLAlchemyAsyncRepositoryProtocol)
         if method.startswith("_") is False
     ]
 
@@ -30,13 +30,13 @@ def test_protocols():
     for method in sync_methods:
         # Sync signature is the same as sync protocol
         assert signature(getattr(SQLAlchemyRepository, method)) == signature(
-            getattr(SQLAlchemyRepositoryInterface, method)
+            getattr(SQLAlchemyRepositoryProtocol, method)
         )
         # Async signature is the same as async protocol
         assert signature(getattr(SQLAlchemyAsyncRepository, method)) == signature(
-            getattr(SQLAlchemyRepositoryInterface, method)
+            getattr(SQLAlchemyRepositoryProtocol, method)
         )
         # Sync signature is the same as async signature
         assert signature(
-            getattr(SQLAlchemyAsyncRepositoryInterface, method)
-        ) == signature(getattr(SQLAlchemyRepositoryInterface, method))
+            getattr(SQLAlchemyAsyncRepositoryProtocol, method)
+        ) == signature(getattr(SQLAlchemyRepositoryProtocol, method))
