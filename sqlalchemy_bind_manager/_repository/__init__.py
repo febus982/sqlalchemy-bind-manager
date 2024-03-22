@@ -18,6 +18,7 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 #  DEALINGS IN THE SOFTWARE.
 
+from .abstract import SQLAlchemyAsyncRepositoryInterface, SQLAlchemyRepositoryInterface
 from .async_ import SQLAlchemyAsyncRepository
 from .common import (
     CursorPaginatedResult,
@@ -26,4 +27,3 @@ from .common import (
     SortDirection,
 )
 from .sync import SQLAlchemyRepository
-from .abstract import SQLAlchemyAsyncRepositoryInterface, SQLAlchemyRepositoryInterface
