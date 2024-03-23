@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.14">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.15">
     
     
       
@@ -28,7 +28,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.10ba22f1.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.7e359304.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
@@ -817,22 +817,24 @@
 <li><code>cursor_paginated_find</code>: Search for a list of models, with cursor based pagination support</li>
 </ul>
 <details class="tip">
-<summary>Typing and Protocols</summary>
-<p>The repository classes are fully typed (as the rest of this package), but
-protocols classes are provided as addition to allow more decoupled type checking
+<summary>Typing and Interfaces</summary>
+<p>The repository classes are fully typed (as the rest of this package). The repositories
+implement interface classes that are available to allow better code decoupling
 and inversion of control patterns such as
 <a href="https://en.wikipedia.org/wiki/Dependency_injection">dependency injection</a>.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">sqlalchemy_bind_manager.protocols</span> <span class="kn">import</span> <span class="n">SQLAlchemyRepositoryInterface</span><span class="p">,</span> <span class="n">SQLAlchemyAsyncRepositoryInterface</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">sqlalchemy_bind_manager.repository</span> <span class="kn">import</span> <span class="n">SQLAlchemyRepositoryInterface</span><span class="p">,</span> <span class="n">SQLAlchemyAsyncRepositoryInterface</span>
+
 
 <span class="k">def</span> <span class="nf">some_function</span><span class="p">(</span><span class="n">repository</span><span class="p">:</span> <span class="n">SQLAlchemyRepositoryInterface</span><span class="p">[</span><span class="n">MyModel</span><span class="p">]):</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">repository</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
     <span class="o">...</span>
 
+
 <span class="k">async</span> <span class="k">def</span> <span class="nf">some_async_function</span><span class="p">(</span><span class="n">repository</span><span class="p">:</span> <span class="n">SQLAlchemyAsyncRepositoryInterface</span><span class="p">[</span><span class="n">MyModel</span><span class="p">]):</span>
     <span class="n">model</span> <span class="o">=</span> <span class="k">await</span> <span class="n">repository</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">123</span><span class="p">)</span>
     <span class="o">...</span>
 </code></pre></div>
-<p>Both repository and related protocols are Generic, accepting the model class as argument.</p>
+<p>Both repository and related interface are Generic, accepting the model class as a typing argument.</p>
 </details>
 <h3 id="maximum-query-limit">Maximum query limit</h3>
 <p>Repositories have a maximum limit for paginated queries defaulting to 50 to

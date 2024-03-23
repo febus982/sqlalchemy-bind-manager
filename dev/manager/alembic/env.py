@@ -6,14 +6,14 @@ from alembic import context
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.asyncio import AsyncEngine
 
-from sqlalchemy_bind_manager import SQLAlchemyAsyncConfig, SQLAlchemyBindManager
+from sqlalchemy_bind_manager import SQLAlchemyConfig, SQLAlchemyBindManager
 
 ################################################################
 ## Note: The bind_config, sa_manager and models are normally  ##
 ## implemented in an application. This is only an example!    ##
 ################################################################
 bind_config = {
-    "default": SQLAlchemyAsyncConfig(
+    "default": SQLAlchemyConfig(
         engine_url=f"sqlite+aiosqlite:///{os.path.dirname(os.path.abspath(__file__))}/sqlite.db",
         engine_options=dict(
             connect_args={
@@ -22,6 +22,7 @@ bind_config = {
             echo=False,
             future=True,
         ),
+        async_engine=True,
     ),
 }
 

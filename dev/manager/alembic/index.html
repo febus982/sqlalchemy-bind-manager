@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.14">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.15">
     
     
       
@@ -28,7 +28,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.10ba22f1.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.7e359304.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
@@ -903,14 +903,14 @@ version_path_separator = os  # Use os.pathsep. Default configuration used for ne
 <span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">Column</span><span class="p">,</span> <span class="n">Integer</span><span class="p">,</span> <span class="n">String</span>
 <span class="kn">from</span> <span class="nn">sqlalchemy.ext.asyncio</span> <span class="kn">import</span> <span class="n">AsyncEngine</span>
 
-<span class="kn">from</span> <span class="nn">sqlalchemy_bind_manager</span> <span class="kn">import</span> <span class="n">SQLAlchemyAsyncConfig</span><span class="p">,</span> <span class="n">SQLAlchemyBindManager</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy_bind_manager</span> <span class="kn">import</span> <span class="n">SQLAlchemyConfig</span><span class="p">,</span> <span class="n">SQLAlchemyBindManager</span>
 
 <span class="c1">################################################################</span>
 <span class="c1">## Note: The bind_config, sa_manager and models are normally  ##</span>
 <span class="c1">## implemented in an application. This is only an example!    ##</span>
 <span class="c1">################################################################</span>
 <span class="n">bind_config</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="n">SQLAlchemyAsyncConfig</span><span class="p">(</span>
+    <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="n">SQLAlchemyConfig</span><span class="p">(</span>
         <span class="n">engine_url</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;sqlite+aiosqlite:///</span><span class="si">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span><span class="si">}</span><span class="s2">/sqlite.db&quot;</span><span class="p">,</span>
         <span class="n">engine_options</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
             <span class="n">connect_args</span><span class="o">=</span><span class="p">{</span>
@@ -919,6 +919,7 @@ version_path_separator = os  # Use os.pathsep. Default configuration used for ne
             <span class="n">echo</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
             <span class="n">future</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">),</span>
+        <span class="n">async_engine</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="p">),</span>
 <span class="p">}</span>
 

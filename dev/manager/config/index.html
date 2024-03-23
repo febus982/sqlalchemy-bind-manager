@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.14">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.15">
     
     
       
@@ -28,7 +28,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.10ba22f1.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.7e359304.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
@@ -824,11 +824,12 @@ The dictionary keys are used as a reference name for each bind.</p>
 <li><code>get_mapper(bind_name="default")</code></li>
 </ul>
 <h2 id="asynchronous-database-engines">Asynchronous database engines</h2>
-<p>Is it possible to supply configurations for asyncio supported engines using <code>SQLAlchemyAsyncConfig</code> objects.</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">sqlalchemy_bind_manager</span> <span class="kn">import</span> <span class="n">SQLAlchemyAsyncConfig</span><span class="p">,</span> <span class="n">SQLAlchemyBindManager</span>
+<p>Is it possible to supply configurations for asyncio supported engines using the <code>async_engine</code> config property.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">sqlalchemy_bind_manager</span> <span class="kn">import</span> <span class="n">SQLAlchemyConfig</span><span class="p">,</span> <span class="n">SQLAlchemyBindManager</span>
 
-<span class="n">config</span> <span class="o">=</span> <span class="n">SQLAlchemyAsyncConfig</span><span class="p">(</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">SQLAlchemyConfig</span><span class="p">(</span>
     <span class="n">engine_url</span><span class="o">=</span><span class="s2">&quot;postgresql+asyncpg://scott:tiger@localhost/test&quot;</span><span class="p">,</span>
+    <span class="n">async_engine</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">sa_manager</span> <span class="o">=</span> <span class="n">SQLAlchemyBindManager</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
