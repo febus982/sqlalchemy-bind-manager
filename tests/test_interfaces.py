@@ -1,16 +1,14 @@
 from inspect import signature
 
-from sqlalchemy_bind_manager.protocols import (
-    SQLAlchemyAsyncRepositoryInterface,
-    SQLAlchemyRepositoryInterface,
-)
 from sqlalchemy_bind_manager.repository import (
     SQLAlchemyAsyncRepository,
+    SQLAlchemyAsyncRepositoryInterface,
     SQLAlchemyRepository,
+    SQLAlchemyRepositoryInterface,
 )
 
 
-def test_protocols():
+def test_interfaces():
     assert issubclass(SQLAlchemyRepository, SQLAlchemyRepositoryInterface)
     assert issubclass(SQLAlchemyAsyncRepository, SQLAlchemyAsyncRepositoryInterface)
 
@@ -34,7 +32,7 @@ def test_protocols():
         )
         # Async signature is the same as async protocol
         assert signature(getattr(SQLAlchemyAsyncRepository, method)) == signature(
-            getattr(SQLAlchemyRepositoryInterface, method)
+            getattr(SQLAlchemyAsyncRepositoryInterface, method)
         )
         # Sync signature is the same as async signature
         assert signature(

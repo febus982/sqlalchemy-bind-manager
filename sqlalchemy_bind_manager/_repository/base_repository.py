@@ -19,17 +19,21 @@
 #  DEALINGS IN THE SOFTWARE.
 
 from abc import ABC
+from functools import partial
 from typing import (
     Any,
+    Callable,
+    Dict,
     Generic,
     Iterable,
+    Literal,
     Mapping,
     Tuple,
     Type,
     Union,
 )
 
-from sqlalchemy import asc, func, inspect, select
+from sqlalchemy import asc, desc, func, inspect, select
 from sqlalchemy.orm import Mapper, aliased, class_mapper, lazyload
 from sqlalchemy.orm.exc import UnmappedClassError
 from sqlalchemy.sql import Select
@@ -39,7 +43,6 @@ from sqlalchemy_bind_manager.exceptions import InvalidModelError, UnmappedProper
 from .common import (
     MODEL,
     CursorReference,
-    SortDirection,
 )
 
 
@@ -111,7 +114,9 @@ class BaseRepository(Generic[MODEL], ABC):
         return stmt
 
     def _filter_order_by(
-        self, stmt: Select, order_by: Iterable[Union[str, Tuple[str, SortDirection]]]
+        self,
+        stmt: Select,
+        order_by: Iterable[Union[str, Tuple[str, Literal["asc", "desc"]]]],
     ) -> Select:
         """Build the query ordering clauses from submitted parameters.
 
@@ -119,29 +124,37 @@ class BaseRepository(Generic[MODEL], ABC):
         `_filter_order_by(stmt, ['name'])`
             adds a `ORDER BY name` statement
 
-        `_filter_order_by(stmt, [('name', SortDirection.ASC)])`
+        `_filter_order_by(stmt, [('name', 'asc')])`
             adds a `ORDER BY name ASC` statement
 
         :param stmt: a Select statement
-        :type stmt: Select
         :param order_by: a list of columns, or tuples (column, direction)
-        :type order_by: Iterable[Union[str, Tuple[str, SortDirection]]]
         :return: The filtered query
         """
+        _partial_registry: Dict[Literal["asc", "desc"], Callable] = {
+            "desc": partial(desc),
+            "asc": partial(asc),
+        }
+
         for value in order_by:
             if isinstance(value, str):
                 self._validate_mapped_property(value)
                 stmt = stmt.order_by(getattr(self._model, value))
             else:
                 self._validate_mapped_property(value[0])
-                stmt = stmt.order_by(value[1].value(getattr(self._model, value[0])))
+                stmt = stmt.order_by(
+                    _partial_registry[value[1]](getattr(self._model, value[0]))
+                )
 
         return stmt
 
     def _find_query(
         self,
         search_params: Union[None, Mapping[str, Any]] = None,
-        order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
+        order_by: Union[
+            None,
+            Iterable[Union[str, Tuple[str, Literal["asc", "desc"]]]],
+        ] = None,
     ) -> Select:
         """Build a query with column filters and orders.
 
@@ -152,13 +165,11 @@ class BaseRepository(Generic[MODEL], ABC):
         q = _find_query(order_by=["name"])
             finds all models ordered by `name` column
 
-        q = _find_query(order_by=[("name", SortDirection.DESC)])
+        q = _find_query(order_by=[("name", "desc")])
             finds all models with reversed order by `name` column
 
         :param search_params: Any keyword argument to be used as equality filter
-        :type search_params: Mapping[str, Any]
         :param order_by: a list of columns, or tuples (column, direction)
-        :type order_by: Iterable[Union[str, Tuple[str, SortDirection]]]
         :return: The filtered query
         """
         stmt = select(self._model)
@@ -280,14 +291,14 @@ class BaseRepository(Generic[MODEL], ABC):
                 getattr(self._model, cursor_reference.column) > cursor_reference.value
             )
             page_query = self._filter_order_by(
-                page_query, [(cursor_reference.column, SortDirection.ASC)]
+                page_query, [(cursor_reference.column, "asc")]
             )
         else:
             page_query = stmt.where(
                 getattr(self._model, cursor_reference.column) < cursor_reference.value
             )
             page_query = self._filter_order_by(
-                page_query, [(cursor_reference.column, SortDirection.DESC)]
+                page_query, [(cursor_reference.column, "desc")]
             )
         return page_query.limit(limit)
 
@@ -312,14 +323,14 @@ class BaseRepository(Generic[MODEL], ABC):
                 getattr(self._model, cursor_reference.column) <= cursor_reference.value
             )
             previous_query = self._filter_order_by(
-                previous_query, [(cursor_reference.column, SortDirection.DESC)]
+                previous_query, [(cursor_reference.column, "desc")]
             )
         else:
             previous_query = stmt.where(
                 getattr(self._model, cursor_reference.column) >= cursor_reference.value
             )
             previous_query = self._filter_order_by(
-                previous_query, [(cursor_reference.column, SortDirection.ASC)]
+                previous_query, [(cursor_reference.column, "asc")]
             )
 
         return previous_query.limit(1)

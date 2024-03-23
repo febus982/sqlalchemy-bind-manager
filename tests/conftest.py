@@ -8,7 +8,6 @@ from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import clear_mappers, relationship
 
 from sqlalchemy_bind_manager import (
-    SQLAlchemyAsyncConfig,
     SQLAlchemyBindManager,
     SQLAlchemyConfig,
 )
@@ -40,9 +39,10 @@ def multiple_config():
             engine_url=f"sqlite:///{uuid4()}.db",
             engine_options=dict(connect_args={"check_same_thread": False}),
         ),
-        "async": SQLAlchemyAsyncConfig(
+        "async": SQLAlchemyConfig(
             engine_url=f"sqlite+aiosqlite:///{uuid4()}.db",
             engine_options=dict(connect_args={"check_same_thread": False}),
+            async_engine=True,
         ),
     }
 
@@ -88,9 +88,10 @@ def sa_manager() -> SQLAlchemyBindManager:
             engine_url="sqlite://",
             engine_options=dict(connect_args={"check_same_thread": False}),
         ),
-        "async": SQLAlchemyAsyncConfig(
+        "async": SQLAlchemyConfig(
             engine_url="sqlite+aiosqlite://",
             engine_options=dict(connect_args={"check_same_thread": False}),
+            async_engine=True,
         ),
     }
 

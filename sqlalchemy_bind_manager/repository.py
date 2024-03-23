@@ -19,12 +19,15 @@
 #  DEALINGS IN THE SOFTWARE.
 
 from ._repository import (
+    CursorPageInfo,
     CursorPaginatedResult,
     CursorReference,
+    PageInfo,
     PaginatedResult,
-    SortDirection,
     SQLAlchemyAsyncRepository,
+    SQLAlchemyAsyncRepositoryInterface,
     SQLAlchemyRepository,
+    SQLAlchemyRepositoryInterface,
 )
 from ._unit_of_work import (
     AsyncUnitOfWork,

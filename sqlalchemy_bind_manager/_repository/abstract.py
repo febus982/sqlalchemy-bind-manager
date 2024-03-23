@@ -18,31 +18,38 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 #  DEALINGS IN THE SOFTWARE.
 
+#
+#  Permission is hereby granted, free of charge, to any person obtaining a
+#  copy of this software and associated documentation files (the "Software"),
+#  to deal in the Software without restriction, including without limitation
+#  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+#  and/or sell copies of the Software, and to permit persons to whom the
+#  Software is furnished to do so, subject to the following conditions:
+#
+#
+from abc import ABC, abstractmethod
 from typing import (
     Any,
+    Generic,
     Iterable,
     List,
+    Literal,
     Mapping,
-    Protocol,
     Tuple,
     Union,
-    runtime_checkable,
 )
 
-from sqlalchemy_bind_manager._repository.common import (
+from .common import (
     MODEL,
     PRIMARY_KEY,
-)
-from sqlalchemy_bind_manager.repository import (
     CursorPaginatedResult,
     CursorReference,
     PaginatedResult,
-    SortDirection,
 )
 
 
-@runtime_checkable
-class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
+class SQLAlchemyAsyncRepositoryInterface(Generic[MODEL], ABC):
+    @abstractmethod
     async def get(self, identifier: PRIMARY_KEY) -> MODEL:
         """Get a model by primary key.
 
@@ -52,6 +59,7 @@ class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
         """
         ...
 
+    @abstractmethod
     async def get_many(self, identifiers: Iterable[PRIMARY_KEY]) -> List[MODEL]:
         """Get a list of models by primary keys.
 
@@ -60,6 +68,7 @@ class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
         """
         ...
 
+    @abstractmethod
     async def save(self, instance: MODEL) -> MODEL:
         """Persist a model.
 
@@ -68,6 +77,7 @@ class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
         """
         ...
 
+    @abstractmethod
     async def save_many(self, instances: Iterable[MODEL]) -> Iterable[MODEL]:
         """Persist many models in a single database get_session.
 
@@ -76,6 +86,7 @@ class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
         """
         ...
 
+    @abstractmethod
     async def delete(self, instance: MODEL) -> None:
         """Deletes a model.
 
@@ -83,6 +94,7 @@ class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
         """
         ...
 
+    @abstractmethod
     async def delete_many(self, instances: Iterable[MODEL]) -> None:
         """Deletes a collection of models in a single transaction.
 
@@ -90,10 +102,14 @@ class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
         """
         ...
 
+    @abstractmethod
     async def find(
         self,
         search_params: Union[None, Mapping[str, Any]] = None,
-        order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
+        order_by: Union[
+            None,
+            Iterable[Union[str, Tuple[str, Literal["asc", "desc"]]]],
+        ] = None,
     ) -> List[MODEL]:
         """Find models using filters.
 
@@ -106,7 +122,7 @@ class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
             find(order_by=["name"])
 
             # find all models with reversed order by `name` column
-            find(order_by=[("name", SortDirection.DESC)])
+            find(order_by=[("name", "desc")])
 
         :param search_params: A mapping containing equality filters
         :param order_by:
@@ -114,12 +130,16 @@ class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
         """
         ...
 
+    @abstractmethod
     async def paginated_find(
         self,
         items_per_page: int,
         page: int = 1,
         search_params: Union[None, Mapping[str, Any]] = None,
-        order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
+        order_by: Union[
+            None,
+            Iterable[Union[str, Tuple[str, Literal["asc", "desc"]]]],
+        ] = None,
     ) -> PaginatedResult[MODEL]:
         """Find models using filters and limit/offset pagination. Returned results
         do include pagination metadata.
@@ -139,7 +159,7 @@ class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
             paginated_find(order_by=["name"])
 
             # find all models with reversed order by `name` column
-            paginated_find(order_by=[("name", SortDirection.DESC)])
+            paginated_find(order_by=[("name", "desc")])
 
         :param items_per_page: Number of models to retrieve
         :param page: Page to retrieve
@@ -149,6 +169,7 @@ class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
         """
         ...
 
+    @abstractmethod
     async def cursor_paginated_find(
         self,
         items_per_page: int,
@@ -184,8 +205,8 @@ class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
         ...
 
 
-@runtime_checkable
-class SQLAlchemyRepositoryInterface(Protocol[MODEL]):
+class SQLAlchemyRepositoryInterface(Generic[MODEL], ABC):
+    @abstractmethod
     def get(self, identifier: PRIMARY_KEY) -> MODEL:
         """Get a model by primary key.
 
@@ -195,6 +216,7 @@ class SQLAlchemyRepositoryInterface(Protocol[MODEL]):
         """
         ...
 
+    @abstractmethod
     def get_many(self, identifiers: Iterable[PRIMARY_KEY]) -> List[MODEL]:
         """Get a list of models by primary keys.
 
@@ -203,6 +225,7 @@ class SQLAlchemyRepositoryInterface(Protocol[MODEL]):
         """
         ...
 
+    @abstractmethod
     def save(self, instance: MODEL) -> MODEL:
         """Persist a model.
 
@@ -211,6 +234,7 @@ class SQLAlchemyRepositoryInterface(Protocol[MODEL]):
         """
         ...
 
+    @abstractmethod
     def save_many(self, instances: Iterable[MODEL]) -> Iterable[MODEL]:
         """Persist many models in a single database get_session.
 
@@ -219,6 +243,7 @@ class SQLAlchemyRepositoryInterface(Protocol[MODEL]):
         """
         ...
 
+    @abstractmethod
     def delete(self, instance: MODEL) -> None:
         """Deletes a model.
 
@@ -226,6 +251,7 @@ class SQLAlchemyRepositoryInterface(Protocol[MODEL]):
         """
         ...
 
+    @abstractmethod
     def delete_many(self, instances: Iterable[MODEL]) -> None:
         """Deletes a collection of models in a single transaction.
 
@@ -233,10 +259,14 @@ class SQLAlchemyRepositoryInterface(Protocol[MODEL]):
         """
         ...
 
+    @abstractmethod
     def find(
         self,
         search_params: Union[None, Mapping[str, Any]] = None,
-        order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
+        order_by: Union[
+            None,
+            Iterable[Union[str, Tuple[str, Literal["asc", "desc"]]]],
+        ] = None,
     ) -> List[MODEL]:
         """Find models using filters.
 
@@ -249,7 +279,7 @@ class SQLAlchemyRepositoryInterface(Protocol[MODEL]):
             find(order_by=["name"])
 
             # find all models with reversed order by `name` column
-            find(order_by=[("name", SortDirection.DESC)])
+            find(order_by=[("name", "desc")])
 
         :param search_params: A mapping containing equality filters
         :param order_by:
@@ -257,12 +287,16 @@ class SQLAlchemyRepositoryInterface(Protocol[MODEL]):
         """
         ...
 
+    @abstractmethod
     def paginated_find(
         self,
         items_per_page: int,
         page: int = 1,
         search_params: Union[None, Mapping[str, Any]] = None,
-        order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
+        order_by: Union[
+            None,
+            Iterable[Union[str, Tuple[str, Literal["asc", "desc"]]]],
+        ] = None,
     ) -> PaginatedResult[MODEL]:
         """Find models using filters and limit/offset pagination. Returned results
         do include pagination metadata.
@@ -282,7 +316,7 @@ class SQLAlchemyRepositoryInterface(Protocol[MODEL]):
             paginated_find(order_by=["name"])
 
             # find all models with reversed order by `name` column
-            paginated_find(order_by=[("name", SortDirection.DESC)])
+            paginated_find(order_by=[("name", "desc")])
 
         :param items_per_page: Number of models to retrieve
         :param page: Page to retrieve
@@ -292,6 +326,7 @@ class SQLAlchemyRepositoryInterface(Protocol[MODEL]):
         """
         ...
 
+    @abstractmethod
     def cursor_paginated_find(
         self,
         items_per_page: int,

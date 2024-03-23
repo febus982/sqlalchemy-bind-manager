@@ -19,7 +19,6 @@
 #  DEALINGS IN THE SOFTWARE.
 
 from ._bind_manager import (
-    SQLAlchemyAsyncConfig,
     SQLAlchemyBindManager,
     SQLAlchemyConfig,
 )

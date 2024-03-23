@@ -20,7 +20,7 @@
 
 from typing import Mapping, MutableMapping, Union
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, StrictBool
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy.engine import Engine
 from sqlalchemy.ext.asyncio import (
@@ -40,22 +40,13 @@ from sqlalchemy_bind_manager.exceptions import (
 
 class SQLAlchemyConfig(BaseModel):
     """
-    Configuration for synchronous engines
+    Configuration for engines
     """
 
     engine_url: str
     engine_options: Union[dict, None] = None
     session_options: Union[dict, None] = None
-
-
-class SQLAlchemyAsyncConfig(BaseModel):
-    """
-    Configuration for asynchronous engines
-    """
-
-    engine_url: str
-    engine_options: Union[dict, None] = None
-    session_options: Union[dict, None] = None
+    async_engine: StrictBool = False
 
 
 class SQLAlchemyBind(BaseModel):
@@ -85,9 +76,8 @@ class SQLAlchemyBindManager:
     def __init__(
         self,
         config: Union[
-            Mapping[str, Union[SQLAlchemyConfig, SQLAlchemyAsyncConfig]],
+            Mapping[str, SQLAlchemyConfig],
             SQLAlchemyConfig,
-            SQLAlchemyAsyncConfig,
         ],
     ) -> None:
         self.__binds = {}
@@ -97,18 +87,10 @@ class SQLAlchemyBindManager:
         else:
             self.__init_bind(DEFAULT_BIND_NAME, config)
 
-    def __init_bind(
-        self, name: str, config: Union[SQLAlchemyConfig, SQLAlchemyAsyncConfig]
-    ):
-        if not any(
-            [
-                isinstance(config, SQLAlchemyConfig),
-                isinstance(config, SQLAlchemyAsyncConfig),
-            ]
-        ):
+    def __init_bind(self, name: str, config: SQLAlchemyConfig):
+        if not isinstance(config, SQLAlchemyConfig):
             raise InvalidConfigError(
-                f"Config for bind `{name}` is not a SQLAlchemyConfig"
-                f" or SQLAlchemyAsyncConfig object"
+                f"Config for bind `{name}` is not a SQLAlchemyConfig" f"object"
             )
 
         engine_options: dict = config.engine_options or {}
@@ -119,7 +101,7 @@ class SQLAlchemyBindManager:
         session_options.setdefault("expire_on_commit", False)
         session_options.setdefault("autobegin", False)
 
-        if isinstance(config, SQLAlchemyAsyncConfig):
+        if config.async_engine:
             self.__binds[name] = self.__build_async_bind(
                 engine_url=config.engine_url,
                 engine_options=engine_options,
