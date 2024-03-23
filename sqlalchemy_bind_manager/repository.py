@@ -22,7 +22,6 @@ from ._repository import (
     CursorPaginatedResult,
     CursorReference,
     PaginatedResult,
-    SortDirection,
     SQLAlchemyAsyncRepository,
     SQLAlchemyAsyncRepositoryInterface,
     SQLAlchemyRepository,

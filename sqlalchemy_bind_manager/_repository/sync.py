@@ -25,6 +25,7 @@ from typing import (
     Iterable,
     Iterator,
     List,
+    Literal,
     Mapping,
     Tuple,
     Type,
@@ -47,7 +48,6 @@ from .common import (
     CursorPaginatedResult,
     CursorReference,
     PaginatedResult,
-    SortDirection,
 )
 from .result_presenters import CursorPaginatedResultPresenter, PaginatedResultPresenter
 
@@ -145,7 +145,10 @@ class SQLAlchemyRepository(
     def find(
         self,
         search_params: Union[None, Mapping[str, Any]] = None,
-        order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
+        order_by: Union[
+            None,
+            Iterable[Union[str, Tuple[str, Literal["asc", "desc"]]]],
+        ] = None,
     ) -> List[MODEL]:
         """Find models using filters.
 
@@ -158,7 +161,7 @@ class SQLAlchemyRepository(
             find(order_by=["name"])
 
             # find all models with reversed order by `name` column
-            find(order_by=[("name", SortDirection.DESC)])
+            find(order_by=[("name", "desc")])
 
         :param search_params: A mapping containing equality filters
         :param order_by:
@@ -175,7 +178,10 @@ class SQLAlchemyRepository(
         items_per_page: int,
         page: int = 1,
         search_params: Union[None, Mapping[str, Any]] = None,
-        order_by: Union[None, Iterable[Union[str, Tuple[str, SortDirection]]]] = None,
+        order_by: Union[
+            None,
+            Iterable[Union[str, Tuple[str, Literal["asc", "desc"]]]],
+        ] = None,
     ) -> PaginatedResult[MODEL]:
         """Find models using filters and limit/offset pagination. Returned results
         do include pagination metadata.
@@ -195,7 +201,7 @@ class SQLAlchemyRepository(
             paginated_find(order_by=["name"])
 
             # find all models with reversed order by `name` column
-            paginated_find(order_by=[("name", SortDirection.DESC)])
+            paginated_find(order_by=[("name", "desc")])
 
         :param items_per_page: Number of models to retrieve
         :param page: Page to retrieve

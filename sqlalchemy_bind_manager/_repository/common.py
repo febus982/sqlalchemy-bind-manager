@@ -18,12 +18,9 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 #  DEALINGS IN THE SOFTWARE.
 
-from enum import Enum
-from functools import partial
-from typing import Callable, Generic, List, TypeVar, Union
+from typing import Generic, List, TypeVar, Union
 
 from pydantic import BaseModel, StrictInt, StrictStr
-from sqlalchemy import asc, desc
 
 MODEL = TypeVar("MODEL")
 PRIMARY_KEY = Union[str, int, tuple, dict]
@@ -60,8 +57,3 @@ class CursorPageInfo(BaseModel):
 class CursorPaginatedResult(BaseModel, Generic[MODEL]):
     items: List[MODEL]
     page_info: CursorPageInfo
-
-
-class SortDirection(Enum):
-    ASC: Callable = partial(asc)
-    DESC: Callable = partial(desc)

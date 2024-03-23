@@ -3,7 +3,6 @@
       members:
       - SQLAlchemyRepository
       - SQLAlchemyAsyncRepository
-      - SortDirection
       - PaginatedResult
       - CursorPaginatedResult
       - CursorReference

@@ -24,6 +24,5 @@ from .common import (
     CursorPaginatedResult,
     CursorReference,
     PaginatedResult,
-    SortDirection,
 )
 from .sync import SQLAlchemyRepository
