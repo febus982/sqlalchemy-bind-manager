@@ -19,8 +19,10 @@
 #  DEALINGS IN THE SOFTWARE.
 
 from ._repository import (
+    CursorPageInfo,
     CursorPaginatedResult,
     CursorReference,
+    PageInfo,
     PaginatedResult,
     SQLAlchemyAsyncRepository,
     SQLAlchemyAsyncRepositoryInterface,

@@ -4,5 +4,6 @@
       - SQLAlchemyRepository
       - SQLAlchemyAsyncRepository
       - PaginatedResult
+      - PageInfo
       - CursorPaginatedResult
-      - CursorReference
+      - CursorPageInfo

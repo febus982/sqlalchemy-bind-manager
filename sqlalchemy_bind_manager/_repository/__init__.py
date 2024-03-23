@@ -21,8 +21,10 @@
 from .abstract import SQLAlchemyAsyncRepositoryInterface, SQLAlchemyRepositoryInterface
 from .async_ import SQLAlchemyAsyncRepository
 from .common import (
+    CursorPageInfo,
     CursorPaginatedResult,
     CursorReference,
+    PageInfo,
     PaginatedResult,
 )
 from .sync import SQLAlchemyRepository

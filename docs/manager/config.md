@@ -63,7 +63,7 @@ All the `SQLAlchemyBindManager` helper methods accept the `bind_name` optional p
 
 ## Asynchronous database engines
 
-Is it possible to supply configurations for asyncio supported engines using `SQLAlchemyAsyncConfig` objects.
+Is it possible to supply configurations for asyncio supported engines using the `async_engine` config property.
 
 ```python
 from sqlalchemy_bind_manager import SQLAlchemyConfig, SQLAlchemyBindManager
