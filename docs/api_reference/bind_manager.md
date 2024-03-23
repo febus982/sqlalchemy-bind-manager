@@ -3,4 +3,3 @@
       members:
       - SQLAlchemyBindManager 
       - SQLAlchemyConfig 
-      - SQLAlchemyAsyncConfig 

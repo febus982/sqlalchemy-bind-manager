@@ -66,10 +66,11 @@ All the `SQLAlchemyBindManager` helper methods accept the `bind_name` optional p
 Is it possible to supply configurations for asyncio supported engines using `SQLAlchemyAsyncConfig` objects.
 
 ```python
-from sqlalchemy_bind_manager import SQLAlchemyAsyncConfig, SQLAlchemyBindManager
+from sqlalchemy_bind_manager import SQLAlchemyConfig, SQLAlchemyBindManager
 
-config = SQLAlchemyAsyncConfig(
+config = SQLAlchemyConfig(
     engine_url="postgresql+asyncpg://scott:tiger@localhost/test",
+    async_engine=True,
 )
 
 sa_manager = SQLAlchemyBindManager(config)
