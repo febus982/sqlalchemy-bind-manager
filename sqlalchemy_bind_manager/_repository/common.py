@@ -43,6 +43,7 @@ class PageInfo(BaseModel):
     :param has_previous_page: True if there is a previous page.
     :type has_previous_page: bool
     """
+
     page: int
     items_per_page: int
     total_pages: int
@@ -60,6 +61,7 @@ class PaginatedResult(BaseModel, Generic[MODEL]):
     :param page_info: The pagination metadata
     :type page_info: PageInfo
     """
+
     items: List[MODEL]
     page_info: PageInfo
 
@@ -81,11 +83,14 @@ class CursorPageInfo(BaseModel):
     :type has_next_page: bool
     :param has_previous_page: True if there is a previous page.
     :type has_previous_page: bool
-    :param start_cursor: The cursor pointing to the first item in the page, if at least one item is returned.
+    :param start_cursor: The cursor pointing to the first item in the page,
+    if at least one item is returned.
     :type start_cursor: Union[CursorReference, None]
-    :param end_cursor: The cursor pointing to the last item in the page, if at least one item is returned.
+    :param end_cursor: The cursor pointing to the last item in the page,
+    if at least one item is returned.
     :type end_cursor: Union[CursorReference, None]
     """
+
     items_per_page: int
     total_items: int
     has_next_page: bool = False
@@ -103,5 +108,6 @@ class CursorPaginatedResult(BaseModel, Generic[MODEL]):
     :param page_info: The pagination metadata
     :type page_info: CursorPageInfo
     """
+
     items: List[MODEL]
     page_info: CursorPageInfo
