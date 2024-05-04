@@ -8,12 +8,16 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  # Run tests on Friday to check if tests pass with updated dependencies
+  schedule:
+    - cron: '0 0 * * 5'
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
 jobs:
   test:
     strategy:
+      fail-fast: false
       matrix:
         version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
         os: [ubuntu-latest]
@@ -31,5 +35,49 @@ jobs:
         poetry config virtualenvs.create false
         poetry install --no-root --with dev
     - name: Test with pytest
+      id: citest
       run: |
         make ci-test
+
+  failure-notification:
+    runs-on: ubuntu-latest
+    needs: test
+    if: failure() && github.event.schedule == '0 0 * * 5'
+    permissions:
+      issues: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create label if not exists
+        run: |
+          gh label create scheduled-failure --force --color B60205
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Opens an issue if not already existing and open
+        run: |
+          previous_issue_number=$(gh issue list \
+            --label "$LABELS" \
+            --json number \
+            --jq '.[0].number')
+          if [[ -n $previous_issue_number ]]; then
+            gh issue edit "$previous_issue_number" --body "$BODY"
+          else
+            new_issue_url=$(gh issue create \
+              --title "$TITLE" \
+              --label "$LABELS" \
+              --body "$BODY")
+            if [[ $PINNED == true ]]; then
+              gh issue pin "$new_issue_url"
+            fi          
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          TITLE: Scheduled automated test failure
+          LABELS: scheduled-failure
+          BODY: |
+            ### Test suite failed during scheduled run
+
+            [Link to failing run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+          PINNED: false
