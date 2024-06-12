@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.21">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.26">
     
     
       
@@ -28,7 +28,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.66ac8b77.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.6543a935.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.06af60db.min.css">
@@ -203,7 +203,7 @@
       
     </form>
     <div class="md-search__output">
-      <div class="md-search__scrollwrap" data-md-scrollfix>
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
         <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
             Initializing search
@@ -1208,14 +1208,14 @@
 
 
 <h2 id="sqlalchemy_bind_manager.repository" class="doc doc-heading">
-          <span class="doc doc-object-name doc-module-name">sqlalchemy_bind_manager.repository</span>
+            <span class="doc doc-object-name doc-module-name">sqlalchemy_bind_manager.repository</span>
 
 
 </h2>
 
-  <div class="doc doc-contents first">
+    <div class="doc doc-contents first">
 
-  
+
 
   <div class="doc doc-children">
 
@@ -1231,18 +1231,18 @@
 
 
 <h3 id="sqlalchemy_bind_manager.repository.SQLAlchemyRepository" class="doc doc-heading">
-          <span class="doc doc-object-name doc-class-name">sqlalchemy_bind_manager.repository.SQLAlchemyRepository</span>
+            <span class="doc doc-object-name doc-class-name">sqlalchemy_bind_manager.repository.SQLAlchemyRepository</span>
 
 
 </h3>
 
 
-  <div class="doc doc-contents ">
+    <div class="doc doc-contents ">
 
 
-            <details class="quote">
-              <summary>Source code in <code>sqlalchemy_bind_manager/_repository/sync.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 55</span>
+              <details class="quote">
+                <summary>Source code in <code>sqlalchemy_bind_manager/_repository/sync.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 55</span>
 <span class="normal"> 56</span>
 <span class="normal"> 57</span>
 <span class="normal"> 58</span>
@@ -1712,12 +1712,11 @@
         <span class="k">else</span><span class="p">:</span>
             <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">_external_session</span>
 </code></pre></div></td></tr></table></div>
-            </details>
+              </details>
 
-  
+
 
   <div class="doc doc-children">
-
 
 
 
@@ -1730,100 +1729,96 @@
 <div class="doc doc-object doc-function">
 
 
-
 <h4 id="sqlalchemy_bind_manager.repository.SQLAlchemyRepository.get" class="doc doc-heading">
-          <span class="doc doc-object-name doc-function-name">get</span>
+            <span class="doc doc-object-name doc-function-name">get</span>
 
 
 </h4>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">get</span><span class="p">(</span><span class="n">identifier</span><span class="p">:</span> <span class="n"><span title="sqlalchemy_bind_manager._repository.common.PRIMARY_KEY">PRIMARY_KEY</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span></span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Get a model by primary key.</p>
 
 
-
-  <p><span class="doc-section-title">Parameters:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td><code>identifier</code></td>
-          <td>
-                <code><span title="sqlalchemy_bind_manager._repository.common.PRIMARY_KEY">PRIMARY_KEY</span></code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>The primary key</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
         </tr>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>identifier</code></td>
+            <td>
+                  <code><span title="sqlalchemy_bind_manager._repository.common.PRIMARY_KEY">PRIMARY_KEY</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The primary key</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
-
-  <p><span class="doc-section-title">Returns:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td>
-                <code><span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span></code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>A model instance</p>
-            </div>
-          </td>
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
         </tr>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A model instance</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
-
-  <p><span class="doc-section-title">Raises:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td>
-                <code>ModelNotFoundError</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>No model has been found using the primary key</p>
-            </div>
-          </td>
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
         </tr>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code>ModelNotFoundError</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>No model has been found using the primary key</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
-          <details class="quote">
-            <summary>Source code in <code>sqlalchemy_bind_manager/_repository/sync.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">78</span>
+            <details class="quote">
+              <summary>Source code in <code>sqlalchemy_bind_manager/_repository/sync.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">78</span>
 <span class="normal">79</span>
 <span class="normal">80</span>
 <span class="normal">81</span>
@@ -1847,85 +1842,81 @@
         <span class="k">raise</span> <span class="n">ModelNotFoundError</span><span class="p">(</span><span class="s2">&quot;No rows found for provided primary key.&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">model</span>
 </code></pre></div></td></tr></table></div>
-          </details>
-  </div>
+            </details>
+    </div>
 
 </div>
-
 
 <div class="doc doc-object doc-function">
 
 
-
 <h4 id="sqlalchemy_bind_manager.repository.SQLAlchemyRepository.get_many" class="doc doc-heading">
-          <span class="doc doc-object-name doc-function-name">get_many</span>
+            <span class="doc doc-object-name doc-function-name">get_many</span>
 
 
 </h4>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">get_many</span><span class="p">(</span><span class="n">identifiers</span><span class="p">:</span> <span class="n"><span title="typing.Iterable">Iterable</span></span><span class="p">[</span><span class="n"><span title="sqlalchemy_bind_manager._repository.common.PRIMARY_KEY">PRIMARY_KEY</span></span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n"><span title="typing.List">List</span></span><span class="p">[</span><span class="n"><span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span></span><span class="p">]</span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Get a list of models by primary keys.</p>
 
 
-
-  <p><span class="doc-section-title">Parameters:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td><code>identifiers</code></td>
-          <td>
-                <code><span title="typing.Iterable">Iterable</span>[<span title="sqlalchemy_bind_manager._repository.common.PRIMARY_KEY">PRIMARY_KEY</span>]</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>A list of primary keys</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
         </tr>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>identifiers</code></td>
+            <td>
+                  <code><span title="typing.Iterable">Iterable</span>[<span title="sqlalchemy_bind_manager._repository.common.PRIMARY_KEY">PRIMARY_KEY</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A list of primary keys</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
-
-  <p><span class="doc-section-title">Returns:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td>
-                <code><span title="typing.List">List</span>[<span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span>]</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>A list of models</p>
-            </div>
-          </td>
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
         </tr>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="typing.List">List</span>[<span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A list of models</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
-          <details class="quote">
-            <summary>Source code in <code>sqlalchemy_bind_manager/_repository/sync.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 91</span>
+            <details class="quote">
+              <summary>Source code in <code>sqlalchemy_bind_manager/_repository/sync.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 91</span>
 <span class="normal"> 92</span>
 <span class="normal"> 93</span>
 <span class="normal"> 94</span>
@@ -1949,85 +1940,81 @@
     <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_session</span><span class="p">(</span><span class="n">commit</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">stmt</span><span class="p">)</span><span class="o">.</span><span class="n">scalars</span><span class="p">()]</span>
 </code></pre></div></td></tr></table></div>
-          </details>
-  </div>
+            </details>
+    </div>
 
 </div>
-
 
 <div class="doc doc-object doc-function">
 
 
-
 <h4 id="sqlalchemy_bind_manager.repository.SQLAlchemyRepository.save" class="doc doc-heading">
-          <span class="doc doc-object-name doc-function-name">save</span>
+            <span class="doc doc-object-name doc-function-name">save</span>
 
 
 </h4>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">save</span><span class="p">(</span><span class="n">instance</span><span class="p">:</span> <span class="n"><span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span></span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Persist a model.</p>
 
 
-
-  <p><span class="doc-section-title">Parameters:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td><code>instance</code></td>
-          <td>
-                <code><span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span></code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>A mapped object instance to be persisted</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
         </tr>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>instance</code></td>
+            <td>
+                  <code><span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A mapped object instance to be persisted</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
-
-  <p><span class="doc-section-title">Returns:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td>
-                <code><span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span></code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>The model instance after being persisted</p>
-            </div>
-          </td>
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
         </tr>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The model instance after being persisted</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
-          <details class="quote">
-            <summary>Source code in <code>sqlalchemy_bind_manager/_repository/sync.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">104</span>
+            <details class="quote">
+              <summary>Source code in <code>sqlalchemy_bind_manager/_repository/sync.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">104</span>
 <span class="normal">105</span>
 <span class="normal">106</span>
 <span class="normal">107</span>
@@ -2047,85 +2034,81 @@
         <span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">instance</span>
 </code></pre></div></td></tr></table></div>
-          </details>
-  </div>
+            </details>
+    </div>
 
 </div>
-
 
 <div class="doc doc-object doc-function">
 
 
-
 <h4 id="sqlalchemy_bind_manager.repository.SQLAlchemyRepository.save_many" class="doc doc-heading">
-          <span class="doc doc-object-name doc-function-name">save_many</span>
+            <span class="doc doc-object-name doc-function-name">save_many</span>
 
 
 </h4>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">save_many</span><span class="p">(</span><span class="n">instances</span><span class="p">:</span> <span class="n"><span title="typing.Iterable">Iterable</span></span><span class="p">[</span><span class="n"><span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span></span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n"><span title="typing.Iterable">Iterable</span></span><span class="p">[</span><span class="n"><span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span></span><span class="p">]</span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Persist many models in a single database get_session.</p>
 
 
-
-  <p><span class="doc-section-title">Parameters:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td><code>instances</code></td>
-          <td>
-                <code><span title="typing.Iterable">Iterable</span>[<span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span>]</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>A list of mapped objects to be persisted</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
         </tr>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>instances</code></td>
+            <td>
+                  <code><span title="typing.Iterable">Iterable</span>[<span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A list of mapped objects to be persisted</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
-
-  <p><span class="doc-section-title">Returns:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td>
-                <code><span title="typing.Iterable">Iterable</span>[<span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span>]</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>The model instances after being persisted</p>
-            </div>
-          </td>
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
         </tr>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="typing.Iterable">Iterable</span>[<span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The model instances after being persisted</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
-          <details class="quote">
-            <summary>Source code in <code>sqlalchemy_bind_manager/_repository/sync.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">115</span>
+            <details class="quote">
+              <summary>Source code in <code>sqlalchemy_bind_manager/_repository/sync.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">115</span>
 <span class="normal">116</span>
 <span class="normal">117</span>
 <span class="normal">118</span>
@@ -2145,61 +2128,58 @@
         <span class="n">session</span><span class="o">.</span><span class="n">add_all</span><span class="p">(</span><span class="n">instances</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">instances</span>
 </code></pre></div></td></tr></table></div>
-          </details>
-  </div>
+            </details>
+    </div>
 
 </div>
-
 
 <div class="doc doc-object doc-function">
 
 
-
 <h4 id="sqlalchemy_bind_manager.repository.SQLAlchemyRepository.delete" class="doc doc-heading">
-          <span class="doc doc-object-name doc-function-name">delete</span>
+            <span class="doc doc-object-name doc-function-name">delete</span>
 
 
 </h4>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">delete</span><span class="p">(</span><span class="n">instance</span><span class="p">:</span> <span class="n"><span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Deletes a model.</p>
 
 
-
-  <p><span class="doc-section-title">Parameters:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td><code>instance</code></td>
-          <td>
-                <code><span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span></code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>The model instance</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
         </tr>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>instance</code></td>
+            <td>
+                  <code><span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The model instance</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
-          <details class="quote">
-            <summary>Source code in <code>sqlalchemy_bind_manager/_repository/sync.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">126</span>
+            <details class="quote">
+              <summary>Source code in <code>sqlalchemy_bind_manager/_repository/sync.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">126</span>
 <span class="normal">127</span>
 <span class="normal">128</span>
 <span class="normal">129</span>
@@ -2215,61 +2195,58 @@
     <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_session</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
         <span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
-          </details>
-  </div>
+            </details>
+    </div>
 
 </div>
-
 
 <div class="doc doc-object doc-function">
 
 
-
 <h4 id="sqlalchemy_bind_manager.repository.SQLAlchemyRepository.delete_many" class="doc doc-heading">
-          <span class="doc doc-object-name doc-function-name">delete_many</span>
+            <span class="doc doc-object-name doc-function-name">delete_many</span>
 
 
 </h4>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">delete_many</span><span class="p">(</span><span class="n">instances</span><span class="p">:</span> <span class="n"><span title="typing.Iterable">Iterable</span></span><span class="p">[</span><span class="n"><span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span></span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Deletes a collection of models in a single transaction.</p>
 
 
-
-  <p><span class="doc-section-title">Parameters:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td><code>instances</code></td>
-          <td>
-                <code><span title="typing.Iterable">Iterable</span>[<span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span>]</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>The model instances</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
         </tr>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>instances</code></td>
+            <td>
+                  <code><span title="typing.Iterable">Iterable</span>[<span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The model instances</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
-          <details class="quote">
-            <summary>Source code in <code>sqlalchemy_bind_manager/_repository/sync.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">135</span>
+            <details class="quote">
+              <summary>Source code in <code>sqlalchemy_bind_manager/_repository/sync.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">135</span>
 <span class="normal">136</span>
 <span class="normal">137</span>
 <span class="normal">138</span>
@@ -2287,26 +2264,24 @@
         <span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">instances</span><span class="p">:</span>
             <span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
-          </details>
-  </div>
+            </details>
+    </div>
 
 </div>
-
 
 <div class="doc doc-object doc-function">
 
 
-
 <h4 id="sqlalchemy_bind_manager.repository.SQLAlchemyRepository.find" class="doc doc-heading">
-          <span class="doc doc-object-name doc-function-name">find</span>
+            <span class="doc doc-object-name doc-function-name">find</span>
 
 
 </h4>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">find</span><span class="p">(</span><span class="n">search_params</span><span class="p">:</span> <span class="n"><span title="typing.Union">Union</span></span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n"><span title="typing.Mapping">Mapping</span></span><span class="p">[</span><span class="n">str</span><span class="p">,</span> <span class="n"><span title="typing.Any">Any</span></span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">order_by</span><span class="p">:</span> <span class="n"><span title="typing.Union">Union</span></span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n"><span title="typing.Iterable">Iterable</span></span><span class="p">[</span><span class="n"><span title="typing.Union">Union</span></span><span class="p">[</span><span class="n">str</span><span class="p">,</span> <span class="n"><span title="typing.Tuple">Tuple</span></span><span class="p">[</span><span class="n">str</span><span class="p">,</span> <span class="n"><span title="typing.Literal">Literal</span></span><span class="p">[</span><span class="s1">&#39;asc&#39;</span><span class="p">,</span> <span class="s1">&#39;desc&#39;</span><span class="p">]]]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="typing.List">List</span></span><span class="p">[</span><span class="n"><span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span></span><span class="p">]</span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Find models using filters.</p>
 <p>E.g.</p>
 <pre><code># find all models with name = John
@@ -2320,76 +2295,74 @@ find(order_by=[("name", "desc")])
 </code></pre>
 
 
-
-  <p><span class="doc-section-title">Parameters:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td><code>search_params</code></td>
-          <td>
-                <code><span title="typing.Union">Union</span>[None, <span title="typing.Mapping">Mapping</span>[str, <span title="typing.Any">Any</span>]]</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>A mapping containing equality filters</p>
-            </div>
-          </td>
-          <td>
-                <code>None</code>
-          </td>
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
         </tr>
-        <tr class="doc-section-item">
-          <td><code>order_by</code></td>
-          <td>
-                <code><span title="typing.Union">Union</span>[None, <span title="typing.Iterable">Iterable</span>[<span title="typing.Union">Union</span>[str, <span title="typing.Tuple">Tuple</span>[str, <span title="typing.Literal">Literal</span>[&#39;asc&#39;, &#39;desc&#39;]]]]]</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              
-            </div>
-          </td>
-          <td>
-                <code>None</code>
-          </td>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>search_params</code></td>
+            <td>
+                  <code><span title="typing.Union">Union</span>[None, <span title="typing.Mapping">Mapping</span>[str, <span title="typing.Any">Any</span>]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A mapping containing equality filters</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>order_by</code></td>
+            <td>
+                  <code><span title="typing.Union">Union</span>[None, <span title="typing.Iterable">Iterable</span>[<span title="typing.Union">Union</span>[str, <span title="typing.Tuple">Tuple</span>[str, <span title="typing.Literal">Literal</span>[&#39;asc&#39;, &#39;desc&#39;]]]]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
         </tr>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="typing.List">List</span>[<span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A collection of models</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
-
-
-  <p><span class="doc-section-title">Returns:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td>
-                <code><span title="typing.List">List</span>[<span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span>]</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>A collection of models</p>
-            </div>
-          </td>
-        </tr>
-    </tbody>
-  </table>
-
-          <details class="quote">
-            <summary>Source code in <code>sqlalchemy_bind_manager/_repository/sync.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">145</span>
+            <details class="quote">
+              <summary>Source code in <code>sqlalchemy_bind_manager/_repository/sync.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">145</span>
 <span class="normal">146</span>
 <span class="normal">147</span>
 <span class="normal">148</span>
@@ -2449,26 +2422,24 @@ find(order_by=[("name", "desc")])
         <span class="n">result</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">stmt</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">scalars</span><span class="p">()]</span>
 </code></pre></div></td></tr></table></div>
-          </details>
-  </div>
+            </details>
+    </div>
 
 </div>
-
 
 <div class="doc doc-object doc-function">
 
 
-
 <h4 id="sqlalchemy_bind_manager.repository.SQLAlchemyRepository.paginated_find" class="doc doc-heading">
-          <span class="doc doc-object-name doc-function-name">paginated_find</span>
+            <span class="doc doc-object-name doc-function-name">paginated_find</span>
 
 
 </h4>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">paginated_find</span><span class="p">(</span><span class="n">items_per_page</span><span class="p">:</span> <span class="n">int</span><span class="p">,</span> <span class="n">page</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">search_params</span><span class="p">:</span> <span class="n"><span title="typing.Union">Union</span></span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n"><span title="typing.Mapping">Mapping</span></span><span class="p">[</span><span class="n">str</span><span class="p">,</span> <span class="n"><span title="typing.Any">Any</span></span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">order_by</span><span class="p">:</span> <span class="n"><span title="typing.Union">Union</span></span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n"><span title="typing.Iterable">Iterable</span></span><span class="p">[</span><span class="n"><span title="typing.Union">Union</span></span><span class="p">[</span><span class="n">str</span><span class="p">,</span> <span class="n"><span title="typing.Tuple">Tuple</span></span><span class="p">[</span><span class="n">str</span><span class="p">,</span> <span class="n"><span title="typing.Literal">Literal</span></span><span class="p">[</span><span class="s1">&#39;asc&#39;</span><span class="p">,</span> <span class="s1">&#39;desc&#39;</span><span class="p">]]]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-internal" title="sqlalchemy_bind_manager._repository.common.PaginatedResult" href="#sqlalchemy_bind_manager.repository.PaginatedResult">PaginatedResult</a></span><span class="p">[</span><span class="n"><span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span></span><span class="p">]</span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Find models using filters and limit/offset pagination. Returned results
 do include pagination metadata.</p>
 <p>E.g.</p>
@@ -2489,104 +2460,102 @@ paginated_find(order_by=[("name", "desc")])
 </code></pre>
 
 
-
-  <p><span class="doc-section-title">Parameters:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td><code>items_per_page</code></td>
-          <td>
-                <code>int</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>Number of models to retrieve</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
         </tr>
-        <tr class="doc-section-item">
-          <td><code>page</code></td>
-          <td>
-                <code>int</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>Page to retrieve</p>
-            </div>
-          </td>
-          <td>
-                <code>1</code>
-          </td>
-        </tr>
-        <tr class="doc-section-item">
-          <td><code>search_params</code></td>
-          <td>
-                <code><span title="typing.Union">Union</span>[None, <span title="typing.Mapping">Mapping</span>[str, <span title="typing.Any">Any</span>]]</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>A mapping containing equality filters</p>
-            </div>
-          </td>
-          <td>
-                <code>None</code>
-          </td>
-        </tr>
-        <tr class="doc-section-item">
-          <td><code>order_by</code></td>
-          <td>
-                <code><span title="typing.Union">Union</span>[None, <span title="typing.Iterable">Iterable</span>[<span title="typing.Union">Union</span>[str, <span title="typing.Tuple">Tuple</span>[str, <span title="typing.Literal">Literal</span>[&#39;asc&#39;, &#39;desc&#39;]]]]]</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              
-            </div>
-          </td>
-          <td>
-                <code>None</code>
-          </td>
-        </tr>
-    </tbody>
-  </table>
-
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>items_per_page</code></td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of models to retrieve</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>page</code></td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Page to retrieve</p>
+              </div>
+            </td>
+            <td>
+                  <code>1</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>search_params</code></td>
+            <td>
+                  <code><span title="typing.Union">Union</span>[None, <span title="typing.Mapping">Mapping</span>[str, <span title="typing.Any">Any</span>]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A mapping containing equality filters</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>order_by</code></td>
+            <td>
+                  <code><span title="typing.Union">Union</span>[None, <span title="typing.Iterable">Iterable</span>[<span title="typing.Union">Union</span>[str, <span title="typing.Tuple">Tuple</span>[str, <span title="typing.Literal">Literal</span>[&#39;asc&#39;, &#39;desc&#39;]]]]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
-  <p><span class="doc-section-title">Returns:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td>
-                <code><a class="autorefs autorefs-internal" title="sqlalchemy_bind_manager._repository.common.PaginatedResult" href="#sqlalchemy_bind_manager.repository.PaginatedResult">PaginatedResult</a>[<span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span>]</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>A collection of models</p>
-            </div>
-          </td>
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
         </tr>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="sqlalchemy_bind_manager._repository.common.PaginatedResult" href="#sqlalchemy_bind_manager.repository.PaginatedResult">PaginatedResult</a>[<span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A collection of models</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
-          <details class="quote">
-            <summary>Source code in <code>sqlalchemy_bind_manager/_repository/sync.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">176</span>
+            <details class="quote">
+              <summary>Source code in <code>sqlalchemy_bind_manager/_repository/sync.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">176</span>
 <span class="normal">177</span>
 <span class="normal">178</span>
 <span class="normal">179</span>
@@ -2688,26 +2657,24 @@ paginated_find(order_by=[("name", "desc")])
             <span class="n">items_per_page</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_sanitised_query_limit</span><span class="p">(</span><span class="n">items_per_page</span><span class="p">),</span>
         <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
-          </details>
-  </div>
+            </details>
+    </div>
 
 </div>
-
 
 <div class="doc doc-object doc-function">
 
 
-
 <h4 id="sqlalchemy_bind_manager.repository.SQLAlchemyRepository.cursor_paginated_find" class="doc doc-heading">
-          <span class="doc doc-object-name doc-function-name">cursor_paginated_find</span>
+            <span class="doc doc-object-name doc-function-name">cursor_paginated_find</span>
 
 
 </h4>
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">cursor_paginated_find</span><span class="p">(</span><span class="n">items_per_page</span><span class="p">:</span> <span class="n">int</span><span class="p">,</span> <span class="n">cursor_reference</span><span class="p">:</span> <span class="n"><span title="typing.Union">Union</span></span><span class="p">[</span><span class="n"><span title="sqlalchemy_bind_manager._repository.common.CursorReference">CursorReference</span></span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">is_before_cursor</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">search_params</span><span class="p">:</span> <span class="n"><span title="typing.Union">Union</span></span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n"><span title="typing.Mapping">Mapping</span></span><span class="p">[</span><span class="n">str</span><span class="p">,</span> <span class="n"><span title="typing.Any">Any</span></span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-internal" title="sqlalchemy_bind_manager._repository.common.CursorPaginatedResult" href="#sqlalchemy_bind_manager.repository.CursorPaginatedResult">CursorPaginatedResult</a></span><span class="p">[</span><span class="n"><span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span></span><span class="p">]</span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Find models using filters and cursor based pagination. Returned results
 do include pagination metadata.</p>
 <p>E.g.</p>
@@ -2725,104 +2692,102 @@ cursor_paginated_find(50, CursorReference(column="id", value=123), True)
 </code></pre>
 
 
-
-  <p><span class="doc-section-title">Parameters:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td><code>items_per_page</code></td>
-          <td>
-                <code>int</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>Number of models to retrieve</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
         </tr>
-        <tr class="doc-section-item">
-          <td><code>cursor_reference</code></td>
-          <td>
-                <code><span title="typing.Union">Union</span>[<span title="sqlalchemy_bind_manager._repository.common.CursorReference">CursorReference</span>, None]</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>A cursor reference containing ordering column and threshold value</p>
-            </div>
-          </td>
-          <td>
-                <code>None</code>
-          </td>
-        </tr>
-        <tr class="doc-section-item">
-          <td><code>is_before_cursor</code></td>
-          <td>
-                <code>bool</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>If True it will return items before the cursor, otherwise items after</p>
-            </div>
-          </td>
-          <td>
-                <code>False</code>
-          </td>
-        </tr>
-        <tr class="doc-section-item">
-          <td><code>search_params</code></td>
-          <td>
-                <code><span title="typing.Union">Union</span>[None, <span title="typing.Mapping">Mapping</span>[str, <span title="typing.Any">Any</span>]]</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>A mapping containing equality filters</p>
-            </div>
-          </td>
-          <td>
-                <code>None</code>
-          </td>
-        </tr>
-    </tbody>
-  </table>
-
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>items_per_page</code></td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of models to retrieve</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>cursor_reference</code></td>
+            <td>
+                  <code><span title="typing.Union">Union</span>[<span title="sqlalchemy_bind_manager._repository.common.CursorReference">CursorReference</span>, None]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A cursor reference containing ordering column and threshold value</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>is_before_cursor</code></td>
+            <td>
+                  <code>bool</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True it will return items before the cursor, otherwise items after</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>search_params</code></td>
+            <td>
+                  <code><span title="typing.Union">Union</span>[None, <span title="typing.Mapping">Mapping</span>[str, <span title="typing.Any">Any</span>]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A mapping containing equality filters</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
-  <p><span class="doc-section-title">Returns:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td>
-                <code><a class="autorefs autorefs-internal" title="sqlalchemy_bind_manager._repository.common.CursorPaginatedResult" href="#sqlalchemy_bind_manager.repository.CursorPaginatedResult">CursorPaginatedResult</a>[<span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span>]</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>A collection of models</p>
-            </div>
-          </td>
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
         </tr>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="sqlalchemy_bind_manager._repository.common.CursorPaginatedResult" href="#sqlalchemy_bind_manager.repository.CursorPaginatedResult">CursorPaginatedResult</a>[<span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A collection of models</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
-          <details class="quote">
-            <summary>Source code in <code>sqlalchemy_bind_manager/_repository/sync.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">228</span>
+            <details class="quote">
+              <summary>Source code in <code>sqlalchemy_bind_manager/_repository/sync.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">228</span>
 <span class="normal">229</span>
 <span class="normal">230</span>
 <span class="normal">231</span>
@@ -2930,8 +2895,8 @@ cursor_paginated_find(50, CursorReference(column="id", value=123), True)
             <span class="n">is_before_cursor</span><span class="o">=</span><span class="n">is_before_cursor</span><span class="p">,</span>
         <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
-          </details>
-  </div>
+            </details>
+    </div>
 
 </div>
 
@@ -2939,8 +2904,7 @@ cursor_paginated_find(50, CursorReference(column="id", value=123), True)
 
   </div>
 
-  </div>
-
+    </div>
 
 </div>
 
@@ -2949,18 +2913,18 @@ cursor_paginated_find(50, CursorReference(column="id", value=123), True)
 
 
 <h3 id="sqlalchemy_bind_manager.repository.SQLAlchemyAsyncRepository" class="doc doc-heading">
-          <span class="doc doc-object-name doc-class-name">sqlalchemy_bind_manager.repository.SQLAlchemyAsyncRepository</span>
+            <span class="doc doc-object-name doc-class-name">sqlalchemy_bind_manager.repository.SQLAlchemyAsyncRepository</span>
 
 
 </h3>
 
 
-  <div class="doc doc-contents ">
+    <div class="doc doc-contents ">
 
 
-            <details class="quote">
-              <summary>Source code in <code>sqlalchemy_bind_manager/_repository/async_.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 55</span>
+              <details class="quote">
+                <summary>Source code in <code>sqlalchemy_bind_manager/_repository/async_.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 55</span>
 <span class="normal"> 56</span>
 <span class="normal"> 57</span>
 <span class="normal"> 58</span>
@@ -3442,12 +3406,11 @@ cursor_paginated_find(50, CursorReference(column="id", value=123), True)
         <span class="k">else</span><span class="p">:</span>
             <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">_external_session</span>
 </code></pre></div></td></tr></table></div>
-            </details>
+              </details>
 
-  
+
 
   <div class="doc doc-children">
-
 
 
 
@@ -3460,11 +3423,10 @@ cursor_paginated_find(50, CursorReference(column="id", value=123), True)
 <div class="doc doc-object doc-function">
 
 
-
 <h4 id="sqlalchemy_bind_manager.repository.SQLAlchemyAsyncRepository.get" class="doc doc-heading">
-          <span class="doc doc-object-name doc-function-name">get</span>
+            <span class="doc doc-object-name doc-function-name">get</span>
 
-  
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-async"><code>async</code></small>
   </span>
@@ -3473,91 +3435,88 @@ cursor_paginated_find(50, CursorReference(column="id", value=123), True)
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">get</span><span class="p">(</span><span class="n">identifier</span><span class="p">:</span> <span class="n"><span title="sqlalchemy_bind_manager._repository.common.PRIMARY_KEY">PRIMARY_KEY</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span></span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Get a model by primary key.</p>
 
 
-
-  <p><span class="doc-section-title">Parameters:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td><code>identifier</code></td>
-          <td>
-                <code><span title="sqlalchemy_bind_manager._repository.common.PRIMARY_KEY">PRIMARY_KEY</span></code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>The primary key</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
         </tr>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>identifier</code></td>
+            <td>
+                  <code><span title="sqlalchemy_bind_manager._repository.common.PRIMARY_KEY">PRIMARY_KEY</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The primary key</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
-
-  <p><span class="doc-section-title">Returns:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td>
-                <code><span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span></code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>A model instance</p>
-            </div>
-          </td>
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
         </tr>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A model instance</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
-
-  <p><span class="doc-section-title">Raises:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td>
-                <code>ModelNotFoundError</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>No model has been found using the primary key</p>
-            </div>
-          </td>
+<p><span class="doc-section-title">Raises:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
         </tr>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code>ModelNotFoundError</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>No model has been found using the primary key</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
-          <details class="quote">
-            <summary>Source code in <code>sqlalchemy_bind_manager/_repository/async_.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">78</span>
+            <details class="quote">
+              <summary>Source code in <code>sqlalchemy_bind_manager/_repository/async_.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">78</span>
 <span class="normal">79</span>
 <span class="normal">80</span>
 <span class="normal">81</span>
@@ -3581,20 +3540,18 @@ cursor_paginated_find(50, CursorReference(column="id", value=123), True)
         <span class="k">raise</span> <span class="n">ModelNotFoundError</span><span class="p">(</span><span class="s2">&quot;No rows found for provided primary key.&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">model</span>
 </code></pre></div></td></tr></table></div>
-          </details>
-  </div>
+            </details>
+    </div>
 
 </div>
-
 
 <div class="doc doc-object doc-function">
 
 
-
 <h4 id="sqlalchemy_bind_manager.repository.SQLAlchemyAsyncRepository.get_many" class="doc doc-heading">
-          <span class="doc doc-object-name doc-function-name">get_many</span>
+            <span class="doc doc-object-name doc-function-name">get_many</span>
 
-  
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-async"><code>async</code></small>
   </span>
@@ -3603,67 +3560,65 @@ cursor_paginated_find(50, CursorReference(column="id", value=123), True)
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">get_many</span><span class="p">(</span><span class="n">identifiers</span><span class="p">:</span> <span class="n"><span title="typing.Iterable">Iterable</span></span><span class="p">[</span><span class="n"><span title="sqlalchemy_bind_manager._repository.common.PRIMARY_KEY">PRIMARY_KEY</span></span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n"><span title="typing.List">List</span></span><span class="p">[</span><span class="n"><span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span></span><span class="p">]</span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Get a list of models by primary keys.</p>
 
 
-
-  <p><span class="doc-section-title">Parameters:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td><code>identifiers</code></td>
-          <td>
-                <code><span title="typing.Iterable">Iterable</span>[<span title="sqlalchemy_bind_manager._repository.common.PRIMARY_KEY">PRIMARY_KEY</span>]</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>A list of primary keys</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
         </tr>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>identifiers</code></td>
+            <td>
+                  <code><span title="typing.Iterable">Iterable</span>[<span title="sqlalchemy_bind_manager._repository.common.PRIMARY_KEY">PRIMARY_KEY</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A list of primary keys</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
-
-  <p><span class="doc-section-title">Returns:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td>
-                <code><span title="typing.List">List</span>[<span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span>]</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>A list of models</p>
-            </div>
-          </td>
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
         </tr>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="typing.List">List</span>[<span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A list of models</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
-          <details class="quote">
-            <summary>Source code in <code>sqlalchemy_bind_manager/_repository/async_.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 91</span>
+            <details class="quote">
+              <summary>Source code in <code>sqlalchemy_bind_manager/_repository/async_.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 91</span>
 <span class="normal"> 92</span>
 <span class="normal"> 93</span>
 <span class="normal"> 94</span>
@@ -3687,20 +3642,18 @@ cursor_paginated_find(50, CursorReference(column="id", value=123), True)
     <span class="k">async</span> <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_session</span><span class="p">(</span><span class="n">commit</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">(</span><span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">stmt</span><span class="p">))</span><span class="o">.</span><span class="n">scalars</span><span class="p">()]</span>
 </code></pre></div></td></tr></table></div>
-          </details>
-  </div>
+            </details>
+    </div>
 
 </div>
-
 
 <div class="doc doc-object doc-function">
 
 
-
 <h4 id="sqlalchemy_bind_manager.repository.SQLAlchemyAsyncRepository.save" class="doc doc-heading">
-          <span class="doc doc-object-name doc-function-name">save</span>
+            <span class="doc doc-object-name doc-function-name">save</span>
 
-  
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-async"><code>async</code></small>
   </span>
@@ -3709,67 +3662,65 @@ cursor_paginated_find(50, CursorReference(column="id", value=123), True)
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">save</span><span class="p">(</span><span class="n">instance</span><span class="p">:</span> <span class="n"><span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span></span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Persist a model.</p>
 
 
-
-  <p><span class="doc-section-title">Parameters:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td><code>instance</code></td>
-          <td>
-                <code><span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span></code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>A mapped object instance to be persisted</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
         </tr>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>instance</code></td>
+            <td>
+                  <code><span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A mapped object instance to be persisted</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
-
-  <p><span class="doc-section-title">Returns:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td>
-                <code><span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span></code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>The model instance after being persisted</p>
-            </div>
-          </td>
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
         </tr>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The model instance after being persisted</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
-          <details class="quote">
-            <summary>Source code in <code>sqlalchemy_bind_manager/_repository/async_.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">104</span>
+            <details class="quote">
+              <summary>Source code in <code>sqlalchemy_bind_manager/_repository/async_.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">104</span>
 <span class="normal">105</span>
 <span class="normal">106</span>
 <span class="normal">107</span>
@@ -3789,20 +3740,18 @@ cursor_paginated_find(50, CursorReference(column="id", value=123), True)
         <span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">instance</span>
 </code></pre></div></td></tr></table></div>
-          </details>
-  </div>
+            </details>
+    </div>
 
 </div>
-
 
 <div class="doc doc-object doc-function">
 
 
-
 <h4 id="sqlalchemy_bind_manager.repository.SQLAlchemyAsyncRepository.save_many" class="doc doc-heading">
-          <span class="doc doc-object-name doc-function-name">save_many</span>
+            <span class="doc doc-object-name doc-function-name">save_many</span>
 
-  
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-async"><code>async</code></small>
   </span>
@@ -3811,67 +3760,65 @@ cursor_paginated_find(50, CursorReference(column="id", value=123), True)
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">save_many</span><span class="p">(</span><span class="n">instances</span><span class="p">:</span> <span class="n"><span title="typing.Iterable">Iterable</span></span><span class="p">[</span><span class="n"><span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span></span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n"><span title="typing.Iterable">Iterable</span></span><span class="p">[</span><span class="n"><span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span></span><span class="p">]</span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Persist many models in a single database get_session.</p>
 
 
-
-  <p><span class="doc-section-title">Parameters:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td><code>instances</code></td>
-          <td>
-                <code><span title="typing.Iterable">Iterable</span>[<span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span>]</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>A list of mapped objects to be persisted</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
         </tr>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>instances</code></td>
+            <td>
+                  <code><span title="typing.Iterable">Iterable</span>[<span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A list of mapped objects to be persisted</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
-
-  <p><span class="doc-section-title">Returns:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td>
-                <code><span title="typing.Iterable">Iterable</span>[<span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span>]</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>The model instances after being persisted</p>
-            </div>
-          </td>
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
         </tr>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="typing.Iterable">Iterable</span>[<span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The model instances after being persisted</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
-          <details class="quote">
-            <summary>Source code in <code>sqlalchemy_bind_manager/_repository/async_.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">115</span>
+            <details class="quote">
+              <summary>Source code in <code>sqlalchemy_bind_manager/_repository/async_.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">115</span>
 <span class="normal">116</span>
 <span class="normal">117</span>
 <span class="normal">118</span>
@@ -3897,20 +3844,18 @@ cursor_paginated_find(50, CursorReference(column="id", value=123), True)
         <span class="n">session</span><span class="o">.</span><span class="n">add_all</span><span class="p">(</span><span class="n">instances</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">instances</span>
 </code></pre></div></td></tr></table></div>
-          </details>
-  </div>
+            </details>
+    </div>
 
 </div>
-
 
 <div class="doc doc-object doc-function">
 
 
-
 <h4 id="sqlalchemy_bind_manager.repository.SQLAlchemyAsyncRepository.delete" class="doc doc-heading">
-          <span class="doc doc-object-name doc-function-name">delete</span>
+            <span class="doc doc-object-name doc-function-name">delete</span>
 
-  
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-async"><code>async</code></small>
   </span>
@@ -3919,43 +3864,42 @@ cursor_paginated_find(50, CursorReference(column="id", value=123), True)
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">delete</span><span class="p">(</span><span class="n">instance</span><span class="p">:</span> <span class="n"><span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Deletes a model.</p>
 
 
-
-  <p><span class="doc-section-title">Parameters:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td><code>instance</code></td>
-          <td>
-                <code><span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span></code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>The model instance</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
         </tr>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>instance</code></td>
+            <td>
+                  <code><span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span></code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The model instance</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
-          <details class="quote">
-            <summary>Source code in <code>sqlalchemy_bind_manager/_repository/async_.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">129</span>
+            <details class="quote">
+              <summary>Source code in <code>sqlalchemy_bind_manager/_repository/async_.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">129</span>
 <span class="normal">130</span>
 <span class="normal">131</span>
 <span class="normal">132</span>
@@ -3971,20 +3915,18 @@ cursor_paginated_find(50, CursorReference(column="id", value=123), True)
     <span class="k">async</span> <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_session</span><span class="p">()</span> <span class="k">as</span> <span class="n">session</span><span class="p">:</span>
         <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
-          </details>
-  </div>
+            </details>
+    </div>
 
 </div>
-
 
 <div class="doc doc-object doc-function">
 
 
-
 <h4 id="sqlalchemy_bind_manager.repository.SQLAlchemyAsyncRepository.delete_many" class="doc doc-heading">
-          <span class="doc doc-object-name doc-function-name">delete_many</span>
+            <span class="doc doc-object-name doc-function-name">delete_many</span>
 
-  
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-async"><code>async</code></small>
   </span>
@@ -3993,43 +3935,42 @@ cursor_paginated_find(50, CursorReference(column="id", value=123), True)
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">delete_many</span><span class="p">(</span><span class="n">instances</span><span class="p">:</span> <span class="n"><span title="typing.Iterable">Iterable</span></span><span class="p">[</span><span class="n"><span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span></span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Deletes a collection of models in a single transaction.</p>
 
 
-
-  <p><span class="doc-section-title">Parameters:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td><code>instances</code></td>
-          <td>
-                <code><span title="typing.Iterable">Iterable</span>[<span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span>]</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>The model instances</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
         </tr>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>instances</code></td>
+            <td>
+                  <code><span title="typing.Iterable">Iterable</span>[<span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The model instances</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
-          <details class="quote">
-            <summary>Source code in <code>sqlalchemy_bind_manager/_repository/async_.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">138</span>
+            <details class="quote">
+              <summary>Source code in <code>sqlalchemy_bind_manager/_repository/async_.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">138</span>
 <span class="normal">139</span>
 <span class="normal">140</span>
 <span class="normal">141</span>
@@ -4047,20 +3988,18 @@ cursor_paginated_find(50, CursorReference(column="id", value=123), True)
         <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="n">instances</span><span class="p">:</span>
             <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
-          </details>
-  </div>
+            </details>
+    </div>
 
 </div>
-
 
 <div class="doc doc-object doc-function">
 
 
-
 <h4 id="sqlalchemy_bind_manager.repository.SQLAlchemyAsyncRepository.find" class="doc doc-heading">
-          <span class="doc doc-object-name doc-function-name">find</span>
+            <span class="doc doc-object-name doc-function-name">find</span>
 
-  
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-async"><code>async</code></small>
   </span>
@@ -4069,8 +4008,8 @@ cursor_paginated_find(50, CursorReference(column="id", value=123), True)
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">find</span><span class="p">(</span><span class="n">search_params</span><span class="p">:</span> <span class="n"><span title="typing.Union">Union</span></span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n"><span title="typing.Mapping">Mapping</span></span><span class="p">[</span><span class="n">str</span><span class="p">,</span> <span class="n"><span title="typing.Any">Any</span></span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">order_by</span><span class="p">:</span> <span class="n"><span title="typing.Union">Union</span></span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n"><span title="typing.Iterable">Iterable</span></span><span class="p">[</span><span class="n"><span title="typing.Union">Union</span></span><span class="p">[</span><span class="n">str</span><span class="p">,</span> <span class="n"><span title="typing.Tuple">Tuple</span></span><span class="p">[</span><span class="n">str</span><span class="p">,</span> <span class="n"><span title="typing.Literal">Literal</span></span><span class="p">[</span><span class="s1">&#39;asc&#39;</span><span class="p">,</span> <span class="s1">&#39;desc&#39;</span><span class="p">]]]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><span title="typing.List">List</span></span><span class="p">[</span><span class="n"><span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span></span><span class="p">]</span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Find models using filters.</p>
 <p>E.g.</p>
 <pre><code># find all models with name = John
@@ -4084,76 +4023,74 @@ find(order_by=[("name", "desc")])
 </code></pre>
 
 
-
-  <p><span class="doc-section-title">Parameters:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td><code>search_params</code></td>
-          <td>
-                <code><span title="typing.Union">Union</span>[None, <span title="typing.Mapping">Mapping</span>[str, <span title="typing.Any">Any</span>]]</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>A mapping containing equality filters</p>
-            </div>
-          </td>
-          <td>
-                <code>None</code>
-          </td>
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
         </tr>
-        <tr class="doc-section-item">
-          <td><code>order_by</code></td>
-          <td>
-                <code><span title="typing.Union">Union</span>[None, <span title="typing.Iterable">Iterable</span>[<span title="typing.Union">Union</span>[str, <span title="typing.Tuple">Tuple</span>[str, <span title="typing.Literal">Literal</span>[&#39;asc&#39;, &#39;desc&#39;]]]]]</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              
-            </div>
-          </td>
-          <td>
-                <code>None</code>
-          </td>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>search_params</code></td>
+            <td>
+                  <code><span title="typing.Union">Union</span>[None, <span title="typing.Mapping">Mapping</span>[str, <span title="typing.Any">Any</span>]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A mapping containing equality filters</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>order_by</code></td>
+            <td>
+                  <code><span title="typing.Union">Union</span>[None, <span title="typing.Iterable">Iterable</span>[<span title="typing.Union">Union</span>[str, <span title="typing.Tuple">Tuple</span>[str, <span title="typing.Literal">Literal</span>[&#39;asc&#39;, &#39;desc&#39;]]]]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
+
+
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
         </tr>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><span title="typing.List">List</span>[<span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A collection of models</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
-
-
-  <p><span class="doc-section-title">Returns:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td>
-                <code><span title="typing.List">List</span>[<span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span>]</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>A collection of models</p>
-            </div>
-          </td>
-        </tr>
-    </tbody>
-  </table>
-
-          <details class="quote">
-            <summary>Source code in <code>sqlalchemy_bind_manager/_repository/async_.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">148</span>
+            <details class="quote">
+              <summary>Source code in <code>sqlalchemy_bind_manager/_repository/async_.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">148</span>
 <span class="normal">149</span>
 <span class="normal">150</span>
 <span class="normal">151</span>
@@ -4213,20 +4150,18 @@ find(order_by=[("name", "desc")])
         <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">stmt</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">scalars</span><span class="p">()]</span>
 </code></pre></div></td></tr></table></div>
-          </details>
-  </div>
+            </details>
+    </div>
 
 </div>
-
 
 <div class="doc doc-object doc-function">
 
 
-
 <h4 id="sqlalchemy_bind_manager.repository.SQLAlchemyAsyncRepository.paginated_find" class="doc doc-heading">
-          <span class="doc doc-object-name doc-function-name">paginated_find</span>
+            <span class="doc doc-object-name doc-function-name">paginated_find</span>
 
-  
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-async"><code>async</code></small>
   </span>
@@ -4235,8 +4170,8 @@ find(order_by=[("name", "desc")])
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">paginated_find</span><span class="p">(</span><span class="n">items_per_page</span><span class="p">:</span> <span class="n">int</span><span class="p">,</span> <span class="n">page</span><span class="p">:</span> <span class="n">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">search_params</span><span class="p">:</span> <span class="n"><span title="typing.Union">Union</span></span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n"><span title="typing.Mapping">Mapping</span></span><span class="p">[</span><span class="n">str</span><span class="p">,</span> <span class="n"><span title="typing.Any">Any</span></span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">order_by</span><span class="p">:</span> <span class="n"><span title="typing.Union">Union</span></span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n"><span title="typing.Iterable">Iterable</span></span><span class="p">[</span><span class="n"><span title="typing.Union">Union</span></span><span class="p">[</span><span class="n">str</span><span class="p">,</span> <span class="n"><span title="typing.Tuple">Tuple</span></span><span class="p">[</span><span class="n">str</span><span class="p">,</span> <span class="n"><span title="typing.Literal">Literal</span></span><span class="p">[</span><span class="s1">&#39;asc&#39;</span><span class="p">,</span> <span class="s1">&#39;desc&#39;</span><span class="p">]]]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-internal" title="sqlalchemy_bind_manager._repository.common.PaginatedResult" href="#sqlalchemy_bind_manager.repository.PaginatedResult">PaginatedResult</a></span><span class="p">[</span><span class="n"><span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span></span><span class="p">]</span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Find models using filters and limit/offset pagination. Returned results
 do include pagination metadata.</p>
 <p>E.g.</p>
@@ -4257,104 +4192,102 @@ paginated_find(order_by=[("name", "desc")])
 </code></pre>
 
 
-
-  <p><span class="doc-section-title">Parameters:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td><code>items_per_page</code></td>
-          <td>
-                <code>int</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>Number of models to retrieve</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
         </tr>
-        <tr class="doc-section-item">
-          <td><code>page</code></td>
-          <td>
-                <code>int</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>Page to retrieve</p>
-            </div>
-          </td>
-          <td>
-                <code>1</code>
-          </td>
-        </tr>
-        <tr class="doc-section-item">
-          <td><code>search_params</code></td>
-          <td>
-                <code><span title="typing.Union">Union</span>[None, <span title="typing.Mapping">Mapping</span>[str, <span title="typing.Any">Any</span>]]</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>A mapping containing equality filters</p>
-            </div>
-          </td>
-          <td>
-                <code>None</code>
-          </td>
-        </tr>
-        <tr class="doc-section-item">
-          <td><code>order_by</code></td>
-          <td>
-                <code><span title="typing.Union">Union</span>[None, <span title="typing.Iterable">Iterable</span>[<span title="typing.Union">Union</span>[str, <span title="typing.Tuple">Tuple</span>[str, <span title="typing.Literal">Literal</span>[&#39;asc&#39;, &#39;desc&#39;]]]]]</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              
-            </div>
-          </td>
-          <td>
-                <code>None</code>
-          </td>
-        </tr>
-    </tbody>
-  </table>
-
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>items_per_page</code></td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of models to retrieve</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>page</code></td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Page to retrieve</p>
+              </div>
+            </td>
+            <td>
+                  <code>1</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>search_params</code></td>
+            <td>
+                  <code><span title="typing.Union">Union</span>[None, <span title="typing.Mapping">Mapping</span>[str, <span title="typing.Any">Any</span>]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A mapping containing equality filters</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>order_by</code></td>
+            <td>
+                  <code><span title="typing.Union">Union</span>[None, <span title="typing.Iterable">Iterable</span>[<span title="typing.Union">Union</span>[str, <span title="typing.Tuple">Tuple</span>[str, <span title="typing.Literal">Literal</span>[&#39;asc&#39;, &#39;desc&#39;]]]]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
-  <p><span class="doc-section-title">Returns:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td>
-                <code><a class="autorefs autorefs-internal" title="sqlalchemy_bind_manager._repository.common.PaginatedResult" href="#sqlalchemy_bind_manager.repository.PaginatedResult">PaginatedResult</a>[<span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span>]</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>A collection of models</p>
-            </div>
-          </td>
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
         </tr>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="sqlalchemy_bind_manager._repository.common.PaginatedResult" href="#sqlalchemy_bind_manager.repository.PaginatedResult">PaginatedResult</a>[<span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A collection of models</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
-          <details class="quote">
-            <summary>Source code in <code>sqlalchemy_bind_manager/_repository/async_.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">179</span>
+            <details class="quote">
+              <summary>Source code in <code>sqlalchemy_bind_manager/_repository/async_.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">179</span>
 <span class="normal">180</span>
 <span class="normal">181</span>
 <span class="normal">182</span>
@@ -4460,20 +4393,18 @@ paginated_find(order_by=[("name", "desc")])
             <span class="n">items_per_page</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_sanitised_query_limit</span><span class="p">(</span><span class="n">items_per_page</span><span class="p">),</span>
         <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
-          </details>
-  </div>
+            </details>
+    </div>
 
 </div>
-
 
 <div class="doc doc-object doc-function">
 
 
-
 <h4 id="sqlalchemy_bind_manager.repository.SQLAlchemyAsyncRepository.cursor_paginated_find" class="doc doc-heading">
-          <span class="doc doc-object-name doc-function-name">cursor_paginated_find</span>
+            <span class="doc doc-object-name doc-function-name">cursor_paginated_find</span>
 
-  
+
   <span class="doc doc-labels">
       <small class="doc doc-label doc-label-async"><code>async</code></small>
   </span>
@@ -4482,8 +4413,8 @@ paginated_find(order_by=[("name", "desc")])
 <div class="doc-signature highlight"><pre><span></span><code><span class="nf">cursor_paginated_find</span><span class="p">(</span><span class="n">items_per_page</span><span class="p">:</span> <span class="n">int</span><span class="p">,</span> <span class="n">cursor_reference</span><span class="p">:</span> <span class="n"><span title="typing.Union">Union</span></span><span class="p">[</span><span class="n"><span title="sqlalchemy_bind_manager._repository.common.CursorReference">CursorReference</span></span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">is_before_cursor</span><span class="p">:</span> <span class="n">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">search_params</span><span class="p">:</span> <span class="n"><span title="typing.Union">Union</span></span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n"><span title="typing.Mapping">Mapping</span></span><span class="p">[</span><span class="n">str</span><span class="p">,</span> <span class="n"><span title="typing.Any">Any</span></span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n"><a class="autorefs autorefs-internal" title="sqlalchemy_bind_manager._repository.common.CursorPaginatedResult" href="#sqlalchemy_bind_manager.repository.CursorPaginatedResult">CursorPaginatedResult</a></span><span class="p">[</span><span class="n"><span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span></span><span class="p">]</span>
 </code></pre></div>
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Find models using filters and cursor based pagination. Returned results
 do include pagination metadata.</p>
 <p>E.g.</p>
@@ -4501,104 +4432,102 @@ cursor_paginated_find(50, CursorReference(column="id", value=123), True)
 </code></pre>
 
 
-
-  <p><span class="doc-section-title">Parameters:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td><code>items_per_page</code></td>
-          <td>
-                <code>int</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>Number of models to retrieve</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
         </tr>
-        <tr class="doc-section-item">
-          <td><code>cursor_reference</code></td>
-          <td>
-                <code><span title="typing.Union">Union</span>[<span title="sqlalchemy_bind_manager._repository.common.CursorReference">CursorReference</span>, None]</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>A cursor reference containing ordering column and threshold value</p>
-            </div>
-          </td>
-          <td>
-                <code>None</code>
-          </td>
-        </tr>
-        <tr class="doc-section-item">
-          <td><code>is_before_cursor</code></td>
-          <td>
-                <code>bool</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>If True it will return items before the cursor, otherwise items after</p>
-            </div>
-          </td>
-          <td>
-                <code>False</code>
-          </td>
-        </tr>
-        <tr class="doc-section-item">
-          <td><code>search_params</code></td>
-          <td>
-                <code><span title="typing.Union">Union</span>[None, <span title="typing.Mapping">Mapping</span>[str, <span title="typing.Any">Any</span>]]</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>A mapping containing equality filters</p>
-            </div>
-          </td>
-          <td>
-                <code>None</code>
-          </td>
-        </tr>
-    </tbody>
-  </table>
-
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>items_per_page</code></td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>Number of models to retrieve</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>cursor_reference</code></td>
+            <td>
+                  <code><span title="typing.Union">Union</span>[<span title="sqlalchemy_bind_manager._repository.common.CursorReference">CursorReference</span>, None]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A cursor reference containing ordering column and threshold value</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>is_before_cursor</code></td>
+            <td>
+                  <code>bool</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>If True it will return items before the cursor, otherwise items after</p>
+              </div>
+            </td>
+            <td>
+                  <code>False</code>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>search_params</code></td>
+            <td>
+                  <code><span title="typing.Union">Union</span>[None, <span title="typing.Mapping">Mapping</span>[str, <span title="typing.Any">Any</span>]]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A mapping containing equality filters</p>
+              </div>
+            </td>
+            <td>
+                  <code>None</code>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
 
-  <p><span class="doc-section-title">Returns:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td>
-                <code><a class="autorefs autorefs-internal" title="sqlalchemy_bind_manager._repository.common.CursorPaginatedResult" href="#sqlalchemy_bind_manager.repository.CursorPaginatedResult">CursorPaginatedResult</a>[<span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span>]</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>A collection of models</p>
-            </div>
-          </td>
+    <p><span class="doc-section-title">Returns:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Description</th>
         </tr>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td>
+                  <code><a class="autorefs autorefs-internal" title="sqlalchemy_bind_manager._repository.common.CursorPaginatedResult" href="#sqlalchemy_bind_manager.repository.CursorPaginatedResult">CursorPaginatedResult</a>[<span title="sqlalchemy_bind_manager._repository.common.MODEL">MODEL</span>]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>A collection of models</p>
+              </div>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
-          <details class="quote">
-            <summary>Source code in <code>sqlalchemy_bind_manager/_repository/async_.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">233</span>
+            <details class="quote">
+              <summary>Source code in <code>sqlalchemy_bind_manager/_repository/async_.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">233</span>
 <span class="normal">234</span>
 <span class="normal">235</span>
 <span class="normal">236</span>
@@ -4708,8 +4637,8 @@ cursor_paginated_find(50, CursorReference(column="id", value=123), True)
             <span class="n">is_before_cursor</span><span class="o">=</span><span class="n">is_before_cursor</span><span class="p">,</span>
         <span class="p">)</span>
 </code></pre></div></td></tr></table></div>
-          </details>
-  </div>
+            </details>
+    </div>
 
 </div>
 
@@ -4717,8 +4646,7 @@ cursor_paginated_find(50, CursorReference(column="id", value=123), True)
 
   </div>
 
-  </div>
-
+    </div>
 
 </div>
 
@@ -4727,64 +4655,63 @@ cursor_paginated_find(50, CursorReference(column="id", value=123), True)
 
 
 <h3 id="sqlalchemy_bind_manager.repository.PaginatedResult" class="doc doc-heading">
-          <span class="doc doc-object-name doc-class-name">sqlalchemy_bind_manager.repository.PaginatedResult</span>
+            <span class="doc doc-object-name doc-class-name">sqlalchemy_bind_manager.repository.PaginatedResult</span>
 
 
 </h3>
 
 
-  <div class="doc doc-contents ">
+    <div class="doc doc-contents ">
 
-  
+
       <p>The result of a paginated query.</p>
 
 
-
-  <p><span class="doc-section-title">Parameters:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td><code>items</code></td>
-          <td>
-                <code>List[MODEL]</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>The models returned by the query</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
         </tr>
-        <tr class="doc-section-item">
-          <td><code>page_info</code></td>
-          <td>
-                <code>PageInfo</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>The pagination metadata</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>items</code></td>
+            <td>
+                  <code>List[MODEL]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The models returned by the query</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>page_info</code></td>
+            <td>
+                  <code>PageInfo</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The pagination metadata</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
-            <details class="quote">
-              <summary>Source code in <code>sqlalchemy_bind_manager/_repository/common.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">55</span>
+              <details class="quote">
+                <summary>Source code in <code>sqlalchemy_bind_manager/_repository/common.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">55</span>
 <span class="normal">56</span>
 <span class="normal">57</span>
 <span class="normal">58</span>
@@ -4808,9 +4735,9 @@ cursor_paginated_find(50, CursorReference(column="id", value=123), True)
     <span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">MODEL</span><span class="p">]</span>
     <span class="n">page_info</span><span class="p">:</span> <span class="n">PageInfo</span>
 </code></pre></div></td></tr></table></div>
-            </details>
+              </details>
 
-  
+
 
   <div class="doc doc-children">
 
@@ -4826,8 +4753,7 @@ cursor_paginated_find(50, CursorReference(column="id", value=123), True)
 
   </div>
 
-  </div>
-
+    </div>
 
 </div>
 
@@ -4836,120 +4762,119 @@ cursor_paginated_find(50, CursorReference(column="id", value=123), True)
 
 
 <h3 id="sqlalchemy_bind_manager.repository.PageInfo" class="doc doc-heading">
-          <span class="doc doc-object-name doc-class-name">sqlalchemy_bind_manager.repository.PageInfo</span>
+            <span class="doc doc-object-name doc-class-name">sqlalchemy_bind_manager.repository.PageInfo</span>
 
 
 </h3>
 
 
-  <div class="doc doc-contents ">
+    <div class="doc doc-contents ">
 
-  
+
       <p>Paginated query metadata.</p>
 
 
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>page</code></td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The current page number</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>items_per_page</code></td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The maximum number of items in a page.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>total_pages</code></td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The number of available pages.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>total_items</code></td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The total items in all the pages.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>has_next_page</code></td>
+            <td>
+                  <code>bool</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>True if there is a next page.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>has_previous_page</code></td>
+            <td>
+                  <code>bool</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>True if there is a previous page.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
-  <p><span class="doc-section-title">Parameters:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td><code>page</code></td>
-          <td>
-                <code>int</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>The current page number</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-        <tr class="doc-section-item">
-          <td><code>items_per_page</code></td>
-          <td>
-                <code>int</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>The maximum number of items in a page.</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-        <tr class="doc-section-item">
-          <td><code>total_pages</code></td>
-          <td>
-                <code>int</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>The number of available pages.</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-        <tr class="doc-section-item">
-          <td><code>total_items</code></td>
-          <td>
-                <code>int</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>The total items in all the pages.</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-        <tr class="doc-section-item">
-          <td><code>has_next_page</code></td>
-          <td>
-                <code>bool</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>True if there is a next page.</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-        <tr class="doc-section-item">
-          <td><code>has_previous_page</code></td>
-          <td>
-                <code>bool</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>True if there is a previous page.</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-    </tbody>
-  </table>
-
-            <details class="quote">
-              <summary>Source code in <code>sqlalchemy_bind_manager/_repository/common.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">29</span>
+              <details class="quote">
+                <summary>Source code in <code>sqlalchemy_bind_manager/_repository/common.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">29</span>
 <span class="normal">30</span>
 <span class="normal">31</span>
 <span class="normal">32</span>
@@ -4997,9 +4922,9 @@ cursor_paginated_find(50, CursorReference(column="id", value=123), True)
     <span class="n">has_next_page</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="n">has_previous_page</span><span class="p">:</span> <span class="nb">bool</span>
 </code></pre></div></td></tr></table></div>
-            </details>
+              </details>
 
-  
+
 
   <div class="doc doc-children">
 
@@ -5015,8 +4940,7 @@ cursor_paginated_find(50, CursorReference(column="id", value=123), True)
 
   </div>
 
-  </div>
-
+    </div>
 
 </div>
 
@@ -5025,64 +4949,63 @@ cursor_paginated_find(50, CursorReference(column="id", value=123), True)
 
 
 <h3 id="sqlalchemy_bind_manager.repository.CursorPaginatedResult" class="doc doc-heading">
-          <span class="doc doc-object-name doc-class-name">sqlalchemy_bind_manager.repository.CursorPaginatedResult</span>
+            <span class="doc doc-object-name doc-class-name">sqlalchemy_bind_manager.repository.CursorPaginatedResult</span>
 
 
 </h3>
 
 
-  <div class="doc doc-contents ">
+    <div class="doc doc-contents ">
 
-  
+
       <p>The result of a cursor paginated query.</p>
 
 
-
-  <p><span class="doc-section-title">Parameters:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td><code>items</code></td>
-          <td>
-                <code>List[MODEL]</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>The models returned by the query</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
         </tr>
-        <tr class="doc-section-item">
-          <td><code>page_info</code></td>
-          <td>
-                <code>CursorPageInfo</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>The pagination metadata</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>items</code></td>
+            <td>
+                  <code>List[MODEL]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The models returned by the query</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>page_info</code></td>
+            <td>
+                  <code>CursorPageInfo</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The pagination metadata</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
-            <details class="quote">
-              <summary>Source code in <code>sqlalchemy_bind_manager/_repository/common.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">102</span>
+              <details class="quote">
+                <summary>Source code in <code>sqlalchemy_bind_manager/_repository/common.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">102</span>
 <span class="normal">103</span>
 <span class="normal">104</span>
 <span class="normal">105</span>
@@ -5106,9 +5029,9 @@ cursor_paginated_find(50, CursorReference(column="id", value=123), True)
     <span class="n">items</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">MODEL</span><span class="p">]</span>
     <span class="n">page_info</span><span class="p">:</span> <span class="n">CursorPageInfo</span>
 </code></pre></div></td></tr></table></div>
-            </details>
+              </details>
 
-  
+
 
   <div class="doc doc-children">
 
@@ -5124,8 +5047,7 @@ cursor_paginated_find(50, CursorReference(column="id", value=123), True)
 
   </div>
 
-  </div>
-
+    </div>
 
 </div>
 
@@ -5134,120 +5056,119 @@ cursor_paginated_find(50, CursorReference(column="id", value=123), True)
 
 
 <h3 id="sqlalchemy_bind_manager.repository.CursorPageInfo" class="doc doc-heading">
-          <span class="doc doc-object-name doc-class-name">sqlalchemy_bind_manager.repository.CursorPageInfo</span>
+            <span class="doc doc-object-name doc-class-name">sqlalchemy_bind_manager.repository.CursorPageInfo</span>
 
 
 </h3>
 
 
-  <div class="doc doc-contents ">
+    <div class="doc doc-contents ">
 
-  
+
       <p>Cursor-paginated query metadata.</p>
 
 
+<p><span class="doc-section-title">Parameters:</span></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr class="doc-section-item">
+            <td><code>items_per_page</code></td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The maximum number of items in a page.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>total_items</code></td>
+            <td>
+                  <code>int</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The total items in all the pages.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>has_next_page</code></td>
+            <td>
+                  <code>bool</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>True if there is a next page.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>has_previous_page</code></td>
+            <td>
+                  <code>bool</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>True if there is a previous page.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>start_cursor</code></td>
+            <td>
+                  <code>Union[CursorReference, None]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The cursor pointing to the first item in the page, if at least one item is returned.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+          <tr class="doc-section-item">
+            <td><code>end_cursor</code></td>
+            <td>
+                  <code>Union[CursorReference, None]</code>
+            </td>
+            <td>
+              <div class="doc-md-description">
+                <p>The cursor pointing to the last item in the page, if at least one item is returned.</p>
+              </div>
+            </td>
+            <td>
+                <em>required</em>
+            </td>
+          </tr>
+      </tbody>
+    </table>
 
-  <p><span class="doc-section-title">Parameters:</span></p>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Description</th>
-        <th>Default</th>
-      </tr>
-    </thead>
-    <tbody>
-        <tr class="doc-section-item">
-          <td><code>items_per_page</code></td>
-          <td>
-                <code>int</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>The maximum number of items in a page.</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-        <tr class="doc-section-item">
-          <td><code>total_items</code></td>
-          <td>
-                <code>int</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>The total items in all the pages.</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-        <tr class="doc-section-item">
-          <td><code>has_next_page</code></td>
-          <td>
-                <code>bool</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>True if there is a next page.</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-        <tr class="doc-section-item">
-          <td><code>has_previous_page</code></td>
-          <td>
-                <code>bool</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>True if there is a previous page.</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-        <tr class="doc-section-item">
-          <td><code>start_cursor</code></td>
-          <td>
-                <code>Union[CursorReference, None]</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>The cursor pointing to the first item in the page, if at least one item is returned.</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-        <tr class="doc-section-item">
-          <td><code>end_cursor</code></td>
-          <td>
-                <code>Union[CursorReference, None]</code>
-          </td>
-          <td>
-            <div class="doc-md-description">
-              <p>The cursor pointing to the last item in the page, if at least one item is returned.</p>
-            </div>
-          </td>
-          <td>
-              <em>required</em>
-          </td>
-        </tr>
-    </tbody>
-  </table>
-
-            <details class="quote">
-              <summary>Source code in <code>sqlalchemy_bind_manager/_repository/common.py</code></summary>
-              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">74</span>
+              <details class="quote">
+                <summary>Source code in <code>sqlalchemy_bind_manager/_repository/common.py</code></summary>
+                <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">74</span>
 <span class="normal">75</span>
 <span class="normal">76</span>
 <span class="normal">77</span>
@@ -5299,9 +5220,9 @@ cursor_paginated_find(50, CursorReference(column="id", value=123), True)
     <span class="n">start_cursor</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">CursorReference</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">end_cursor</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">CursorReference</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
 </code></pre></div></td></tr></table></div>
-            </details>
+              </details>
 
-  
+
 
   <div class="doc doc-children">
 
@@ -5317,8 +5238,7 @@ cursor_paginated_find(50, CursorReference(column="id", value=123), True)
 
   </div>
 
-  </div>
-
+    </div>
 
 </div>
 
@@ -5327,7 +5247,7 @@ cursor_paginated_find(50, CursorReference(column="id", value=123), True)
 
   </div>
 
-  </div>
+    </div>
 
 </div>
 
@@ -5411,7 +5331,7 @@ cursor_paginated_find(50, CursorReference(column="id", value=123), True)
     <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.expand", "navigation.top", "content.code.copy"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"default": "stable", "provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.a7c05c9e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.ad660dcc.min.js"></script>
       
     
   </body>
