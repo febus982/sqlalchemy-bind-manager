@@ -28,7 +28,7 @@ jobs:
         poetry config virtualenvs.create false
         poetry install --no-root --with dev
     - name: Test & publish code coverage
-      uses: paambaati/codeclimate-action@v6.0.0
+      uses: paambaati/codeclimate-action@v8.0.0
       env:
         CC_TEST_REPORTER_ID: ${{ secrets.CODECLIMATE_REPORTER_ID }}
       with:
