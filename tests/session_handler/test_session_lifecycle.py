@@ -32,14 +32,17 @@ def test_session_is_removed_on_cleanup_even_if_loop_is_not_running(sa_manager):
     original_session_remove = sh.scoped_session.remove
     original_get_event_loop = asyncio.get_event_loop
 
-    with patch.object(
-        sh.scoped_session,
-        "remove",
-        wraps=original_session_remove,
-    ) as mocked_close, patch(
-        "asyncio.get_event_loop",
-        wraps=original_get_event_loop,
-    ) as mocked_get_event_loop:
+    with (
+        patch.object(
+            sh.scoped_session,
+            "remove",
+            wraps=original_session_remove,
+        ) as mocked_close,
+        patch(
+            "asyncio.get_event_loop",
+            wraps=original_get_event_loop,
+        ) as mocked_get_event_loop,
+    ):
         # This should trigger the garbage collector and close the session
         sh = None
 
@@ -52,14 +55,17 @@ def test_session_is_removed_on_cleanup_even_if_loop_search_errors_out(sa_manager
     sh = AsyncSessionHandler(sa_manager.get_bind("async"))
     original_session_remove = sh.scoped_session.remove
 
-    with patch.object(
-        sh.scoped_session,
-        "remove",
-        wraps=original_session_remove,
-    ) as mocked_close, patch(
-        "asyncio.get_event_loop",
-        side_effect=RuntimeError(),
-    ) as mocked_get_event_loop:
+    with (
+        patch.object(
+            sh.scoped_session,
+            "remove",
+            wraps=original_session_remove,
+        ) as mocked_close,
+        patch(
+            "asyncio.get_event_loop",
+            side_effect=RuntimeError(),
+        ) as mocked_get_event_loop,
+    ):
         # This should trigger the garbage collector and close the session
         sh = None
 

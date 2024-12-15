@@ -49,13 +49,16 @@ async def test_failed_commit_does_rollback_and_reraises_exception(
     )
     session_mock = AsyncMock if isinstance(sa_bind, SQLAlchemyAsyncBind) else MagicMock
 
-    with patch.object(
-        session_class, "rollback", new_callable=session_mock, return_value=None
-    ) as mocked_rollback, patch.object(
-        session_class,
-        "commit",
-        new_callable=session_mock,
-        side_effect=SomeTestError,
+    with (
+        patch.object(
+            session_class, "rollback", new_callable=session_mock, return_value=None
+        ) as mocked_rollback,
+        patch.object(
+            session_class,
+            "commit",
+            new_callable=session_mock,
+            side_effect=SomeTestError,
+        ),
     ):
         repo = repository_class(bind=sa_bind, model_class=model_class)
 

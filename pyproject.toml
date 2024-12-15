@@ -20,10 +20,11 @@ classifiers = [
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Database",
     "Topic :: Database :: Front-Ends",
     "Topic :: Software Development :: Libraries :: Python Modules",
@@ -38,7 +39,7 @@ requires = ["poetry-core", "poetry-dynamic-versioning"]
 build-backend = "poetry_dynamic_versioning.backend"
 
 [tool.poetry.dependencies]
-python = ">=3.8,<3.13"
+python = ">=3.9,<3.14"
 pydantic = "^2.1.1"
 SQLAlchemy = { version = "~2.0.0", extras = ["asyncio", "mypy"] }
 
@@ -51,9 +52,11 @@ coverage = ">=6.5.0"
 mike = ">=2.0.0"
 mkdocs = ">=1.4.3"
 mkdocstrings = { version = ">=0.24.0", extras = ["python"] }
+mkdocs-awesome-pages-plugin = "^2.9.2"
 mkdocs-gen-files = ">=0.5.0"
 mkdocs-material = ">=9.1.16"
 mypy = ">=0.990"
+poetry-plugin-export = "*"
 pymdown-extensions = ">=10.0.1"
 pytest = "^8.0.0"
 pytest-asyncio = ">=0.20.3"
@@ -62,7 +65,6 @@ pytest-factoryboy = ">=2.5.0"
 pytest-xdist = ">=3.0.2"
 ruff = ">=0.0.263"
 tox = "^4.14.1"
-mkdocs-awesome-pages-plugin = "^2.9.2"
 
 ############################
 ### Tools configuration  ###
@@ -83,11 +85,12 @@ exclude_also = [
 
 [tool.mypy]
 files = "sqlalchemy_bind_manager"
-python_version = "3.8"
+python_version = "3.9"
 plugins = "pydantic.mypy"
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
 minversion = "6.0"
 addopts = "-n auto --cov-report=term-missing"
 testpaths = [
@@ -96,7 +99,7 @@ testpaths = [
 
 [tool.ruff]
 extend-exclude = ["docs", ".tox"]
-target-version = "py38"
+target-version = "py39"
 
 [tool.ruff.lint]
 select = [

@@ -16,7 +16,7 @@ docs:
 	poetry run mkdocs serve
 
 fix:
-	poetry run ruff . --fix
+	poetry run ruff check . --fix
 	poetry run ruff format .
 
 check: poetry-export
