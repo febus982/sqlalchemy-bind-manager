@@ -19,11 +19,12 @@
 #  DEALINGS IN THE SOFTWARE.
 
 from typing import Generic, List, TypeVar, Union
+from uuid import UUID
 
 from pydantic import BaseModel, StrictInt, StrictStr
 
 MODEL = TypeVar("MODEL")
-PRIMARY_KEY = Union[str, int, tuple, dict]
+PRIMARY_KEY = Union[str, int, tuple, dict, UUID]
 
 
 class PageInfo(BaseModel):

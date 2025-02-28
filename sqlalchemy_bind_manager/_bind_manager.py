@@ -90,7 +90,7 @@ class SQLAlchemyBindManager:
     def __init_bind(self, name: str, config: SQLAlchemyConfig):
         if not isinstance(config, SQLAlchemyConfig):
             raise InvalidConfigError(
-                f"Config for bind `{name}` is not a SQLAlchemyConfig" f"object"
+                f"Config for bind `{name}` is not a SQLAlchemyConfig object"
             )
 
         engine_options: dict = config.engine_options or {}
