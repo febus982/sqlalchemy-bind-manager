@@ -38,7 +38,6 @@ from sqlalchemy.orm import Session
 from .._bind_manager import SQLAlchemyBind
 from .._session_handler import SessionHandler
 from ..exceptions import InvalidConfigError, ModelNotFoundError
-from .abstract import SQLAlchemyRepositoryInterface
 from .base_repository import (
     BaseRepository,
 )
@@ -55,7 +54,6 @@ from .result_presenters import CursorPaginatedResultPresenter, PaginatedResultPr
 class SQLAlchemyRepository(
     Generic[MODEL],
     BaseRepository[MODEL],
-    SQLAlchemyRepositoryInterface[MODEL],
 ):
     _session_handler: SessionHandler
     _external_session: Union[Session, None]

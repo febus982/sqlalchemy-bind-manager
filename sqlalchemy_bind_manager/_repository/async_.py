@@ -38,7 +38,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from .._bind_manager import SQLAlchemyAsyncBind
 from .._session_handler import AsyncSessionHandler
 from ..exceptions import InvalidConfigError, ModelNotFoundError
-from .abstract import SQLAlchemyAsyncRepositoryInterface
 from .base_repository import (
     BaseRepository,
 )
@@ -55,7 +54,6 @@ from .result_presenters import CursorPaginatedResultPresenter, PaginatedResultPr
 class SQLAlchemyAsyncRepository(
     Generic[MODEL],
     BaseRepository[MODEL],
-    SQLAlchemyAsyncRepositoryInterface[MODEL],
 ):
     _session_handler: AsyncSessionHandler
     _external_session: Union[AsyncSession, None]
