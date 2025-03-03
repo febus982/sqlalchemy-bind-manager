@@ -57,7 +57,25 @@ async def some_async_function(repository: SQLAlchemyAsyncRepositoryInterface[MyM
     ...
 ```
 
-Both repository and related interface are Generic, accepting the model class as a typing argument.
+Both repository and related interface are Protocols, accepting the model class as a typing argument. You can also
+extend the protocols with your custom methods.
+
+```python
+from typing import Protocol
+from sqlalchemy_bind_manager.repository import SQLAlchemyRepositoryInterface, SQLAlchemyRepository
+
+# SQLAlchemy model
+class MyModel:
+    ...
+
+class MyCustomRepositoryInterface(SQLAlchemyRepositoryInterface[MyModel], Protocol):
+    def some_custom_method(self, model: MyModel) -> MyModel:
+        ...
+
+class MyCustomRepository(SQLAlchemyRepository[MyModel]):
+    def some_custom_method(self, model: MyModel) -> MyModel:
+        return model
+```
 ///
 
 ### Maximum query limit

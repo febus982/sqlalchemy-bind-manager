@@ -1,4 +1,5 @@
 from inspect import signature
+from typing import Protocol, runtime_checkable
 
 from sqlalchemy_bind_manager.repository import (
     SQLAlchemyAsyncRepository,
@@ -8,9 +9,17 @@ from sqlalchemy_bind_manager.repository import (
 )
 
 
+@runtime_checkable
+class RuntimeRepoProtocol(SQLAlchemyRepositoryInterface, Protocol): ...
+
+
+@runtime_checkable
+class RuntimeAsyncRepoProtocol(SQLAlchemyAsyncRepositoryInterface, Protocol): ...
+
+
 def test_interfaces():
-    assert issubclass(SQLAlchemyRepository, SQLAlchemyRepositoryInterface)
-    assert issubclass(SQLAlchemyAsyncRepository, SQLAlchemyAsyncRepositoryInterface)
+    assert issubclass(SQLAlchemyRepository, RuntimeRepoProtocol)
+    assert issubclass(SQLAlchemyAsyncRepository, RuntimeAsyncRepoProtocol)
 
     sync_methods = [
         method
@@ -26,15 +35,15 @@ def test_interfaces():
     assert sync_methods == async_methods
 
     for method in sync_methods:
-        # Sync signature is the same as sync protocol
+        # Concrete sync signature is the same as sync protocol signature
         assert signature(getattr(SQLAlchemyRepository, method)) == signature(
             getattr(SQLAlchemyRepositoryInterface, method)
         )
-        # Async signature is the same as async protocol
+        # Concrete async signature is the same as async protocol signature
         assert signature(getattr(SQLAlchemyAsyncRepository, method)) == signature(
             getattr(SQLAlchemyAsyncRepositoryInterface, method)
         )
-        # Sync signature is the same as async signature
+        # Sync protocol signature is the same as async protocol signature
         assert signature(
             getattr(SQLAlchemyAsyncRepositoryInterface, method)
         ) == signature(getattr(SQLAlchemyRepositoryInterface, method))

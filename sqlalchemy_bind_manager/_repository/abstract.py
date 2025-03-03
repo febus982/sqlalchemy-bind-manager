@@ -27,14 +27,13 @@
 #  Software is furnished to do so, subject to the following conditions:
 #
 #
-from abc import ABC, abstractmethod
 from typing import (
     Any,
-    Generic,
     Iterable,
     List,
     Literal,
     Mapping,
+    Protocol,
     Tuple,
     Union,
 )
@@ -48,8 +47,7 @@ from .common import (
 )
 
 
-class SQLAlchemyAsyncRepositoryInterface(Generic[MODEL], ABC):
-    @abstractmethod
+class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
     async def get(self, identifier: PRIMARY_KEY) -> MODEL:
         """Get a model by primary key.
 
@@ -59,7 +57,6 @@ class SQLAlchemyAsyncRepositoryInterface(Generic[MODEL], ABC):
         """
         ...
 
-    @abstractmethod
     async def get_many(self, identifiers: Iterable[PRIMARY_KEY]) -> List[MODEL]:
         """Get a list of models by primary keys.
 
@@ -68,7 +65,6 @@ class SQLAlchemyAsyncRepositoryInterface(Generic[MODEL], ABC):
         """
         ...
 
-    @abstractmethod
     async def save(self, instance: MODEL) -> MODEL:
         """Persist a model.
 
@@ -77,7 +73,6 @@ class SQLAlchemyAsyncRepositoryInterface(Generic[MODEL], ABC):
         """
         ...
 
-    @abstractmethod
     async def save_many(self, instances: Iterable[MODEL]) -> Iterable[MODEL]:
         """Persist many models in a single database get_session.
 
@@ -86,7 +81,6 @@ class SQLAlchemyAsyncRepositoryInterface(Generic[MODEL], ABC):
         """
         ...
 
-    @abstractmethod
     async def delete(self, instance: MODEL) -> None:
         """Deletes a model.
 
@@ -94,7 +88,6 @@ class SQLAlchemyAsyncRepositoryInterface(Generic[MODEL], ABC):
         """
         ...
 
-    @abstractmethod
     async def delete_many(self, instances: Iterable[MODEL]) -> None:
         """Deletes a collection of models in a single transaction.
 
@@ -102,7 +95,6 @@ class SQLAlchemyAsyncRepositoryInterface(Generic[MODEL], ABC):
         """
         ...
 
-    @abstractmethod
     async def find(
         self,
         search_params: Union[None, Mapping[str, Any]] = None,
@@ -130,7 +122,6 @@ class SQLAlchemyAsyncRepositoryInterface(Generic[MODEL], ABC):
         """
         ...
 
-    @abstractmethod
     async def paginated_find(
         self,
         items_per_page: int,
@@ -169,7 +160,6 @@ class SQLAlchemyAsyncRepositoryInterface(Generic[MODEL], ABC):
         """
         ...
 
-    @abstractmethod
     async def cursor_paginated_find(
         self,
         items_per_page: int,
@@ -205,8 +195,7 @@ class SQLAlchemyAsyncRepositoryInterface(Generic[MODEL], ABC):
         ...
 
 
-class SQLAlchemyRepositoryInterface(Generic[MODEL], ABC):
-    @abstractmethod
+class SQLAlchemyRepositoryInterface(Protocol[MODEL]):
     def get(self, identifier: PRIMARY_KEY) -> MODEL:
         """Get a model by primary key.
 
@@ -216,7 +205,6 @@ class SQLAlchemyRepositoryInterface(Generic[MODEL], ABC):
         """
         ...
 
-    @abstractmethod
     def get_many(self, identifiers: Iterable[PRIMARY_KEY]) -> List[MODEL]:
         """Get a list of models by primary keys.
 
@@ -225,7 +213,6 @@ class SQLAlchemyRepositoryInterface(Generic[MODEL], ABC):
         """
         ...
 
-    @abstractmethod
     def save(self, instance: MODEL) -> MODEL:
         """Persist a model.
 
@@ -234,7 +221,6 @@ class SQLAlchemyRepositoryInterface(Generic[MODEL], ABC):
         """
         ...
 
-    @abstractmethod
     def save_many(self, instances: Iterable[MODEL]) -> Iterable[MODEL]:
         """Persist many models in a single database get_session.
 
@@ -243,7 +229,6 @@ class SQLAlchemyRepositoryInterface(Generic[MODEL], ABC):
         """
         ...
 
-    @abstractmethod
     def delete(self, instance: MODEL) -> None:
         """Deletes a model.
 
@@ -251,7 +236,6 @@ class SQLAlchemyRepositoryInterface(Generic[MODEL], ABC):
         """
         ...
 
-    @abstractmethod
     def delete_many(self, instances: Iterable[MODEL]) -> None:
         """Deletes a collection of models in a single transaction.
 
@@ -259,7 +243,6 @@ class SQLAlchemyRepositoryInterface(Generic[MODEL], ABC):
         """
         ...
 
-    @abstractmethod
     def find(
         self,
         search_params: Union[None, Mapping[str, Any]] = None,
@@ -287,7 +270,6 @@ class SQLAlchemyRepositoryInterface(Generic[MODEL], ABC):
         """
         ...
 
-    @abstractmethod
     def paginated_find(
         self,
         items_per_page: int,
@@ -326,7 +308,6 @@ class SQLAlchemyRepositoryInterface(Generic[MODEL], ABC):
         """
         ...
 
-    @abstractmethod
     def cursor_paginated_find(
         self,
         items_per_page: int,
