@@ -8,8 +8,9 @@ Please note that this project is released with a Contributor Code of Conduct. By
 
 ## Submitting a pull request
 
+Before running any commands, [install `uv`](https://docs.astral.sh/uv/getting-started/installation/):
+
 0. Fork and clone the repository
-0. Install poetry: `pip install -g poetry`
 0. Configure and install the dependencies: `make dev-dependencies`
 0. Make sure the tests pass on your machine: `make check`
 0. Create a new branch: `git checkout -b my-branch-name`
