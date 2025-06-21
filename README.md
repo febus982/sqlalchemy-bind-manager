@@ -4,8 +4,8 @@
 [![stability-beta](https://img.shields.io/badge/stability-beta-33bbff.svg)](https://github.com/mkenney/software-guides/blob/master/STABILITY-BADGES.md#beta)
 
 [![Python tests](https://github.com/febus982/sqlalchemy-bind-manager/actions/workflows/python-tests.yml/badge.svg?branch=main)](https://github.com/febus982/sqlalchemy-bind-manager/actions/workflows/python-tests.yml)
-[![Maintainability](https://api.codeclimate.com/v1/badges/0140f7f4e559ae806887/maintainability)](https://codeclimate.com/github/febus982/sqlalchemy-bind-manager/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/0140f7f4e559ae806887/test_coverage)](https://codeclimate.com/github/febus982/sqlalchemy-bind-manager/test_coverage)
+[![Maintainability](https://qlty.sh/badges/ed2ae1f6-fd5f-483b-8130-6f4f6518e31d/maintainability.svg)](https://qlty.sh/gh/febus982/projects/sqlalchemy-bind-manager)
+[![Code Coverage](https://qlty.sh/badges/ed2ae1f6-fd5f-483b-8130-6f4f6518e31d/test_coverage.svg)](https://qlty.sh/gh/febus982/projects/sqlalchemy-bind-manager)
 
 [![Checked with mypy](https://www.mypy-lang.org/static/mypy_badge.svg)](https://mypy-lang.org/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)

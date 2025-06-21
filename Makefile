@@ -1,4 +1,4 @@
-.PHONY: dev-dependencies update-dependencies test docs fix check typing lint format ci-test ci-coverage
+.PHONY: dev-dependencies update-dependencies test docs fix check typing lint format ci-test ci-coverage qlty
 
 #########################
 ###### dev commands #####
@@ -17,6 +17,9 @@ fix:
 	uv run ruff format .
 	uv run ruff check . --fix
 	uv run ruff format .
+
+qlty:
+	qlty smells --all
 
 check:
 	uv run tox
