@@ -1,14 +1,16 @@
-[tool.poetry]
+[project]
 name = "sqlalchemy-bind-manager"
-version = "0.0.0"
+dynamic = ["version"]
 description = "A manager to easily handle multiple SQLAlchemy configurations"
-license = "MIT"
-authors = ["Federico Busetti <729029+febus982@users.noreply.github.com>"]
-repository = "https://github.com/febus982/sqlalchemy-bind-manager"
-homepage = "https://febus982.github.io/sqlalchemy-bind-manager"
+authors = [{ name = "Federico Busetti", email = "729029+febus982@users.noreply.github.com" }]
+requires-python = ">=3.9,<3.14"
 readme = "README.md"
-packages = [{include = "sqlalchemy_bind_manager"}]
-keywords = ["sqlalchemy", "config", "manager"]
+license = "MIT"
+keywords = [
+    "sqlalchemy",
+    "config",
+    "manager",
+]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Framework :: AsyncIO",
@@ -28,52 +30,63 @@ classifiers = [
     "Topic :: Database",
     "Topic :: Database :: Front-Ends",
     "Topic :: Software Development :: Libraries :: Python Modules",
-    "Typing :: Typed"
+    "Typing :: Typed",
+]
+dependencies = [
+    "pydantic>=2.1.1,<3",
+    "SQLAlchemy[asyncio, mypy]~=2.0.0",
+]
+
+[project.urls]
+Homepage = "https://febus982.github.io/sqlalchemy-bind-manager"
+Repository = "https://github.com/febus982/sqlalchemy-bind-manager"
+
+[dependency-groups]
+dev = [
+    "aiosqlite>=0.18.0",
+    "coverage>=6.5.0",
+    "mike>=2.0.0",
+    "mkdocs>=1.4.3",
+    "mkdocstrings[python]>=0.24.0",
+    "mkdocs-awesome-pages-plugin>=2.9.2,<3",
+    "mkdocs-gen-files>=0.5.0",
+    "mkdocs-material>=9.1.16",
+    "mypy>=0.990",
+    "poetry-plugin-export",
+    "pymdown-extensions>=10.0.1",
+    "pytest>=8.0.0,<9",
+    "pytest-asyncio>=0.20.3",
+    "pytest-cov>=4.0.0",
+    "pytest-factoryboy>=2.5.0",
+    "pytest-xdist>=3.0.2",
+    "ruff>=0.0.263",
+    "tox>=4.14.1,<5",
+    "tox-uv>=1.26.0",
+    "uv-dynamic-versioning>=0.8.2",
 ]
 
 [tool.poetry-dynamic-versioning]
 enable = true
 
 [build-system]
-requires = ["poetry-core", "poetry-dynamic-versioning"]
-build-backend = "poetry_dynamic_versioning.backend"
+requires = ["hatchling", "uv-dynamic-versioning"]
+build-backend = "hatchling.build"
 
-[tool.poetry.dependencies]
-python = ">=3.9,<3.14"
-pydantic = "^2.1.1"
-SQLAlchemy = { version = "~2.0.0", extras = ["asyncio", "mypy"] }
+[tool.hatch.build.targets.sdist]
+include = ["sqlalchemy_bind_manager"]
 
-[tool.poetry.group.dev]
-optional = true
+[tool.hatch.build.targets.wheel]
+include = ["sqlalchemy_bind_manager"]
 
-[tool.poetry.group.dev.dependencies]
-aiosqlite = ">=0.18.0"
-coverage = ">=6.5.0"
-mike = ">=2.0.0"
-mkdocs = ">=1.4.3"
-mkdocstrings = { version = ">=0.24.0", extras = ["python"] }
-mkdocs-awesome-pages-plugin = "^2.9.2"
-mkdocs-gen-files = ">=0.5.0"
-mkdocs-material = ">=9.1.16"
-mypy = ">=0.990"
-poetry-plugin-export = "*"
-pymdown-extensions = ">=10.0.1"
-pytest = "^8.0.0"
-pytest-asyncio = ">=0.20.3"
-pytest-cov = ">=4.0.0"
-pytest-factoryboy = ">=2.5.0"
-pytest-xdist = ">=3.0.2"
-ruff = ">=0.0.263"
-tox = "^4.14.1"
+[tool.hatch.version]
+source = "uv-dynamic-versioning"
 
-############################
-### Tools configuration  ###
-############################
+[tool.hatch.build.hooks.version]
+path = "sqlalchemy_bind_manager/version.py"
+
 [tool.coverage.run]
 branch = true
 source = ["sqlalchemy_bind_manager"]
-# It's not necessary to setup concurrency here
-# because pytest-cov takes care of that
 
 [tool.coverage.report]
 fail_under = 100
@@ -82,6 +95,9 @@ exclude_also = [
     "pass",
     "\\.\\.\\.",
     ]
+omit = [
+    "sqlalchemy_bind_manager/version.py",
+]
 
 [tool.mypy]
 files = "sqlalchemy_bind_manager"
