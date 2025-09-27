@@ -69,7 +69,7 @@ class PaginatedResult(BaseModel, Generic[MODEL]):
 
 class CursorReference(BaseModel):
     column: str
-    value: Union[StrictStr, StrictInt]
+    value: Union[StrictStr, StrictInt, UUID]
 
 
 class CursorPageInfo(BaseModel):
