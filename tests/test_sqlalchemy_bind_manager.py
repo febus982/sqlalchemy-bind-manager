@@ -127,7 +127,9 @@ def test_engine_is_disposed_on_cleanup_even_if_no_loop(multiple_config):
     mocked_async_dispose.assert_called()
 
 
-async def test_engine_is_disposed_on_cleanup_even_if_loop_search_errors_out(multiple_config):
+def test_engine_is_disposed_on_cleanup_even_if_loop_search_errors_out(
+    multiple_config,
+):
     sa_manager = SQLAlchemyBindManager(multiple_config)
     sync_engine = sa_manager.get_bind("default").engine
     async_engine = sa_manager.get_bind("async").engine
