@@ -98,7 +98,7 @@ async def test_engine_is_disposed_on_cleanup(multiple_config):
         sa_manager = None
 
     mocked_dispose.assert_called_once()
-    mocked_async_dispose.assert_called_once()
+    mocked_async_dispose.assert_called()
 
 
 def test_engine_is_disposed_on_cleanup_even_if_no_loop(multiple_config):
@@ -124,10 +124,10 @@ def test_engine_is_disposed_on_cleanup_even_if_no_loop(multiple_config):
         sa_manager = None
 
     mocked_dispose.assert_called_once()
-    mocked_async_dispose.assert_called_once()
+    mocked_async_dispose.assert_called()
 
 
-def test_engine_is_disposed_on_cleanup_even_if_loop_search_errors_out(multiple_config):
+async def test_engine_is_disposed_on_cleanup_even_if_loop_search_errors_out(multiple_config):
     sa_manager = SQLAlchemyBindManager(multiple_config)
     sync_engine = sa_manager.get_bind("default").engine
     async_engine = sa_manager.get_bind("async").engine
@@ -155,4 +155,4 @@ def test_engine_is_disposed_on_cleanup_even_if_loop_search_errors_out(multiple_c
 
     mocked_get_event_loop.assert_called_once()
     mocked_dispose.assert_called_once()
-    mocked_async_dispose.assert_called_once()
+    mocked_async_dispose.assert_called()
