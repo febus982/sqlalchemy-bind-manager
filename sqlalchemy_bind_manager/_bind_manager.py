@@ -32,6 +32,7 @@ from sqlalchemy.ext.asyncio import (
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.orm.decl_api import DeclarativeMeta, registry
 
+from sqlalchemy_bind_manager._async_helpers import run_async_from_sync
 from sqlalchemy_bind_manager.exceptions import (
     InvalidConfigError,
     NotInitializedBindError,
@@ -86,6 +87,13 @@ class SQLAlchemyBindManager:
                 self.__init_bind(name, conf)
         else:
             self.__init_bind(DEFAULT_BIND_NAME, config)
+
+    def __del__(self):
+        for bind in self.__binds.values():
+            if isinstance(bind, SQLAlchemyAsyncBind):
+                run_async_from_sync(bind.engine.dispose())
+            else:
+                bind.engine.dispose()
 
     def __init_bind(self, name: str, config: SQLAlchemyConfig):
         if not isinstance(config, SQLAlchemyConfig):
