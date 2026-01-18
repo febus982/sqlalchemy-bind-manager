@@ -19,10 +19,8 @@
 #  DEALINGS IN THE SOFTWARE.
 
 from abc import ABC
-from functools import partial
 from typing import (
     Any,
-    Callable,
     Dict,
     Generic,
     Iterable,
@@ -131,9 +129,9 @@ class BaseRepository(Generic[MODEL], ABC):
         :param order_by: a list of columns, or tuples (column, direction)
         :return: The filtered query
         """
-        _partial_registry: Dict[Literal["asc", "desc"], Callable] = {
-            "desc": partial(desc),
-            "asc": partial(asc),
+        _order_funcs: Dict[Literal["asc", "desc"], type] = {
+            "desc": desc,
+            "asc": asc,
         }
 
         for value in order_by:
@@ -143,7 +141,7 @@ class BaseRepository(Generic[MODEL], ABC):
             else:
                 self._validate_mapped_property(value[0])
                 stmt = stmt.order_by(
-                    _partial_registry[value[1]](getattr(self._model, value[0]))
+                    _order_funcs[value[1]](getattr(self._model, value[0]))
                 )
 
         return stmt
