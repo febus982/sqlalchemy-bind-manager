@@ -21,6 +21,7 @@
 from abc import ABC
 from typing import (
     Any,
+    Callable,
     Dict,
     Generic,
     Iterable,
@@ -130,7 +131,7 @@ class BaseRepository(Generic[MODEL], ABC):
         :param order_by: a list of columns, or tuples (column, direction)
         :return: The filtered query
         """
-        _order_funcs: Dict[Literal["asc", "desc"], type] = {
+        _order_funcs: Dict[Literal["asc", "desc"], Callable] = {
             "desc": desc,
             "asc": asc,
         }
