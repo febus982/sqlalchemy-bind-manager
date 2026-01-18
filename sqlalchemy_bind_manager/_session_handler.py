@@ -28,7 +28,6 @@ from sqlalchemy.ext.asyncio import (
 )
 from sqlalchemy.orm import Session, scoped_session
 
-from sqlalchemy_bind_manager._async_helpers import run_async_from_sync
 from sqlalchemy_bind_manager._bind_manager import (
     SQLAlchemyAsyncBind,
     SQLAlchemyBind,
@@ -69,12 +68,20 @@ class SessionHandler:
         """
         try:
             session.commit()
-        except:
+        except Exception:
             session.rollback()
             raise
 
 
 class AsyncSessionHandler:
+    """Async session handler for managing async scoped sessions.
+
+    Note: Unlike SessionHandler, this class does not implement __del__ cleanup
+    because async_scoped_session.remove() is an async operation that cannot be
+    safely executed during garbage collection. Sessions should be properly
+    closed via the get_session() context manager.
+    """
+
     scoped_session: async_scoped_session
 
     def __init__(self, bind: SQLAlchemyAsyncBind):
@@ -84,11 +91,6 @@ class AsyncSessionHandler:
             self.scoped_session = async_scoped_session(
                 bind.session_class, asyncio.current_task
             )
-
-    def __del__(self):
-        if not getattr(self, "scoped_session", None):
-            return
-        run_async_from_sync(self.scoped_session.remove())
 
     @asynccontextmanager
     async def get_session(self, read_only: bool = False) -> AsyncIterator[AsyncSession]:
@@ -110,6 +112,6 @@ class AsyncSessionHandler:
         """
         try:
             await session.commit()
-        except:
+        except Exception:
             await session.rollback()
             raise

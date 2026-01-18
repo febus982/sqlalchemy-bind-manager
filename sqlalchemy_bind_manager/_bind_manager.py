@@ -18,7 +18,9 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 #  DEALINGS IN THE SOFTWARE.
 
-from typing import Mapping, MutableMapping, Union
+import atexit
+import weakref
+from typing import ClassVar, Mapping, MutableMapping, Union
 
 from pydantic import BaseModel, ConfigDict, StrictBool
 from sqlalchemy import MetaData, create_engine
@@ -32,7 +34,6 @@ from sqlalchemy.ext.asyncio import (
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.orm.decl_api import DeclarativeMeta, registry
 
-from sqlalchemy_bind_manager._async_helpers import run_async_from_sync
 from sqlalchemy_bind_manager.exceptions import (
     InvalidConfigError,
     NotInitializedBindError,
@@ -73,6 +74,7 @@ DEFAULT_BIND_NAME = "default"
 
 class SQLAlchemyBindManager:
     __binds: MutableMapping[str, Union[SQLAlchemyBind, SQLAlchemyAsyncBind]]
+    _instances: ClassVar[weakref.WeakSet["SQLAlchemyBindManager"]] = weakref.WeakSet()
 
     def __init__(
         self,
@@ -87,13 +89,23 @@ class SQLAlchemyBindManager:
                 self.__init_bind(name, conf)
         else:
             self.__init_bind(DEFAULT_BIND_NAME, config)
+        SQLAlchemyBindManager._instances.add(self)
 
-    def __del__(self):
+    def _dispose_sync(self) -> None:
+        """Dispose all engines synchronously.
+
+        This method is safe to call from any context, including __del__
+        and atexit handlers. For async engines, it uses the underlying
+        sync_engine to perform synchronous disposal.
+        """
         for bind in self.__binds.values():
             if isinstance(bind, SQLAlchemyAsyncBind):
-                run_async_from_sync(bind.engine.dispose())
+                bind.engine.sync_engine.dispose()
             else:
                 bind.engine.dispose()
+
+    def __del__(self) -> None:
+        self._dispose_sync()
 
     def __init_bind(self, name: str, config: SQLAlchemyConfig):
         if not isinstance(config, SQLAlchemyConfig):
@@ -210,3 +222,15 @@ class SQLAlchemyBindManager:
         :return: The SQLAlchemy Session object
         """
         return self.get_bind(bind_name).session_class()
+
+
+@atexit.register
+def _cleanup_all_managers() -> None:
+    """Cleanup handler that runs during interpreter shutdown.
+
+    This ensures all SQLAlchemyBindManager instances have their engines
+    disposed before the interpreter exits, even if __del__ hasn't been
+    called yet due to reference cycles or other GC timing issues.
+    """
+    for manager in list(SQLAlchemyBindManager._instances):
+        manager._dispose_sync()
