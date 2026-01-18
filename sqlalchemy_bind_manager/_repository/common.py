@@ -18,13 +18,27 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 #  DEALINGS IN THE SOFTWARE.
 
-from typing import Generic, List, TypeVar, Union
+from typing import Generic, List, Type, TypeVar, Union
 from uuid import UUID
 
 from pydantic import BaseModel, StrictInt, StrictStr
+from sqlalchemy import inspect
 
 MODEL = TypeVar("MODEL")
 PRIMARY_KEY = Union[str, int, tuple, dict, UUID]
+
+
+def get_model_pk_name(model_class: Type) -> str:
+    """Retrieves the primary key column name from a SQLAlchemy model class.
+
+    :param model_class: A SQLAlchemy model class
+    :return: The name of the primary key column
+    :raises NotImplementedError: If the model has composite primary keys
+    """
+    primary_keys = inspect(model_class).primary_key  # type: ignore
+    if len(primary_keys) > 1:
+        raise NotImplementedError("Composite primary keys are not supported.")
+    return primary_keys[0].name
 
 
 class PageInfo(BaseModel):

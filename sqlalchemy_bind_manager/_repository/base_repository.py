@@ -31,7 +31,7 @@ from typing import (
     Union,
 )
 
-from sqlalchemy import asc, desc, func, inspect, select
+from sqlalchemy import asc, desc, func, select
 from sqlalchemy.orm import Mapper, aliased, class_mapper, lazyload
 from sqlalchemy.orm.exc import UnmappedClassError
 from sqlalchemy.sql import Select
@@ -41,6 +41,7 @@ from sqlalchemy_bind_manager.exceptions import InvalidModelError, UnmappedProper
 from .common import (
     MODEL,
     CursorReference,
+    get_model_pk_name,
 )
 
 
@@ -342,11 +343,7 @@ class BaseRepository(Generic[MODEL], ABC):
 
         :return:
         """
-        primary_keys = inspect(self._model).primary_key  # type: ignore
-        if len(primary_keys) > 1:
-            raise NotImplementedError("Composite primary keys are not supported.")
-
-        return primary_keys[0].name
+        return get_model_pk_name(self._model)
 
     def _fail_if_invalid_models(self, objects: Iterable[MODEL]) -> None:
         if any(not isinstance(x, self._model) for x in objects):
