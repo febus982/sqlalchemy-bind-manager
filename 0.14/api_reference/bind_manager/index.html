@@ -751,6 +751,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#sqlalchemy_bind_manager.SQLAlchemyBindManager.dispose_engines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dispose_engines
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#sqlalchemy_bind_manager.SQLAlchemyBindManager.get_bind_mappers_metadata" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -945,6 +956,17 @@
   
     <nav class="md-nav" aria-label="SQLAlchemyBindManager">
       <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sqlalchemy_bind_manager.SQLAlchemyBindManager.dispose_engines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        dispose_engines
+      
+    </span>
+  </a>
+  
+</li>
         
           <li class="md-nav__item">
   <a href="#sqlalchemy_bind_manager.SQLAlchemyBindManager.get_bind_mappers_metadata" class="md-nav__link">
@@ -1266,7 +1288,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">__init_bind</span><span class="p">(</span><span class="n">DEFAULT_BIND_NAME</span><span class="p">,</span> <span class="n">config</span><span class="p">)</span>
         <span class="n">SQLAlchemyBindManager</span><span class="o">.</span><span class="n">_instances</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_dispose_sync</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">dispose_engines</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Dispose all engines synchronously.</span>
 
 <span class="sd">        This method is safe to call from any context, including __del__</span>
@@ -1280,7 +1302,7 @@
                 <span class="n">bind</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">dispose</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_dispose_sync</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dispose_engines</span><span class="p">()</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__init_bind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">SQLAlchemyConfig</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">SQLAlchemyConfig</span><span class="p">):</span>
@@ -1411,6 +1433,56 @@
 
 
 
+
+<div class="doc doc-object doc-function">
+
+
+<h4 id="sqlalchemy_bind_manager.SQLAlchemyBindManager.dispose_engines" class="doc doc-heading">
+            <span class="doc doc-object-name doc-function-name">dispose_engines</span>
+
+
+</h4>
+<div class="doc-signature highlight"><pre><span></span><code><span class="nf">dispose_engines</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span>
+</code></pre></div>
+
+    <div class="doc doc-contents ">
+
+        <p>Dispose all engines synchronously.</p>
+<p>This method is safe to call from any context, including <strong>del</strong>
+and atexit handlers. For async engines, it uses the underlying
+sync_engine to perform synchronous disposal.</p>
+
+
+            <details class="mkdocstrings-source">
+              <summary>Source code in <code>sqlalchemy_bind_manager/_bind_manager.py</code></summary>
+              <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 94</span>
+<span class="normal"> 95</span>
+<span class="normal"> 96</span>
+<span class="normal"> 97</span>
+<span class="normal"> 98</span>
+<span class="normal"> 99</span>
+<span class="normal">100</span>
+<span class="normal">101</span>
+<span class="normal">102</span>
+<span class="normal">103</span>
+<span class="normal">104</span>
+<span class="normal">105</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">dispose_engines</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Dispose all engines synchronously.</span>
+
+<span class="sd">    This method is safe to call from any context, including __del__</span>
+<span class="sd">    and atexit handlers. For async engines, it uses the underlying</span>
+<span class="sd">    sync_engine to perform synchronous disposal.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">bind</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__binds</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">bind</span><span class="p">,</span> <span class="n">SQLAlchemyAsyncBind</span><span class="p">):</span>
+            <span class="n">bind</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">sync_engine</span><span class="o">.</span><span class="n">dispose</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">bind</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">dispose</span><span class="p">()</span>
+</code></pre></div></td></tr></table></div>
+            </details>
+    </div>
+
+</div>
 
 <div class="doc doc-object doc-function">
 
