@@ -349,7 +349,7 @@ class BaseRepository(Generic[MODEL], ABC):
         return primary_keys[0].name
 
     def _fail_if_invalid_models(self, objects: Iterable[MODEL]) -> None:
-        if [x for x in objects if not isinstance(x, self._model)]:
+        if any(not isinstance(x, self._model) for x in objects):
             raise InvalidModelError(
                 "Cannot handle models not belonging to this repository"
             )
