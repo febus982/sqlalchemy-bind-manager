@@ -115,8 +115,8 @@ def test_atexit_cleanup_disposes_all_managers(multiple_config):
 
     with patch.object(
         sa_manager,
-        "_dispose_sync",
-    ) as mocked_dispose_sync:
+        "dispose_engines",
+    ) as mocked_dispose_engines:
         _cleanup_all_managers()
 
-    mocked_dispose_sync.assert_called_once()
+    mocked_dispose_engines.assert_called_once()
