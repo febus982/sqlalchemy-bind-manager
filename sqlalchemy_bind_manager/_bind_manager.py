@@ -91,18 +91,24 @@ class SQLAlchemyBindManager:
             self.__init_bind(DEFAULT_BIND_NAME, config)
         SQLAlchemyBindManager._instances.add(self)
 
-    def _dispose_sync(self) -> None:
+    def _dispose_sync(self, close: bool = True) -> None:
         """Dispose all engines synchronously.
 
         This method is safe to call from any context, including __del__
         and atexit handlers. For async engines, it uses the underlying
         sync_engine to perform synchronous disposal.
+
+        Args:
+            close: If True (default), also close all currently checked-in
+                connections. Set to False during interpreter shutdown to
+                avoid issues with async drivers (e.g., aiosqlite) that
+                require an event loop to close connections.
         """
         for bind in self.__binds.values():
             if isinstance(bind, SQLAlchemyAsyncBind):
-                bind.engine.sync_engine.dispose()
+                bind.engine.sync_engine.dispose(close=close)
             else:
-                bind.engine.dispose()
+                bind.engine.dispose(close=close)
 
     def __del__(self) -> None:
         self._dispose_sync()
@@ -230,6 +236,10 @@ def _cleanup_all_managers() -> None:
     This ensures all SQLAlchemyBindManager instances have their engines
     disposed before the interpreter exits, even if __del__ hasn't been
     called yet due to reference cycles or other GC timing issues.
+
+    Uses close=False to avoid issues with async drivers (e.g., aiosqlite)
+    that require an event loop context to close connections. The OS will
+    clean up connections when the process exits.
     """
     for manager in list(SQLAlchemyBindManager._instances):
-        manager._dispose_sync()
+        manager._dispose_sync(close=False)
