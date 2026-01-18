@@ -452,6 +452,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#bind-engines-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bind engines lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -888,6 +899,17 @@
   
 </li>
       
+        <li class="md-nav__item">
+  <a href="#bind-engines-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bind engines lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+      
     </ul>
   
 </nav>
@@ -981,6 +1003,21 @@ The dictionary keys are used as a reference name for each bind.</p>
 </code></pre></div>
 <p>Note that async implementation has several differences from the sync one, make sure
 to check <a href="https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html">SQLAlchemy asyncio documentation</a></p>
+<h2 id="bind-engines-lifecycle">Bind engines lifecycle</h2>
+<p>Engine disposal is handled automatically by <code>SQLAlchemyBindManager</code>. Engines are disposed when:</p>
+<ul>
+<li>The manager instance is garbage collected</li>
+<li>The Python interpreter shuts down (via an <code>atexit</code> handler)</li>
+</ul>
+<p>In some scenarios, such as automated tests, you may need to manually dispose engines to release database connections between tests. The <code>dispose_engines()</code> method is available for this purpose:</p>
+<div class="highlight"><pre><span></span><code><span class="n">sa_manager</span> <span class="o">=</span> <span class="n">SQLAlchemyBindManager</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+
+<span class="c1"># ... use the manager ...</span>
+
+<span class="c1"># Manually dispose all engines</span>
+<span class="n">sa_manager</span><span class="o">.</span><span class="n">dispose_engines</span><span class="p">()</span>
+</code></pre></div>
+<p>This method disposes all engines synchronously, including async engines (using their underlying sync engine).</p>
 
 
 
