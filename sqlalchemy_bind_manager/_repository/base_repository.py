@@ -19,7 +19,6 @@
 #  DEALINGS IN THE SOFTWARE.
 
 from abc import ABC
-from functools import partial
 from typing import (
     Any,
     Callable,
@@ -33,7 +32,7 @@ from typing import (
     Union,
 )
 
-from sqlalchemy import asc, desc, func, inspect, select
+from sqlalchemy import asc, desc, func, select
 from sqlalchemy.orm import Mapper, aliased, class_mapper, lazyload
 from sqlalchemy.orm.exc import UnmappedClassError
 from sqlalchemy.sql import Select
@@ -43,6 +42,7 @@ from sqlalchemy_bind_manager.exceptions import InvalidModelError, UnmappedProper
 from .common import (
     MODEL,
     CursorReference,
+    get_model_pk_name,
 )
 
 
@@ -131,9 +131,9 @@ class BaseRepository(Generic[MODEL], ABC):
         :param order_by: a list of columns, or tuples (column, direction)
         :return: The filtered query
         """
-        _partial_registry: Dict[Literal["asc", "desc"], Callable] = {
-            "desc": partial(desc),
-            "asc": partial(asc),
+        _order_funcs: Dict[Literal["asc", "desc"], Callable] = {
+            "desc": desc,
+            "asc": asc,
         }
 
         for value in order_by:
@@ -143,7 +143,7 @@ class BaseRepository(Generic[MODEL], ABC):
             else:
                 self._validate_mapped_property(value[0])
                 stmt = stmt.order_by(
-                    _partial_registry[value[1]](getattr(self._model, value[0]))
+                    _order_funcs[value[1]](getattr(self._model, value[0]))
                 )
 
         return stmt
@@ -344,14 +344,10 @@ class BaseRepository(Generic[MODEL], ABC):
 
         :return:
         """
-        primary_keys = inspect(self._model).primary_key  # type: ignore
-        if len(primary_keys) > 1:
-            raise NotImplementedError("Composite primary keys are not supported.")
-
-        return primary_keys[0].name
+        return get_model_pk_name(self._model)
 
     def _fail_if_invalid_models(self, objects: Iterable[MODEL]) -> None:
-        if [x for x in objects if not isinstance(x, self._model)]:
+        if any(not isinstance(x, self._model) for x in objects):
             raise InvalidModelError(
                 "Cannot handle models not belonging to this repository"
             )

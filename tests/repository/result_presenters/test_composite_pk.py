@@ -2,15 +2,15 @@ from unittest.mock import Mock, patch
 
 import pytest
 
-from sqlalchemy_bind_manager._repository.result_presenters import _pk_from_result_object
+from sqlalchemy_bind_manager._repository.common import get_model_pk_name
 
 
 def test_exception_raised_if_multiple_primary_keys():
     with (
         patch(
-            "sqlalchemy_bind_manager._repository.result_presenters.inspect",
+            "sqlalchemy_bind_manager._repository.common.inspect",
             return_value=Mock(primary_key=["1", "2"]),
         ),
         pytest.raises(NotImplementedError),
     ):
-        _pk_from_result_object("irrelevant")
+        get_model_pk_name(str)

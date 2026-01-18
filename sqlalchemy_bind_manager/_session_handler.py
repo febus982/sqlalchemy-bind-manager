@@ -19,6 +19,7 @@
 #  DEALINGS IN THE SOFTWARE.
 
 import asyncio
+import logging
 from contextlib import asynccontextmanager, contextmanager
 from typing import AsyncIterator, Iterator
 
@@ -34,6 +35,8 @@ from sqlalchemy_bind_manager._bind_manager import (
 )
 from sqlalchemy_bind_manager.exceptions import UnsupportedBindError
 
+logger = logging.getLogger(__name__)
+
 
 class SessionHandler:
     scoped_session: scoped_session
@@ -45,8 +48,11 @@ class SessionHandler:
             self.scoped_session = scoped_session(bind.session_class)
 
     def __del__(self):
-        if getattr(self, "scoped_session", None):
-            self.scoped_session.remove()
+        try:
+            if getattr(self, "scoped_session", None):
+                self.scoped_session.remove()
+        except Exception:
+            logger.debug("Failed to remove scoped session", exc_info=True)
 
     @contextmanager
     def get_session(self, read_only: bool = False) -> Iterator[Session]:

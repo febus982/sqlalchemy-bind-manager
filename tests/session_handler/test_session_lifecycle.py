@@ -32,6 +32,21 @@ def test_sync_session_is_removed_on_cleanup(sa_manager):
     mocked_remove.assert_called_once()
 
 
+def test_sync_session_cleanup_handles_exception(sa_manager):
+    """Test that __del__ gracefully handles exceptions from scoped_session.remove()."""
+    sh = SessionHandler(sa_manager.get_bind("sync"))
+
+    with patch.object(
+        sh.scoped_session,
+        "remove",
+        side_effect=Exception("Connection already closed"),
+    ) as mocked_remove:
+        # This should not raise - the exception should be caught and logged
+        sh.__del__()
+
+    mocked_remove.assert_called_once()
+
+
 @pytest.mark.parametrize("read_only_flag", [True, False])
 async def test_commit_is_called_only_if_not_read_only(
     read_only_flag,

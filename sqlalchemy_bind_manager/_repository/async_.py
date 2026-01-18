@@ -274,7 +274,7 @@ class SQLAlchemyAsyncRepository(
             ).scalar() or 0
             result_items = [
                 x for x in (await session.execute(paginated_stmt)).scalars()
-            ] or []
+            ]
 
             return CursorPaginatedResultPresenter.build_result(
                 result_items=result_items,

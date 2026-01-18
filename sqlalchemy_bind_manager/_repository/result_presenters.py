@@ -21,8 +21,6 @@
 from math import ceil
 from typing import List, Union
 
-from sqlalchemy import inspect
-
 from .common import (
     MODEL,
     CursorPageInfo,
@@ -30,6 +28,7 @@ from .common import (
     CursorReference,
     PageInfo,
     PaginatedResult,
+    get_model_pk_name,
 )
 
 
@@ -93,7 +92,7 @@ class CursorPaginatedResultPresenter:
         has_next_page = len(result_items) > items_per_page
         if has_next_page:
             result_items = result_items[0:items_per_page]
-        reference_column = _pk_from_result_object(result_items[0])
+        reference_column = get_model_pk_name(type(result_items[0]))
 
         return CursorPaginatedResult(
             items=result_items,
@@ -237,11 +236,3 @@ class PaginatedResultPresenter:
                 has_previous_page=has_previous_page,
             ),
         )
-
-
-def _pk_from_result_object(model) -> str:
-    primary_keys = inspect(type(model)).primary_key  # type: ignore
-    if len(primary_keys) > 1:
-        raise NotImplementedError("Composite primary keys are not supported.")
-
-    return primary_keys[0].name
