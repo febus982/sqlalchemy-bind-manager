@@ -115,7 +115,6 @@ class SQLAlchemyBindManager:
 
         engine_options: dict = config.engine_options or {}
         engine_options.setdefault("echo", False)
-        engine_options.setdefault("future", True)
 
         session_options: dict = config.session_options or {}
         session_options.setdefault("expire_on_commit", False)
