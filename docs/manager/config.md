@@ -88,3 +88,23 @@ async with sa_manager.get_session() as session:
 
 Note that async implementation has several differences from the sync one, make sure
 to check [SQLAlchemy asyncio documentation](https://docs.sqlalchemy.org/en/20/orm/extensions/asyncio.html)
+
+## Bind engines lifecycle
+
+Engine disposal is handled automatically by `SQLAlchemyBindManager`. Engines are disposed when:
+
+* The manager instance is garbage collected
+* The Python interpreter shuts down (via an `atexit` handler)
+
+In some scenarios, such as automated tests, you may need to manually dispose engines to release database connections between tests. The `dispose_engines()` method is available for this purpose:
+
+```python
+sa_manager = SQLAlchemyBindManager(config)
+
+# ... use the manager ...
+
+# Manually dispose all engines
+sa_manager.dispose_engines()
+```
+
+This method disposes all engines synchronously, including async engines (using their underlying sync engine).

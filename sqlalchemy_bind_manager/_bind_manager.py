@@ -91,7 +91,7 @@ class SQLAlchemyBindManager:
             self.__init_bind(DEFAULT_BIND_NAME, config)
         SQLAlchemyBindManager._instances.add(self)
 
-    def _dispose_sync(self) -> None:
+    def dispose_engines(self) -> None:
         """Dispose all engines synchronously.
 
         This method is safe to call from any context, including __del__
@@ -105,7 +105,7 @@ class SQLAlchemyBindManager:
                 bind.engine.dispose()
 
     def __del__(self) -> None:
-        self._dispose_sync()
+        self.dispose_engines()
 
     def __init_bind(self, name: str, config: SQLAlchemyConfig):
         if not isinstance(config, SQLAlchemyConfig):
@@ -232,4 +232,4 @@ def _cleanup_all_managers() -> None:
     called yet due to reference cycles or other GC timing issues.
     """
     for manager in list(SQLAlchemyBindManager._instances):
-        manager._dispose_sync()
+        manager.dispose_engines()
