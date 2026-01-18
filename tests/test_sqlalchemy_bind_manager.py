@@ -105,3 +105,18 @@ def test_engine_is_disposed_on_cleanup(multiple_config):
 
     mocked_dispose.assert_called_once()
     mocked_async_sync_dispose.assert_called_once()
+
+
+def test_atexit_cleanup_disposes_all_managers(multiple_config):
+    """Test that the atexit handler disposes all tracked manager instances."""
+    from sqlalchemy_bind_manager._bind_manager import _cleanup_all_managers
+
+    sa_manager = SQLAlchemyBindManager(multiple_config)
+
+    with patch.object(
+        sa_manager,
+        "_dispose_sync",
+    ) as mocked_dispose_sync:
+        _cleanup_all_managers()
+
+    mocked_dispose_sync.assert_called_once()
