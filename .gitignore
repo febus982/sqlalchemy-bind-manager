@@ -282,5 +282,4 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
-uv.lock
 version.py
