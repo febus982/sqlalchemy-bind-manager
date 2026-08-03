@@ -167,7 +167,7 @@ class SQLAlchemyRepository(
         """
         stmt = self._find_query(search_params, order_by)
 
-        with self._get_session() as session:
+        with self._get_session(commit=False) as session:
             result = session.execute(stmt)
             return [x for x in result.scalars()]
 
@@ -210,7 +210,7 @@ class SQLAlchemyRepository(
         find_stmt = self._find_query(search_params, order_by)
         paginated_stmt = self._paginate_query_by_page(find_stmt, page, items_per_page)
 
-        with self._get_session() as session:
+        with self._get_session(commit=False) as session:
             total_items_count = (
                 session.execute(self._count_query(find_stmt)).scalar() or 0
             )
@@ -264,7 +264,7 @@ class SQLAlchemyRepository(
             items_per_page=items_per_page,
         )
 
-        with self._get_session() as session:
+        with self._get_session(commit=False) as session:
             total_items_count = (
                 session.execute(self._count_query(find_stmt)).scalar() or 0
             )

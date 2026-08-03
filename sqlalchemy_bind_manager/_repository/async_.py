@@ -170,7 +170,7 @@ class SQLAlchemyAsyncRepository(
         """
         stmt = self._find_query(search_params, order_by)
 
-        async with self._get_session() as session:
+        async with self._get_session(commit=False) as session:
             result = await session.execute(stmt)
             return [x for x in result.scalars()]
 
@@ -213,7 +213,7 @@ class SQLAlchemyAsyncRepository(
         find_stmt = self._find_query(search_params, order_by)
         paginated_stmt = self._paginate_query_by_page(find_stmt, page, items_per_page)
 
-        async with self._get_session() as session:
+        async with self._get_session(commit=False) as session:
             total_items_count = (
                 await session.execute(self._count_query(find_stmt))
             ).scalar() or 0
@@ -268,7 +268,7 @@ class SQLAlchemyAsyncRepository(
             items_per_page=items_per_page,
         )
 
-        async with self._get_session() as session:
+        async with self._get_session(commit=False) as session:
             total_items_count = (
                 await session.execute(self._count_query(find_stmt))
             ).scalar() or 0
