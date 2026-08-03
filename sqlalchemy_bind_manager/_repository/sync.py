@@ -142,10 +142,9 @@ class SQLAlchemyRepository(
 
     def find(
         self,
-        search_params: Union[None, Mapping[str, Any]] = None,
+        search_params: Union[Mapping[str, Any], None] = None,
         order_by: Union[
-            None,
-            Iterable[Union[str, Tuple[str, Literal["asc", "desc"]]]],
+            Iterable[Union[str, Tuple[str, Literal["asc", "desc"]]]], None
         ] = None,
     ) -> List[MODEL]:
         """Find models using filters.
@@ -167,7 +166,7 @@ class SQLAlchemyRepository(
         """
         stmt = self._find_query(search_params, order_by)
 
-        with self._get_session() as session:
+        with self._get_session(commit=False) as session:
             result = session.execute(stmt)
             return [x for x in result.scalars()]
 
@@ -175,10 +174,9 @@ class SQLAlchemyRepository(
         self,
         items_per_page: int,
         page: int = 1,
-        search_params: Union[None, Mapping[str, Any]] = None,
+        search_params: Union[Mapping[str, Any], None] = None,
         order_by: Union[
-            None,
-            Iterable[Union[str, Tuple[str, Literal["asc", "desc"]]]],
+            Iterable[Union[str, Tuple[str, Literal["asc", "desc"]]]], None
         ] = None,
     ) -> PaginatedResult[MODEL]:
         """Find models using filters and limit/offset pagination. Returned results
@@ -210,7 +208,7 @@ class SQLAlchemyRepository(
         find_stmt = self._find_query(search_params, order_by)
         paginated_stmt = self._paginate_query_by_page(find_stmt, page, items_per_page)
 
-        with self._get_session() as session:
+        with self._get_session(commit=False) as session:
             total_items_count = (
                 session.execute(self._count_query(find_stmt)).scalar() or 0
             )
@@ -228,7 +226,7 @@ class SQLAlchemyRepository(
         items_per_page: int,
         cursor_reference: Union[CursorReference, None] = None,
         is_before_cursor: bool = False,
-        search_params: Union[None, Mapping[str, Any]] = None,
+        search_params: Union[Mapping[str, Any], None] = None,
     ) -> CursorPaginatedResult[MODEL]:
         """Find models using filters and cursor based pagination. Returned results
         do include pagination metadata.
@@ -264,7 +262,7 @@ class SQLAlchemyRepository(
             items_per_page=items_per_page,
         )
 
-        with self._get_session() as session:
+        with self._get_session(commit=False) as session:
             total_items_count = (
                 session.execute(self._count_query(find_stmt)).scalar() or 0
             )

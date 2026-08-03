@@ -88,10 +88,9 @@ class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
 
     async def find(
         self,
-        search_params: Union[None, Mapping[str, Any]] = None,
+        search_params: Union[Mapping[str, Any], None] = None,
         order_by: Union[
-            None,
-            Iterable[Union[str, Tuple[str, Literal["asc", "desc"]]]],
+            Iterable[Union[str, Tuple[str, Literal["asc", "desc"]]]], None
         ] = None,
     ) -> List[MODEL]:
         """Find models using filters.
@@ -117,10 +116,9 @@ class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
         self,
         items_per_page: int,
         page: int = 1,
-        search_params: Union[None, Mapping[str, Any]] = None,
+        search_params: Union[Mapping[str, Any], None] = None,
         order_by: Union[
-            None,
-            Iterable[Union[str, Tuple[str, Literal["asc", "desc"]]]],
+            Iterable[Union[str, Tuple[str, Literal["asc", "desc"]]]], None
         ] = None,
     ) -> PaginatedResult[MODEL]:
         """Find models using filters and limit/offset pagination. Returned results
@@ -156,7 +154,7 @@ class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
         items_per_page: int,
         cursor_reference: Union[CursorReference, None] = None,
         is_before_cursor: bool = False,
-        search_params: Union[None, Mapping[str, Any]] = None,
+        search_params: Union[Mapping[str, Any], None] = None,
     ) -> CursorPaginatedResult[MODEL]:
         """Find models using filters and cursor based pagination. Returned results
         do include pagination metadata.
@@ -236,10 +234,9 @@ class SQLAlchemyRepositoryInterface(Protocol[MODEL]):
 
     def find(
         self,
-        search_params: Union[None, Mapping[str, Any]] = None,
+        search_params: Union[Mapping[str, Any], None] = None,
         order_by: Union[
-            None,
-            Iterable[Union[str, Tuple[str, Literal["asc", "desc"]]]],
+            Iterable[Union[str, Tuple[str, Literal["asc", "desc"]]]], None
         ] = None,
     ) -> List[MODEL]:
         """Find models using filters.
@@ -265,10 +262,9 @@ class SQLAlchemyRepositoryInterface(Protocol[MODEL]):
         self,
         items_per_page: int,
         page: int = 1,
-        search_params: Union[None, Mapping[str, Any]] = None,
+        search_params: Union[Mapping[str, Any], None] = None,
         order_by: Union[
-            None,
-            Iterable[Union[str, Tuple[str, Literal["asc", "desc"]]]],
+            Iterable[Union[str, Tuple[str, Literal["asc", "desc"]]]], None
         ] = None,
     ) -> PaginatedResult[MODEL]:
         """Find models using filters and limit/offset pagination. Returned results
@@ -304,7 +300,7 @@ class SQLAlchemyRepositoryInterface(Protocol[MODEL]):
         items_per_page: int,
         cursor_reference: Union[CursorReference, None] = None,
         is_before_cursor: bool = False,
-        search_params: Union[None, Mapping[str, Any]] = None,
+        search_params: Union[Mapping[str, Any], None] = None,
     ) -> CursorPaginatedResult[MODEL]:
         """Find models using filters and cursor based pagination. Returned results
         do include pagination metadata.

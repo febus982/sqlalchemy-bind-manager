@@ -115,7 +115,7 @@ testpaths = [
 ]
 
 [tool.ruff]
-extend-exclude = ["docs", ".tox"]
+extend-exclude = ["docs", ".tox", "*.md"]
 target-version = "py39"
 
 [tool.ruff.lint]
