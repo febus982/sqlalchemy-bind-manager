@@ -20,8 +20,8 @@
 
 import asyncio
 import logging
+from collections.abc import AsyncIterator, Iterator
 from contextlib import asynccontextmanager, contextmanager
-from typing import AsyncIterator, Iterator
 
 from sqlalchemy.ext.asyncio import (
     AsyncSession,

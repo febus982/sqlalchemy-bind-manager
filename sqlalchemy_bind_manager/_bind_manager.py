@@ -20,7 +20,8 @@
 
 import atexit
 import weakref
-from typing import ClassVar, Mapping, MutableMapping, Union
+from collections.abc import Mapping, MutableMapping
+from typing import ClassVar
 
 from pydantic import BaseModel, ConfigDict
 from sqlalchemy import MetaData, create_engine
@@ -46,8 +47,8 @@ class SQLAlchemyConfig(BaseModel):
     """
 
     engine_url: str
-    engine_options: Union[dict, None] = None
-    session_options: Union[dict, None] = None
+    engine_options: dict | None = None
+    session_options: dict | None = None
     async_engine: bool = False
 
 
@@ -73,15 +74,12 @@ DEFAULT_BIND_NAME = "default"
 
 
 class SQLAlchemyBindManager:
-    __binds: MutableMapping[str, Union[SQLAlchemyBind, SQLAlchemyAsyncBind]]
+    __binds: MutableMapping[str, SQLAlchemyBind | SQLAlchemyAsyncBind]
     _instances: ClassVar[weakref.WeakSet["SQLAlchemyBindManager"]] = weakref.WeakSet()
 
     def __init__(
         self,
-        config: Union[
-            Mapping[str, SQLAlchemyConfig],
-            SQLAlchemyConfig,
-        ],
+        config: Mapping[str, SQLAlchemyConfig] | SQLAlchemyConfig,
     ) -> None:
         self.__binds = {}
         if isinstance(config, Mapping):
@@ -181,7 +179,7 @@ class SQLAlchemyBindManager:
 
     def get_bind(
         self, bind_name: str = DEFAULT_BIND_NAME
-    ) -> Union[SQLAlchemyBind, SQLAlchemyAsyncBind]:
+    ) -> SQLAlchemyBind | SQLAlchemyAsyncBind:
         """
         Returns a bind object by name.
 
@@ -193,7 +191,7 @@ class SQLAlchemyBindManager:
         except KeyError:
             raise NotInitializedBindError("Bind not initialized")
 
-    def get_binds(self) -> Mapping[str, Union[SQLAlchemyBind, SQLAlchemyAsyncBind]]:
+    def get_binds(self) -> Mapping[str, SQLAlchemyBind | SQLAlchemyAsyncBind]:
         """
         Returns all the registered bind objects.
 
@@ -210,9 +208,7 @@ class SQLAlchemyBindManager:
         """
         return self.get_bind(bind_name).registry_mapper
 
-    def get_session(
-        self, bind_name: str = DEFAULT_BIND_NAME
-    ) -> Union[Session, AsyncSession]:
+    def get_session(self, bind_name: str = DEFAULT_BIND_NAME) -> Session | AsyncSession:
         """
         Returns a SQLAlchemy Session object, ready to be used either
         directly or as a context manager
