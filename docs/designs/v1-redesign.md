@@ -45,14 +45,23 @@ Two `save()` calls against a bind-constructed repository are two transactions. I
 second fails, the first stays committed. There is no way to opt into atomicity without
 switching to a different class entirely.
 
-### Some read methods commit
+### Some read methods committed
 
-The repository already has the mechanism to avoid this. `_get_session(commit=False)`
+/// admonition | Fixed ahead of this redesign
+    type: success
+
+This one was self-contained and shipped separately in
+[#94](https://github.com/febus982/sqlalchemy-bind-manager/pull/94). It is recorded here
+because it illustrates the underlying problem: the repository deciding when to commit.
+Under the new model it cannot recur, because the repository has no commit path at all.
+///
+
+The repository already had the mechanism to avoid this. `_get_session(commit=False)`
 resolves to `SessionHandler.get_session(read_only=True)`, which skips the commit, and
-`get()` and `get_many()` use it correctly.
+`get()` and `get_many()` used it correctly.
 
-The three `find` variants simply never pass the flag, so they take the default
-`commit=True` path and commit a read:
+The three `find` variants simply never passed the flag, so they took the default
+`commit=True` path and committed a read:
 
 ```text
 save():                  BEGIN, FLUSH, COMMIT
@@ -63,10 +72,8 @@ paginated_find():        BEGIN, COMMIT        <- flag not passed
 cursor_paginated_find(): BEGIN, COMMIT        <- flag not passed
 ```
 
-This is a self-contained bug: passing `commit=False` at those three call sites in each of
-the sync and async repositories fixes it today, independently of the rest of this
-redesign. Under the new model it cannot recur, because the repository has no commit path
-at all.
+The fix was to pass `commit=False` at those three call sites in each of the sync and
+async repositories.
 
 ### A unit of work registered once and used per request is broken
 
@@ -455,10 +462,12 @@ Reimplementing `UnitOfWork` as a shim over `TransactionScope` fixes the cross-ta
 the registry leak on the deprecated path too, so users who have not migrated still get
 the fixes.
 
-/// warning | One deliberate behaviour change on the legacy path
+/// note | Reads no longer commit
 
-`find()`, `paginated_find()` and `cursor_paginated_find()` stop committing. This is a
-bugfix, but it is a behaviour change if you were relying on a read to flush pending work.
+`find()`, `paginated_find()` and `cursor_paginated_find()` stopped committing in
+[#94](https://github.com/febus982/sqlalchemy-bind-manager/pull/94), ahead of this
+redesign. Called out because it is a behaviour change if you were relying on a read to
+flush pending work.
 ///
 
 ## Design decisions
