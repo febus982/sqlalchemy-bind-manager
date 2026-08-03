@@ -27,6 +27,13 @@ from sqlalchemy import inspect
 MODEL = TypeVar("MODEL")
 PRIMARY_KEY = Union[str, int, tuple, dict, UUID]
 
+# Constrained rather than bound: a bound TypeVar would happily bind to the
+# union of the constraints, which lets mismatched operands (e.g. `str >= UUID`)
+# pass unnoticed. Constraining makes the checker solve for one concrete type,
+# so a cursor value and the reference it is compared against are provably the
+# same type.
+CURSOR_VALUE = TypeVar("CURSOR_VALUE", StrictStr, StrictInt, UUID)
+
 
 def get_model_pk_name(model_class: Type) -> str:
     """Retrieves the primary key column name from a SQLAlchemy model class.
@@ -81,9 +88,18 @@ class PaginatedResult(BaseModel, Generic[MODEL]):
     page_info: PageInfo
 
 
-class CursorReference(BaseModel):
+class CursorReference(BaseModel, Generic[CURSOR_VALUE]):
+    """A cursor position: an ordering column and a threshold value.
+
+    Generic in the value type so a cursor value read from a model and the
+    reference it is compared against are known to be the same type. The
+    parameter can be omitted (`CursorReference(column="id", value=123)`);
+    it is inferred, and existing annotations that name the class bare keep
+    working.
+    """
+
     column: str
-    value: Union[StrictStr, StrictInt, UUID]
+    value: CURSOR_VALUE
 
 
 class CursorPageInfo(BaseModel):

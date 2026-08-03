@@ -122,3 +122,36 @@ async def test_commit_triggers_once_per_operation_using_internal_uow(
         await sync_async_wrapper(repo1.save(model1))
         await sync_async_wrapper(repo2.save(model2))
     assert mocked_uow_commit.call_count == 2
+
+
+async def test_read_operations_do_not_commit(
+    repository_class, model_class, sa_bind, sync_async_wrapper
+):
+    repo = repository_class(bind=sa_bind, model_class=model_class)
+    model = model_class(
+        name="Someone",
+    )
+    await sync_async_wrapper(repo.save(model))
+
+    session_handler_class = (
+        AsyncSessionHandler
+        if isinstance(sa_bind, SQLAlchemyAsyncBind)
+        else SessionHandler
+    )
+    session_handler_mock = (
+        AsyncMock if isinstance(sa_bind, SQLAlchemyAsyncBind) else MagicMock
+    )
+
+    with patch.object(
+        session_handler_class,
+        "commit",
+        new_callable=session_handler_mock,
+        return_value=None,
+    ) as mocked_commit:
+        await sync_async_wrapper(repo.get(model.model_id))
+        await sync_async_wrapper(repo.get_many([model.model_id]))
+        await sync_async_wrapper(repo.find())
+        await sync_async_wrapper(repo.paginated_find(10))
+        await sync_async_wrapper(repo.cursor_paginated_find(10))
+
+    assert mocked_commit.call_count == 0

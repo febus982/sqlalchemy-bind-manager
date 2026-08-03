@@ -150,10 +150,9 @@ class BaseRepository(Generic[MODEL], ABC):
 
     def _find_query(
         self,
-        search_params: Union[None, Mapping[str, Any]] = None,
+        search_params: Union[Mapping[str, Any], None] = None,
         order_by: Union[
-            None,
-            Iterable[Union[str, Tuple[str, Literal["asc", "desc"]]]],
+            Iterable[Union[str, Tuple[str, Literal["asc", "desc"]]]], None
         ] = None,
     ) -> Select:
         """Build a query with column filters and orders.

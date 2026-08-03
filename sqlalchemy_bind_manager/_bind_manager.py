@@ -22,7 +22,7 @@ import atexit
 import weakref
 from typing import ClassVar, Mapping, MutableMapping, Union
 
-from pydantic import BaseModel, ConfigDict, StrictBool
+from pydantic import BaseModel, ConfigDict
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy.engine import Engine
 from sqlalchemy.ext.asyncio import (
@@ -48,7 +48,7 @@ class SQLAlchemyConfig(BaseModel):
     engine_url: str
     engine_options: Union[dict, None] = None
     session_options: Union[dict, None] = None
-    async_engine: StrictBool = False
+    async_engine: bool = False
 
 
 class SQLAlchemyBind(BaseModel):
