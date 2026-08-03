@@ -22,6 +22,7 @@ from math import ceil
 from typing import List, Union
 
 from .common import (
+    CURSOR_VALUE,
     MODEL,
     CursorPageInfo,
     CursorPaginatedResult,
@@ -117,19 +118,18 @@ class CursorPaginatedResultPresenter:
         result_items: List[MODEL],
         total_items_count: int,
         items_per_page: int,
-        cursor_reference: CursorReference,
+        cursor_reference: CursorReference[CURSOR_VALUE],
     ) -> CursorPaginatedResult:
         index = -1
         reference_column = cursor_reference.column
-        last_found_cursor_value = getattr(result_items[index], reference_column)
+        last_found_cursor_value: CURSOR_VALUE = getattr(
+            result_items[index], reference_column
+        )
         if not isinstance(last_found_cursor_value, type(cursor_reference.value)):
             raise TypeError(
                 "Values from CursorReference and results must be of the same type"
             )
-        # The isinstance check above guarantees both operands have the same
-        # type, but mypy narrows them to independent unions and so considers
-        # mismatched combinations (e.g. `str >= UUID`) reachable.
-        has_next_page = last_found_cursor_value >= cursor_reference.value  # type: ignore[operator]
+        has_next_page = last_found_cursor_value >= cursor_reference.value
         if has_next_page:
             result_items.pop(index)
         has_previous_page = len(result_items) > items_per_page
@@ -167,19 +167,18 @@ class CursorPaginatedResultPresenter:
         result_items: List[MODEL],
         total_items_count: int,
         items_per_page: int,
-        cursor_reference: CursorReference,
+        cursor_reference: CursorReference[CURSOR_VALUE],
     ) -> CursorPaginatedResult:
         index = 0
         reference_column = cursor_reference.column
-        first_found_cursor_value = getattr(result_items[index], reference_column)
+        first_found_cursor_value: CURSOR_VALUE = getattr(
+            result_items[index], reference_column
+        )
         if not isinstance(first_found_cursor_value, type(cursor_reference.value)):
             raise TypeError(
                 "Values from CursorReference and results must be of the same type"
             )
-        # The isinstance check above guarantees both operands have the same
-        # type, but mypy narrows them to independent unions and so considers
-        # mismatched combinations (e.g. `str <= UUID`) reachable.
-        has_previous_page = first_found_cursor_value <= cursor_reference.value  # type: ignore[operator]
+        has_previous_page = first_found_cursor_value <= cursor_reference.value
         if has_previous_page:
             result_items.pop(index)
         has_next_page = len(result_items) > items_per_page
