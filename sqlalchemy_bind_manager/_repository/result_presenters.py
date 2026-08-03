@@ -126,7 +126,10 @@ class CursorPaginatedResultPresenter:
             raise TypeError(
                 "Values from CursorReference and results must be of the same type"
             )
-        has_next_page = last_found_cursor_value >= cursor_reference.value
+        # The isinstance check above guarantees both operands have the same
+        # type, but mypy narrows them to independent unions and so considers
+        # mismatched combinations (e.g. `str >= UUID`) reachable.
+        has_next_page = last_found_cursor_value >= cursor_reference.value  # type: ignore[operator]
         if has_next_page:
             result_items.pop(index)
         has_previous_page = len(result_items) > items_per_page
@@ -173,7 +176,10 @@ class CursorPaginatedResultPresenter:
             raise TypeError(
                 "Values from CursorReference and results must be of the same type"
             )
-        has_previous_page = first_found_cursor_value <= cursor_reference.value
+        # The isinstance check above guarantees both operands have the same
+        # type, but mypy narrows them to independent unions and so considers
+        # mismatched combinations (e.g. `str <= UUID`) reachable.
+        has_previous_page = first_found_cursor_value <= cursor_reference.value  # type: ignore[operator]
         if has_previous_page:
             result_items.pop(index)
         has_next_page = len(result_items) > items_per_page
