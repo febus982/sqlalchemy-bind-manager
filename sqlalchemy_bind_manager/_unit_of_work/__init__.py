@@ -19,8 +19,9 @@
 #  DEALINGS IN THE SOFTWARE.
 
 from abc import ABC
+from collections.abc import AsyncIterator, Iterator
 from contextlib import asynccontextmanager, contextmanager
-from typing import AsyncIterator, Dict, Generic, Iterator, Type, TypeVar, Union
+from typing import Generic, TypeVar
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session
@@ -42,7 +43,7 @@ SESSION_HANDLER = TypeVar("SESSION_HANDLER", SessionHandler, AsyncSessionHandler
 
 class BaseUnitOfWork(Generic[REPOSITORY, SESSION_HANDLER], ABC):
     _session_handler: SESSION_HANDLER
-    _repositories: Dict[str, REPOSITORY]
+    _repositories: dict[str, REPOSITORY]
 
     def __init__(self):
         self._repositories = {}
@@ -50,8 +51,8 @@ class BaseUnitOfWork(Generic[REPOSITORY, SESSION_HANDLER], ABC):
     def register_repository(
         self,
         name: str,
-        repository_class: Type[REPOSITORY],
-        model_class: Union[Type, None] = None,
+        repository_class: type[REPOSITORY],
+        model_class: type | None = None,
         *args,
         **kwargs,
     ):

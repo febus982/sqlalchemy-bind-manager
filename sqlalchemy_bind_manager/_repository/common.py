@@ -18,14 +18,14 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 #  DEALINGS IN THE SOFTWARE.
 
-from typing import Generic, List, Type, TypeVar, Union
+from typing import Generic, TypeVar
 from uuid import UUID
 
 from pydantic import BaseModel, StrictInt, StrictStr
 from sqlalchemy import inspect
 
 MODEL = TypeVar("MODEL")
-PRIMARY_KEY = Union[str, int, tuple, dict, UUID]
+PRIMARY_KEY = str | int | tuple | dict | UUID
 
 # Constrained rather than bound: a bound TypeVar would happily bind to the
 # union of the constraints, which lets mismatched operands (e.g. `str >= UUID`)
@@ -35,7 +35,7 @@ PRIMARY_KEY = Union[str, int, tuple, dict, UUID]
 CURSOR_VALUE = TypeVar("CURSOR_VALUE", StrictStr, StrictInt, UUID)
 
 
-def get_model_pk_name(model_class: Type) -> str:
+def get_model_pk_name(model_class: type) -> str:
     """Retrieves the primary key column name from a SQLAlchemy model class.
 
     :param model_class: A SQLAlchemy model class
@@ -79,12 +79,12 @@ class PaginatedResult(BaseModel, Generic[MODEL]):
     The result of a paginated query.
 
     :param items: The models returned by the query
-    :type items: List[MODEL]
+    :type items: list[MODEL]
     :param page_info: The pagination metadata
     :type page_info: PageInfo
     """
 
-    items: List[MODEL]
+    items: list[MODEL]
     page_info: PageInfo
 
 
@@ -116,18 +116,18 @@ class CursorPageInfo(BaseModel):
     :type has_previous_page: bool
     :param start_cursor: The cursor pointing to the first item in the page,
     if at least one item is returned.
-    :type start_cursor: Union[CursorReference, None]
+    :type start_cursor: CursorReference | None
     :param end_cursor: The cursor pointing to the last item in the page,
     if at least one item is returned.
-    :type end_cursor: Union[CursorReference, None]
+    :type end_cursor: CursorReference | None
     """
 
     items_per_page: int
     total_items: int
     has_next_page: bool = False
     has_previous_page: bool = False
-    start_cursor: Union[CursorReference, None] = None
-    end_cursor: Union[CursorReference, None] = None
+    start_cursor: CursorReference | None = None
+    end_cursor: CursorReference | None = None
 
 
 class CursorPaginatedResult(BaseModel, Generic[MODEL]):
@@ -135,10 +135,10 @@ class CursorPaginatedResult(BaseModel, Generic[MODEL]):
     The result of a cursor paginated query.
 
     :param items: The models returned by the query
-    :type items: List[MODEL]
+    :type items: list[MODEL]
     :param page_info: The pagination metadata
     :type page_info: CursorPageInfo
     """
 
-    items: List[MODEL]
+    items: list[MODEL]
     page_info: CursorPageInfo

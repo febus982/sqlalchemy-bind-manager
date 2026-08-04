@@ -19,17 +19,11 @@
 #  DEALINGS IN THE SOFTWARE.
 
 from abc import ABC
+from collections.abc import Callable, Iterable, Mapping
 from typing import (
     Any,
-    Callable,
-    Dict,
     Generic,
-    Iterable,
     Literal,
-    Mapping,
-    Tuple,
-    Type,
-    Union,
 )
 
 from sqlalchemy import asc, desc, func, select
@@ -48,9 +42,9 @@ from .common import (
 
 class BaseRepository(Generic[MODEL], ABC):
     _max_query_limit: int = 50
-    _model: Type[MODEL]
+    _model: type[MODEL]
 
-    def __init__(self, model_class: Union[Type[MODEL], None] = None) -> None:
+    def __init__(self, model_class: type[MODEL] | None = None) -> None:
         if getattr(self, "_model", None) is None and model_class is not None:
             self._model = model_class
 
@@ -63,7 +57,7 @@ class BaseRepository(Generic[MODEL], ABC):
                 " or in the `_model` class property."
             )
 
-    def _is_mapped_class(self, class_: Type[MODEL]) -> bool:
+    def _is_mapped_class(self, class_: type[MODEL]) -> bool:
         """Checks if the class is mapped in SQLAlchemy.
 
         :param class_: the model class
@@ -116,7 +110,7 @@ class BaseRepository(Generic[MODEL], ABC):
     def _filter_order_by(
         self,
         stmt: Select,
-        order_by: Iterable[Union[str, Tuple[str, Literal["asc", "desc"]]]],
+        order_by: Iterable[str | tuple[str, Literal["asc", "desc"]]],
     ) -> Select:
         """Build the query ordering clauses from submitted parameters.
 
@@ -131,7 +125,7 @@ class BaseRepository(Generic[MODEL], ABC):
         :param order_by: a list of columns, or tuples (column, direction)
         :return: The filtered query
         """
-        _order_funcs: Dict[Literal["asc", "desc"], Callable] = {
+        _order_funcs: dict[Literal["asc", "desc"], Callable] = {
             "desc": desc,
             "asc": asc,
         }
@@ -150,10 +144,8 @@ class BaseRepository(Generic[MODEL], ABC):
 
     def _find_query(
         self,
-        search_params: Union[Mapping[str, Any], None] = None,
-        order_by: Union[
-            Iterable[Union[str, Tuple[str, Literal["asc", "desc"]]]], None
-        ] = None,
+        search_params: Mapping[str, Any] | None = None,
+        order_by: Iterable[str | tuple[str, Literal["asc", "desc"]]] | None = None,
     ) -> Select:
         """Build a query with column filters and orders.
 
@@ -217,7 +209,7 @@ class BaseRepository(Generic[MODEL], ABC):
     def _cursor_paginated_query(
         self,
         stmt: Select,
-        cursor_reference: Union[CursorReference, None],
+        cursor_reference: CursorReference | None,
         is_before_cursor: bool = False,
         items_per_page: int = _max_query_limit,
     ) -> Select:
@@ -229,7 +221,7 @@ class BaseRepository(Generic[MODEL], ABC):
         :type stmt: Select
         :param cursor_reference: A cursor reference containing ordering column
             and threshold value
-        :type cursor_reference: Union[CursorReference, None]
+        :type cursor_reference: CursorReference | None
         :param is_before_cursor: If True it will return items before the cursor,
             otherwise items after
         :type is_before_cursor: bool
@@ -277,7 +269,7 @@ class BaseRepository(Generic[MODEL], ABC):
         :type stmt: Select
         :param cursor_reference: A cursor reference containing ordering column
             and threshold value
-        :type cursor_reference: Union[CursorReference, None]
+        :type cursor_reference: CursorReference | None
         :param is_before_cursor: If True it will return items before the cursor,
             otherwise items after
         :type is_before_cursor: bool
@@ -311,7 +303,7 @@ class BaseRepository(Generic[MODEL], ABC):
         :type stmt: Select
         :param cursor_reference: A cursor reference containing ordering column
             and threshold value
-        :type cursor_reference: Union[CursorReference, None]
+        :type cursor_reference: CursorReference | None
         :param is_before_cursor: If True it will return items before the cursor,
             otherwise items after
         :type is_before_cursor: bool
