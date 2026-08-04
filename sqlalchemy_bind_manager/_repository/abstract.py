@@ -18,15 +18,11 @@
 #  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 #  DEALINGS IN THE SOFTWARE.
 
+from collections.abc import Iterable, Mapping
 from typing import (
     Any,
-    Iterable,
-    List,
     Literal,
-    Mapping,
     Protocol,
-    Tuple,
-    Union,
 )
 
 from .common import (
@@ -48,7 +44,7 @@ class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
         """
         ...
 
-    async def get_many(self, identifiers: Iterable[PRIMARY_KEY]) -> List[MODEL]:
+    async def get_many(self, identifiers: Iterable[PRIMARY_KEY]) -> list[MODEL]:
         """Get a list of models by primary keys.
 
         :param identifiers: A list of primary keys
@@ -88,11 +84,9 @@ class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
 
     async def find(
         self,
-        search_params: Union[Mapping[str, Any], None] = None,
-        order_by: Union[
-            Iterable[Union[str, Tuple[str, Literal["asc", "desc"]]]], None
-        ] = None,
-    ) -> List[MODEL]:
+        search_params: Mapping[str, Any] | None = None,
+        order_by: Iterable[str | tuple[str, Literal["asc", "desc"]]] | None = None,
+    ) -> list[MODEL]:
         """Find models using filters.
 
         E.g.
@@ -116,10 +110,8 @@ class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
         self,
         items_per_page: int,
         page: int = 1,
-        search_params: Union[Mapping[str, Any], None] = None,
-        order_by: Union[
-            Iterable[Union[str, Tuple[str, Literal["asc", "desc"]]]], None
-        ] = None,
+        search_params: Mapping[str, Any] | None = None,
+        order_by: Iterable[str | tuple[str, Literal["asc", "desc"]]] | None = None,
     ) -> PaginatedResult[MODEL]:
         """Find models using filters and limit/offset pagination. Returned results
         do include pagination metadata.
@@ -152,9 +144,9 @@ class SQLAlchemyAsyncRepositoryInterface(Protocol[MODEL]):
     async def cursor_paginated_find(
         self,
         items_per_page: int,
-        cursor_reference: Union[CursorReference, None] = None,
+        cursor_reference: CursorReference | None = None,
         is_before_cursor: bool = False,
-        search_params: Union[Mapping[str, Any], None] = None,
+        search_params: Mapping[str, Any] | None = None,
     ) -> CursorPaginatedResult[MODEL]:
         """Find models using filters and cursor based pagination. Returned results
         do include pagination metadata.
@@ -194,7 +186,7 @@ class SQLAlchemyRepositoryInterface(Protocol[MODEL]):
         """
         ...
 
-    def get_many(self, identifiers: Iterable[PRIMARY_KEY]) -> List[MODEL]:
+    def get_many(self, identifiers: Iterable[PRIMARY_KEY]) -> list[MODEL]:
         """Get a list of models by primary keys.
 
         :param identifiers: A list of primary keys
@@ -234,11 +226,9 @@ class SQLAlchemyRepositoryInterface(Protocol[MODEL]):
 
     def find(
         self,
-        search_params: Union[Mapping[str, Any], None] = None,
-        order_by: Union[
-            Iterable[Union[str, Tuple[str, Literal["asc", "desc"]]]], None
-        ] = None,
-    ) -> List[MODEL]:
+        search_params: Mapping[str, Any] | None = None,
+        order_by: Iterable[str | tuple[str, Literal["asc", "desc"]]] | None = None,
+    ) -> list[MODEL]:
         """Find models using filters.
 
         E.g.
@@ -262,10 +252,8 @@ class SQLAlchemyRepositoryInterface(Protocol[MODEL]):
         self,
         items_per_page: int,
         page: int = 1,
-        search_params: Union[Mapping[str, Any], None] = None,
-        order_by: Union[
-            Iterable[Union[str, Tuple[str, Literal["asc", "desc"]]]], None
-        ] = None,
+        search_params: Mapping[str, Any] | None = None,
+        order_by: Iterable[str | tuple[str, Literal["asc", "desc"]]] | None = None,
     ) -> PaginatedResult[MODEL]:
         """Find models using filters and limit/offset pagination. Returned results
         do include pagination metadata.
@@ -298,9 +286,9 @@ class SQLAlchemyRepositoryInterface(Protocol[MODEL]):
     def cursor_paginated_find(
         self,
         items_per_page: int,
-        cursor_reference: Union[CursorReference, None] = None,
+        cursor_reference: CursorReference | None = None,
         is_before_cursor: bool = False,
-        search_params: Union[Mapping[str, Any], None] = None,
+        search_params: Mapping[str, Any] | None = None,
     ) -> CursorPaginatedResult[MODEL]:
         """Find models using filters and cursor based pagination. Returned results
         do include pagination metadata.

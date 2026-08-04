@@ -3,7 +3,7 @@ name = "sqlalchemy-bind-manager"
 dynamic = ["version"]
 description = "A manager to easily handle multiple SQLAlchemy configurations"
 authors = [{ name = "Federico Busetti", email = "729029+febus982@users.noreply.github.com" }]
-requires-python = ">=3.9,<3.15"
+requires-python = ">=3.11,<3.15"
 readme = "README.md"
 license = "MIT"
 keywords = [
@@ -22,8 +22,6 @@ classifiers = [
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
@@ -102,7 +100,7 @@ omit = [
 
 [tool.mypy]
 files = "sqlalchemy_bind_manager"
-python_version = "3.9"
+python_version = "3.11"
 plugins = "pydantic.mypy"
 
 [tool.pytest.ini_options]
@@ -116,7 +114,7 @@ testpaths = [
 
 [tool.ruff]
 extend-exclude = ["docs", ".tox", "*.md"]
-target-version = "py39"
+target-version = "py311"
 
 [tool.ruff.lint]
 select = [
@@ -126,6 +124,7 @@ select = [
     "I",  # isort
     "N",  # pep8-naming
     "S",  # flake8-bandit
+    "UP",  # pyupgrade
     "RUF",  # ruff-specific-rules
 ]
 # Ignoring rules problematic with formatter
