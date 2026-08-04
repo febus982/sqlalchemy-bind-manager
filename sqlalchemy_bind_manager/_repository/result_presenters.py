@@ -19,7 +19,6 @@
 #  DEALINGS IN THE SOFTWARE.
 
 from math import ceil
-from typing import List, Union
 
 from .common import (
     CURSOR_VALUE,
@@ -37,10 +36,10 @@ class CursorPaginatedResultPresenter:
     @classmethod
     def build_result(
         cls,
-        result_items: List[MODEL],
+        result_items: list[MODEL],
         total_items_count: int,
         items_per_page: int,
-        cursor_reference: Union[CursorReference, None],
+        cursor_reference: CursorReference | None,
         is_before_cursor: bool,
     ) -> CursorPaginatedResult:
         """
@@ -86,7 +85,7 @@ class CursorPaginatedResultPresenter:
 
     @staticmethod
     def _build_no_cursor_result(
-        result_items: List[MODEL],
+        result_items: list[MODEL],
         total_items_count: int,
         items_per_page: int,
     ) -> CursorPaginatedResult:
@@ -115,7 +114,7 @@ class CursorPaginatedResultPresenter:
 
     @staticmethod
     def _build_before_cursor_result(
-        result_items: List[MODEL],
+        result_items: list[MODEL],
         total_items_count: int,
         items_per_page: int,
         cursor_reference: CursorReference[CURSOR_VALUE],
@@ -164,7 +163,7 @@ class CursorPaginatedResultPresenter:
 
     @staticmethod
     def _build_after_cursor_result(
-        result_items: List[MODEL],
+        result_items: list[MODEL],
         total_items_count: int,
         items_per_page: int,
         cursor_reference: CursorReference[CURSOR_VALUE],
@@ -215,7 +214,7 @@ class CursorPaginatedResultPresenter:
 class PaginatedResultPresenter:
     @staticmethod
     def build_result(
-        result_items: List[MODEL],
+        result_items: list[MODEL],
         total_items_count: int,
         page: int,
         items_per_page: int,

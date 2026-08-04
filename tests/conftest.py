@@ -1,6 +1,6 @@
 import inspect
 from contextlib import _AsyncGeneratorContextManager, asynccontextmanager
-from typing import ClassVar, Tuple, Type, Union
+from typing import ClassVar
 from uuid import uuid4
 
 import pytest
@@ -106,7 +106,7 @@ def sa_bind(request, sa_manager):
 
 
 @pytest.fixture
-async def model_classes(sa_bind) -> Tuple[Type, Type]:
+async def model_classes(sa_bind) -> tuple[type, type]:
     class ParentModel(sa_bind.declarative_base):
         __tablename__ = "parent_model"
         # required in order to access columns with server defaults
@@ -149,7 +149,7 @@ async def model_classes(sa_bind) -> Tuple[Type, Type]:
 
 
 @pytest.fixture
-async def model_class(model_classes: Tuple[Type, Type]) -> Type:
+async def model_class(model_classes: tuple[type, type]) -> type:
     return model_classes[0]
 
 
@@ -164,8 +164,8 @@ def session_handler_class(sa_bind):
 
 @pytest.fixture
 def repository_class(
-    sa_bind: Union[SQLAlchemyBind, SQLAlchemyAsyncBind],
-) -> Type[Union[SQLAlchemyAsyncRepository, SQLAlchemyRepository]]:
+    sa_bind: SQLAlchemyBind | SQLAlchemyAsyncBind,
+) -> type[SQLAlchemyAsyncRepository | SQLAlchemyRepository]:
     base_class = (
         SQLAlchemyRepository
         if isinstance(sa_bind, SQLAlchemyBind)

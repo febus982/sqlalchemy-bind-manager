@@ -1,4 +1,4 @@
-from typing import ClassVar, Type
+from typing import ClassVar
 
 import pytest
 from sqlalchemy import Column, Integer, String
@@ -23,7 +23,7 @@ def sa_manager() -> SQLAlchemyBindManager:
 
 
 @pytest.fixture
-def model_class_composite_pk(sa_manager) -> Type:
+def model_class_composite_pk(sa_manager) -> type:
     default_bind = sa_manager.get_bind()
 
     class MyModel(default_bind.declarative_base):
@@ -43,7 +43,7 @@ def model_class_composite_pk(sa_manager) -> Type:
 
 
 @pytest.fixture
-def repository_class(model_class_composite_pk) -> Type[SQLAlchemyRepository]:
+def repository_class(model_class_composite_pk) -> type[SQLAlchemyRepository]:
     class MyRepository(SQLAlchemyRepository[model_class_composite_pk]):
         _model = model_class_composite_pk
 
