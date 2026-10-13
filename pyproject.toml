@@ -3,7 +3,7 @@ name = "sqlalchemy-bind-manager"
 dynamic = ["version"]
 description = "A manager to easily handle multiple SQLAlchemy configurations"
 authors = [{ name = "Federico Busetti", email = "729029+febus982@users.noreply.github.com" }]
-requires-python = ">=3.11,<3.15"
+requires-python = ">=3.15,<3.16"
 readme = "README.md"
 license = "MIT"
 keywords = [
